@@ -11,14 +11,14 @@ namespace Animated.CPU.Model
 
         public BackGroundNoise(Scene scene, DBlock b) : base(scene, b)
         {
-            Bounds   = b.Inner;
-            Speed    = new SKPoint(r.Next(-30, 30) / 30f, r.Next(-30, 30) / 30f);
-            Location = new SKPoint(r.Next(0, (int)b.W), r.Next(0, (int)b.H));
+            Bounds     = b.Inner;
+            Speed      = new SKPoint(r.Next(-30, 30) / 30f, r.Next(-30, 30) / 30f);
+            Location   = new SKPoint(r.Next(0, (int)b.W), r.Next(0, (int)b.H));
 
             Paint = new SKPaint()
             {
                 Style = SKPaintStyle.Fill,
-                Color = SKColor.Parse("#444")
+                Color = SKColor.Parse("#666")
             };
             Paint2 = new SKPaint()
             {
@@ -33,8 +33,12 @@ namespace Animated.CPU.Model
         
         public SKPoint Location { get; set; }
         public SKPoint Speed    { get; set; }
-        
-        
+
+
+        public override void Init(SKSurface surface)
+        {
+            
+        }
         public override void Step(TimeSpan step)
         {
             Location += Speed;
@@ -63,17 +67,18 @@ namespace Animated.CPU.Model
         
         public override void Draw(SKSurface surface)
         {
-            surface.Canvas.DrawCircle(Location.X, Location.Y, 5, Paint);
+            surface.Canvas.DrawCircle(Location.X, Location.Y, 3, Paint);
 
-            foreach (var e in this.Scene.Elements.Where(x=>x is BackGroundNoise).Cast<BackGroundNoise>())
+            foreach (var e in this.Parent.Children.Where(x=>x is BackGroundNoise).Cast<BackGroundNoise>())
             {
                 if (e == this) continue;
 
-                if (SKPoint.Distance(this.Location, e.Location) < 150)
+                var distance = SKPoint.Distance(this.Location, e.Location);
+                if (distance < 150)
                 {
+                    var i = (byte)Drawing.Scale(distance/150f, 255, 20);
+                    Paint2.Color = new SKColor(i,i,i);
                     surface.Canvas.DrawLine(e.Location, this.Location, Paint2);
-                    
-                    surface.Canvas.DrawCircle(Location.X, Location.Y, 5, Paint2);
                 }
 
             }

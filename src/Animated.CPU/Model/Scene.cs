@@ -1,39 +1,27 @@
+using System;
+using System.Diagnostics;
+using System.Drawing;
+using System.Linq;
 using Animated.CPU.Animation;
 using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
-    public class Scene : SceneBase
+
+
+    public class Scene : SceneBase<Cpu>
     {
-        public Scene()
+        public Scene() : base(new StyleFactory())
         {
+            Model = new Cpu();
         }
         
-        internal Cpu cpu = new Cpu();
-        internal SKPaint p1 = new SKPaint()
-        {
-            Style       = SKPaintStyle.Stroke,
-            Color       = new SKColor(255,0,0),
-            StrokeWidth = 2
-                    
-        };
-            
-        internal SKColor bg = SKColor.Parse("#333");
-        internal SKPaint b1 = new SKPaint()
-        {
-            Style       = SKPaintStyle.Stroke,
-            Color       = new SKColor(200,200,200),
-            StrokeWidth = 2
-                    
-        };
-        internal SKPaint t1    =  new SKPaint { TextSize = 15, Color = SKColor.Parse("#00d0fa")};
-        internal SKPaint t1a   =  new SKPaint { TextSize = 15, Color = SKColor.Parse("#00fa00")};
-        internal SKPaint t2    =  new SKPaint { TextSize = 20, Color = SKColor.Parse("#00ff00")};
-        internal SKPaint debug =  new SKPaint { TextSize = 10, Color = SKColor.Parse("#ffffff")};
-        private DStack stack;
 
-        public override void Init(SKSurface surface)
+        protected override void InitScene(SKSurface surface)
         {
+            Debug.WriteLine("Init");
+            Console.WriteLine("Init2");
+            
             var size = surface.Canvas.LocalClipBounds;
             var main = new DBlock()
             {
@@ -42,45 +30,65 @@ namespace Animated.CPU.Model
                 W = size.Width,
                 H = size.Height
             };
-
-            main.Set(10, 1, 4, new SKColor(100, 0, 100));
-
-            stack = new DStack(main, DOrient.Vert, new DBlockProps().Set(1, 1, 1, SKColor.Parse("#444")));
-            stack.Divide(4);
             
             for (int cc = 0; cc < 100; cc++)
                 Add(new BackGroundNoise(this, main));
+            
+            
+            main.Set(10, 1, 4, new SKColor(100, 0, 100));
+            
+            var stack = new DStack(main, DOrient.Vert);
+            var items = stack.Divide(new IElement[]
+            {
+                new ElementRegisterFile(this, Model.RegisterFile, null),
+                new ALUElement(this, null),
+                new MemoryViewElement(this, null, ExampleCPU.Build_Print_Rax()),
+                new MemoryViewElement(this, null, new MemoryView(new []
+                {
+                    new MemoryView.Segment()
+                    {
+                        Source = "Hello World",
+                        Raw    = ExampleCPU.RandomBytes(10)
+                    }
+                }))
+            });
 
-            Add(new RegisterElement(this, stack.Children[0]));
-            // 1 - CPU/FPU
-            Add(new InstructionStack(this, stack.Children[2]));
-            
-            
-            Add(new MemoryViewElement(this, stack.Children[3], ExampleCPU.Build_Print_Rax()));
+            foreach (var kid in items)
+            {
+                kid.model.Block = kid.block;
+                Add(kid.model);
+            }
 
-            
-            
+
         }
         
         protected override void DrawOverlay(SKSurface surface)
         {
             var canvas = surface.Canvas;
-            canvas.DrawText($"{Steps} frames at {Elapsed.TotalSeconds:0.00} sec", 10, 10, debug);
+            canvas.DrawText($"{Steps} frames at {Elapsed.TotalSeconds:0.00} sec", 10, 10, StyleFactory.GetPaint(this, "debug"));
         }
         
         protected override void DrawBackGround(SKSurface surface)
         {
             var canvas = surface.Canvas;
-            canvas.Clear(bg);
+            canvas.Clear(StyleFactory.GetColor(this, "bg"));
 
             Drawing d = new Drawing(surface.Canvas);
+            //
+            // foreach (var item in stack.Children)
+            // {
+            //     d.DrawRect(item);
+            // }
+            //
             
-            foreach (var item in stack.Children)
-            {
-                d.DrawRect(item);
-            }
+            // Highlight RIP
+            // Arrow RIP -> Instruction
+            // Highlight Instruction
+            // Arrow Instration -> Decoder
 
         }
+
+        
     }
 
 

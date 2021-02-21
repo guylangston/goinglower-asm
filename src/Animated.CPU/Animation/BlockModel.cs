@@ -3,6 +3,22 @@ using SkiaSharp;
 
 namespace Animated.CPU.Animation
 {
+    
+    
+    public enum DOrient
+    {
+        Horz,
+        Vert
+    }
+    
+    
+    public enum BlockAnchor
+    {
+        TL, TM, TR,
+        ML, MM, MR,
+        BL, BM, BR
+    }
+    
 
     public interface IBorder
     {
@@ -47,18 +63,11 @@ namespace Animated.CPU.Animation
 
 
 
-        public float Top    { get; private set; }
-        public float Bottom { get; private set; }
-        public float Left   { get; private set; }
-        public float Right  { get; private set; }
-
-        public void Set(float all)
-        {
-            Top    = all;
-            Bottom = all;
-            Left   = all;
-            Right  = all;
-        }
+        public float Top    { get; }
+        public float Bottom { get; }
+        public float Left   { get; }
+        public float Right  { get; }
+        
     }
 
     public struct DBorderStyled : IBorderStyled
@@ -91,33 +100,20 @@ namespace Animated.CPU.Animation
         }
 
 
-        public float    Top    { get; private set;}
-        public float    Bottom { get; private set;}
-        public float    Left   { get; private set;}
-        public float    Right  { get; private set;}
-        public SKPaint? Style  { get; private set;}
+        public float    Top    { get; }
+        public float    Bottom { get; }
+        public float    Left   { get; }
+        public float    Right  { get; }
+        public SKPaint? Style  { get; }
 
-        public void Set(float all, SKPaint? p = null)
-        {
-            Top    = all;
-            Bottom = all;
-            Left   = all;
-            Right  = all;
-            Style  = p;
-        }
     }
 
-    public class DDocument  // Root object
-    {
-        // Styles
-    }
-    
     
     public class DBlockProps
     {
-        DBorderStyled border;
-        DBorder padding;
-        DBorder margin;
+        public DBorderStyled Border  { get; set; }
+        public DBorder               Padding { get; set; }
+        public DBorder               Margin  { get; set; } 
         
         public DBlockProps()
         {
@@ -126,30 +122,29 @@ namespace Animated.CPU.Animation
 
         public DBlockProps(DBlockProps copy)
         {
-            margin = new DBorder(copy.margin);
-            border = new DBorderStyled(copy.border);
-            padding = new DBorder(copy.padding);
+            Margin = new DBorder(copy.Margin);
+            Border = new DBorderStyled(copy.Border);
+            Padding = new DBorder(copy.Padding);
         }
-
-
-        public DBorderStyled Border  => border;
-        public DBorder       Padding => padding;
-        public DBorder       Margin  => margin;
 
         public DBlockProps Set(float margin, float border, float padding, SKColor c)
         {
-            this.margin.Set(margin);
-            this.border.Set(border, new SKPaint()
-            {
-                Style = SKPaintStyle.Stroke,
-                StrokeWidth = border,
-                Color = c,
-            });
-            this.padding.Set(padding);
+            this.Margin  = new DBorder(margin);
+            this.Border  = new DBorderStyled(border, new SKPaint() { Style = SKPaintStyle.Stroke, Color =  c});
+            this.Padding = new DBorder(padding);
             return this;
         }
-
+        
+        public DBlockProps Set(float margin, float border, float padding, SKPaint p)
+        {
+            this.Margin  = new DBorder(margin);
+            this.Border  = new DBorderStyled(border, p);
+            this.Padding = new DBorder(padding);
+            return this;
+        }
     }
+
+
 
 
     public class DBlock : DBlockProps
@@ -166,10 +161,7 @@ namespace Animated.CPU.Animation
         public float                       Y      { get; set; }
         public float                       W      { get; set; }
         public float                       H      { get; set; }
-        public object                      Domain { get; set; }
-        public IReadOnlyCollection<IDDock> Docks  { get; }
         
-
         public Rect Outer => new Rect(X, Y, W, H);
 
         public Rect Inner => new Rect(
@@ -180,12 +172,7 @@ namespace Animated.CPU.Animation
         );
         
     }
-
-    public interface IDDock
-    {
-        string Id    { get; set; }
-        SKRect GetAnchor(DBlock owner);
-    }
+    
 
     public class DText
     {
@@ -195,22 +182,14 @@ namespace Animated.CPU.Animation
             Style = style;
         }
 
-        public string  Text  { get; set; }
-        public SKPaint? Style { get; set; }
+        public string    Text  { get; set; }
+        public SKPaint?  Style { get; set; }
+        public BlockAnchor Anchor  { get; set; }
     }
 
-    public class DPanel : DBlock
-    {
-        public DText   Title       { get; set; }
-        public DText   Footer      { get; set; }
-        
-    }
+    
 
-    public enum DOrient
-    {
-        Vert,
-        Horz
-    }
+    
 
 
 }

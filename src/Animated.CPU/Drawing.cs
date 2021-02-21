@@ -62,9 +62,11 @@ namespace Animated.CPU
                     b.W - b.Margin.Left - b.Margin.Right - b.Border.Left - b.Border.Right , 
                     b.H - b.Margin.Top - b.Margin.Bottom - b.Border.Left - b.Border.Right,
                     b.Border.Style);
-        } 
-            
-        
+        }
+
+
+
+        public static float Scale(float normalised, float a, float b) => a + (b - a) * normalised;
         
     }
 

@@ -4,76 +4,69 @@ using System.Linq;
 
 namespace Animated.CPU.Animation
 {
+    
+    
+    
     public class DStack
     {
-        public DStack(DBlock container, DOrient orient, DBlockProps innerStyle)
+        public DStack(DBlock container, DOrient orient)
         {
             Container  = container;
             Orient     = orient;
-            InnerStyle = innerStyle;
         }
 
-        public List<DBlock> Children   { get; } = new List<DBlock>();
         public DBlock       Container  { get; }
         public DOrient      Orient     { get; }
-        public DBlockProps  InnerStyle { get; }
 
-        public DStack Add(DBlock block)
-        {
-            throw new NotImplementedException();
-        }
-        
-        public DStack Add(float size)
-        {
-            throw new NotImplementedException();
-        }
+        private Rect inner;
+        private float offset;
+        private float size;
 
-        public void Divide<T>(IReadOnlyList<T> items)
+        public IEnumerable<(T model, DBlock block)> Divide<T>(IReadOnlyList<T> items)
         {
+            inner  = Container.Inner;
+            offset = 0f;
+            
+            
             if (Orient == DOrient.Vert)
             {
-                var inner  = Container.Inner;
-                var offset = 0f;
-                var size   = inner.W / items.Count;
+                size = inner.W / items.Count;    
                 
                 for (int i = 0; i < items.Count; i++)
                 {
-                    var b = new DBlock(InnerStyle)
+                    var b = new DBlock()
                     {
                         X = inner.X + offset,
                         Y = inner.Y,
                         W = size,
-                        H = inner.H,
-
-                        Domain =  items[i]
+                        H = inner.H
                     };
-                    Children.Add(b);
+
+                    yield return (items[i], b);
+                    
                     offset += size;
                 }
             }
             else
             {
-                var inner  = Container.Inner;
-                var offset = 0f;
+                
                 var size   = inner.H / items.Count;
                 
                 for (int i = 0; i < items.Count; i++)
                 {
-                    var b = new DBlock(InnerStyle)
+                    var b = new DBlock()
                     {
                         X = inner.X ,
                         Y = inner.Y + offset,
                         W = inner.W,
-                        H = size,
-
-                        Domain =  items[i]
+                        H = size
                     };
-                    Children.Add(b);
+                    yield return (items[i], b);
                     offset += size;
                 }
             }
         }
 
-        public void Divide(int count) => Divide(Enumerable.Repeat(0, count).Select(x => (object)null).ToList());
+        
     }
 }
