@@ -11,13 +11,11 @@ namespace Animated.CPU.GTK
         {
             Application.Init();
 
-            var app = new Application("org.Animated.CPU.GTK.Animated.CPU.GTK", GLib.ApplicationFlags.None);
+            var app = new Application("org.Animated.CPU.GTK", GLib.ApplicationFlags.None);
             app.Register(GLib.Cancellable.Current);
 
             var win = new MainWindow();
             app.AddWindow(win);
-            
-            
 
             win.Show();
             Application.Run();

@@ -35,7 +35,7 @@ namespace Animated.CPU.Tests
         [Fact]
         public void CopyConstructor()
         {
-            outp.WriteLine(CodeGen.GenerateCopyConstructor<DBlockProps>());
+            outp.WriteLine(CodeGen.GenerateCopyConstructor<DBorderStyled>());
         }
     }
 }

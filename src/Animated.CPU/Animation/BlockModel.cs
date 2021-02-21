@@ -36,10 +36,29 @@ namespace Animated.CPU.Animation
             Right  = right;
         }
 
-        public float Top    { get; }
-        public float Bottom { get; }
-        public float Left   { get; }
-        public float Right  { get; }
+
+        public DBorder(DBorder copy) 
+        {
+            this.Top    = copy.Top;
+            this.Bottom = copy.Bottom;
+            this.Left   = copy.Left;
+            this.Right  = copy.Right;
+        }
+
+
+
+        public float Top    { get; private set; }
+        public float Bottom { get; private set; }
+        public float Left   { get; private set; }
+        public float Right  { get; private set; }
+
+        public void Set(float all)
+        {
+            Top    = all;
+            Bottom = all;
+            Left   = all;
+            Right  = all;
+        }
     }
 
     public struct DBorderStyled : IBorderStyled
@@ -61,13 +80,31 @@ namespace Animated.CPU.Animation
             Right  = right;
             Style  = style;
         }
+        
+        public DBorderStyled(DBorderStyled copy) 
+        {
+            this.Top    = copy.Top;
+            this.Bottom = copy.Bottom;
+            this.Left   = copy.Left;
+            this.Right  = copy.Right;
+            this.Style  = copy.Style;
+        }
 
-        public float Top    { get; }
-        public float Bottom { get; }
-        public float Left   { get; }
-        public float Right  { get; }
 
-        public SKPaint Style { get; }
+        public float    Top    { get; private set;}
+        public float    Bottom { get; private set;}
+        public float    Left   { get; private set;}
+        public float    Right  { get; private set;}
+        public SKPaint? Style  { get; private set;}
+
+        public void Set(float all, SKPaint? p = null)
+        {
+            Top    = all;
+            Bottom = all;
+            Left   = all;
+            Right  = all;
+            Style  = p;
+        }
     }
 
     public class DDocument  // Root object
@@ -78,6 +115,10 @@ namespace Animated.CPU.Animation
     
     public class DBlockProps
     {
+        DBorderStyled border;
+        DBorder padding;
+        DBorder margin;
+        
         public DBlockProps()
         {
 
@@ -85,90 +126,29 @@ namespace Animated.CPU.Animation
 
         public DBlockProps(DBlockProps copy)
         {
-            this.PaddingTop        = copy.PaddingTop;
-            this.PaddingBottom     = copy.PaddingBottom;
-            this.PaddingLeft       = copy.PaddingLeft;
-            this.PaddingRight      = copy.PaddingRight;
-        
-            this.MarginTop         = copy.MarginTop;
-            this.MarginBottom      = copy.MarginBottom;
-            this.MarginLeft        = copy.MarginLeft;
-            this.MarginRight       = copy.MarginRight;
-            
-            this.BorderTop         = copy.BorderTop;
-            this.BorderBottom      = copy.BorderBottom;
-            this.BorderLeft        = copy.BorderLeft;
-            this.BorderRight       = copy.BorderRight;
-        
-
-            this.BorderStyle = copy.BorderStyle;
+            margin = new DBorder(copy.margin);
+            border = new DBorderStyled(copy.border);
+            padding = new DBorder(copy.padding);
         }
-        
-        // DisplayProps
 
-        // Convert to DBorder
-        public float PaddingTop    { get; set; }
-        public float PaddingBottom { get; set; }
-        public float PaddingLeft   { get; set; }
-        public float PaddingRight  { get; set; }
 
-        // Convert to DBorder
-        public float MarginTop    { get; set; }
-        public float MarginBottom { get; set; }
-        public float MarginLeft   { get; set; }
-        public float MarginRight  { get; set; }
+        public DBorderStyled Border  => border;
+        public DBorder       Padding => padding;
+        public DBorder       Margin  => margin;
 
-        // Convert to DBorder
-        public float   BorderTop    { get; set; }
-        public float   BorderBottom { get; set; }
-        public float   BorderLeft   { get; set; }
-        public float   BorderRight  { get; set; }
-        public SKPaint BorderStyle  { get; set; }
-        
         public DBlockProps Set(float margin, float border, float padding, SKColor c)
         {
-            SetMargin(margin);
-            SetBorder(border);
-            SetPadding(padding);
-            if (border > 0)
+            this.margin.Set(margin);
+            this.border.Set(border, new SKPaint()
             {
-                BorderStyle = new SKPaint()
-                {
-                    Style       = SKPaintStyle.Stroke,
-                    StrokeWidth = border,
-                    Color       = c
-                };
-            }
-
+                Style = SKPaintStyle.Stroke,
+                StrokeWidth = border,
+                Color = c,
+            });
+            this.padding.Set(padding);
             return this;
         }
 
-        public DBlockProps SetPadding(float all)
-        {
-            PaddingTop    = all;
-            PaddingBottom = all;
-            PaddingLeft   = all;
-            PaddingRight  = all;
-            return this;
-        }
-
-        public DBlockProps SetBorder(float all)
-        {
-            BorderTop    = all;
-            BorderBottom = all;
-            BorderLeft   = all;
-            BorderRight  = all;
-            return this;
-        }
-
-        public DBlockProps SetMargin(float all)
-        {
-            MarginTop    = all;
-            MarginBottom = all;
-            MarginLeft   = all;
-            MarginRight  = all;
-            return this;
-        }
     }
 
 
@@ -181,29 +161,24 @@ namespace Animated.CPU.Animation
         public DBlock(DBlockProps copy) : base(copy)
         {
         }
-
-
-        public float X { get; set; }
-        public float Y { get; set; }
-
-        public float W { get; set; }
-        public float H { get; set; }
+        
+        public float                       X      { get; set; }
+        public float                       Y      { get; set; }
+        public float                       W      { get; set; }
+        public float                       H      { get; set; }
+        public object                      Domain { get; set; }
+        public IReadOnlyCollection<IDDock> Docks  { get; }
+        
 
         public Rect Outer => new Rect(X, Y, W, H);
 
         public Rect Inner => new Rect(
-            X + PaddingLeft + BorderLeft + MarginLeft,
-            Y + PaddingRight + BorderRight + MarginRight,
-            W - (PaddingLeft + BorderLeft + MarginLeft) - (PaddingRight + BorderRight + MarginRight),
-            H - (PaddingTop + BorderTop + MarginTop) - (PaddingBottom + BorderBottom + MarginBottom)
+            X + Padding.Left + Border.Left + Margin.Left,
+            Y + Padding.Right + Border.Right + Margin.Right,
+            W - (Padding.Left + Border.Left + Margin.Left) - (Padding.Right + Border.Right + Margin.Right),
+            H - (Padding.Top + Border.Top + Margin.Top) - (Padding.Bottom + Border.Bottom + Margin.Bottom)
         );
-
-
-        // State
-        public object Domain { get; set; }
         
-        public IReadOnlyCollection<IDDock> Docks { get; }
-
     }
 
     public interface IDDock
