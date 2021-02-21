@@ -43,7 +43,7 @@ namespace Animated.CPU.Model
             // });
             
             
-            draw.DrawRect(Block);
+            draw.DrawRect(Block, Scene.StyleFactory.GetPaint(this, "fill"));
             
             draw.DrawText($"[{Model.Id}]", Scene.StyleFactory.GetPaint(this, "Id"), Block.Inner.TL);
             draw.DrawTextRight(Model.Name ?? "", Scene.StyleFactory.GetPaint(this, "Name"), Block.Inner.TR + new SKPoint(-5, 0));
@@ -58,17 +58,13 @@ namespace Animated.CPU.Model
     {
         public ElementRegisterFile(Scene scene, List<Register> model, DBlock block) : base(scene, model, block)
         {
-            
         }
-
-
-
+        
         public override void Init(SKSurface surface)
         {
             var stack = new DStack(this.Block, DOrient.Horz);
-            ;
-            
-            foreach (var reg in stack.Divide(Model))
+
+            foreach (var reg in stack.Layout(Model))
             {
                 Add(new ElementRegister(this, reg.model, reg.block));
             }

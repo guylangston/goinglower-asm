@@ -15,7 +15,6 @@ namespace Animated.CPU.Model
         {
             Model = new Cpu();
         }
-        
 
         protected override void InitScene(SKSurface surface)
         {
@@ -38,7 +37,7 @@ namespace Animated.CPU.Model
             main.Set(10, 1, 4, new SKColor(100, 0, 100));
             
             var stack = new DStack(main, DOrient.Vert);
-            var items = stack.Divide(new IElement[]
+            var items = stack.Layout(new IElement[]
             {
                 new ElementRegisterFile(this, Model.RegisterFile, null),
                 new ALUElement(this, null),
@@ -55,7 +54,6 @@ namespace Animated.CPU.Model
 
             foreach (var kid in items)
             {
-                kid.model.Block = kid.block;
                 Add(kid.model);
             }
 

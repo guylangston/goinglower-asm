@@ -54,14 +54,13 @@ namespace Animated.CPU
         
         public void DrawRect(SKPaint p1, IRect rect) => canvas.DrawRect(rect.X, rect.Y, rect.W, rect.H, p1);
 
-        public void DrawRect(DBlock b)
+        public void DrawRect(DBlock b, SKPaint p)
         {
-            if (b.Border.Style != null)  
-                canvas.DrawRect(b.X + b.Margin.Left, 
+            canvas.DrawRect(b.X + b.Margin.Left, 
                     b.Y + b.Margin.Top, 
                     b.W - b.Margin.Left - b.Margin.Right - b.Border.Left - b.Border.Right , 
                     b.H - b.Margin.Top - b.Margin.Bottom - b.Border.Left - b.Border.Right,
-                    b.Border.Style);
+                    p);
         }
 
 

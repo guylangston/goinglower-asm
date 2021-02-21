@@ -78,6 +78,12 @@ namespace Animated.CPU.Model
         
         public SKColor GetColor(IElement e, string id)
         {
+            switch (id)
+            {
+                case "bg": return bg;
+                
+            }
+            
             //Console.WriteLine("Unknown Color Style {e}#{id");
             return def.Color;
         }
