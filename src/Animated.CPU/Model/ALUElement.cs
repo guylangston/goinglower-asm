@@ -20,7 +20,8 @@ namespace Animated.CPU.Model
                 item.block.Set(4, 2, 4, null);
                 var e = Add(new BlockElement(this, item.block)
                 {
-                    Model = item.model
+                    Model = item.model,
+                    Anchor = BlockAnchor.TM
                 });
             }
         }

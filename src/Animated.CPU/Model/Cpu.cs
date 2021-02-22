@@ -12,6 +12,8 @@ namespace Animated.CPU.Model
         {
             RegisterFile = new List<Register>()
             {
+                RIP,
+                RFLAGS,
                 R0,
                 R1,
                 R2,
@@ -28,9 +30,8 @@ namespace Animated.CPU.Model
                 R13,
                 R14,
                 R15,
+                CLK
                 
-                RIP,
-                RFLAGS
             };
 
             Main = new Memory((int)Math.Pow(2, 16));
@@ -68,8 +69,9 @@ namespace Animated.CPU.Model
         public Register R14 { get; } = new Register("R14", "Register 14");
         public Register R15 { get; } = new Register("R15", "Register 15");
         
-        public Register RIP { get; } = new Register("RIP", "Instruction Pointer");
+        public Register RIP    { get; } = new Register("RIP", "Instruction Pointer");
         public Register RFLAGS { get; } = new Register("RFLAGS", "Flags");
+        public Register CLK { get; } = new Register("CLK", "Clock");
 
         public List<Register> RegisterFile { get; }
         
@@ -83,6 +85,12 @@ namespace Animated.CPU.Model
         public MemoryView Stack { get; set; }
 
         public ArithmeticLogicUnit ALU { get; set; } = new ArithmeticLogicUnit();
+
+
+        public void Step()
+        {
+            CLK.Value++;
+        }
         
     }
 

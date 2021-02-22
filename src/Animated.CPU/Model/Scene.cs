@@ -30,8 +30,9 @@ namespace Animated.CPU.Model
                 H = size.Height
             };
             
-            for (int cc = 0; cc < 100; cc++)
-                Add(new BackGroundNoise(this, main));
+            //
+            // for (int cc = 0; cc < 100; cc++)
+            //     Add(new BackGroundNoise(this, main));
             
             
             main.Set(10, 1, 4, new SKColor(100, 0, 100));
@@ -49,12 +50,13 @@ namespace Animated.CPU.Model
             {
                 Add(kid.model);
             }
-
-            
-
-
         }
-        
+
+        public override void StepScene(TimeSpan s)
+        {
+            Model.Step();
+        }
+
         protected override void DrawOverlay(SKSurface surface)
         {
             var canvas = surface.Canvas;

@@ -42,6 +42,19 @@ namespace Animated.CPU.Model
             Color    = SKColor.Parse("#eee")
         };
         
+        public SKPaint hex = new SKPaint()
+        {
+            TextSize = 15,
+            Color    = SKColors.Yellow
+        };
+        
+        public SKPaint hex2 = new SKPaint()
+        {
+            TextSize = 15,
+            Color    = SKColors.Cyan
+        };
+
+        
         public SKPaint h1 = new SKPaint()
         {
             TextSize = 25,
@@ -53,7 +66,15 @@ namespace Animated.CPU.Model
         private SKPaint borderGray = new SKPaint()
         {
             Style = SKPaintStyle.Stroke,
+            StrokeWidth = 1,
             Color = SKColor.Parse("#444")
+        };
+        
+        private SKPaint borderReg = new SKPaint()
+        {
+            Style       = SKPaintStyle.Stroke,
+            StrokeWidth = 1,
+            Color       = SKColors.DarkCyan
         };
         
         public SKPaint GetPaint(IElement e, string id)
@@ -82,10 +103,21 @@ namespace Animated.CPU.Model
                     // }, SKShaderTileMode.Repeat)
                 };
             }
+
+            if (e.Parent is ElementRegister)
+            {
+                switch (id)
+                {
+                    case "border": return borderReg;
+                    case "hex": return hex2;
+                    
+                }
+            }
             
             switch (id)
             {
                 case "h1": return h1;
+                case "hex": return hex;
                 case "text": return text;
                 case "debug": return debug;
                 case "border": return borderGray;

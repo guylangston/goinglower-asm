@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Animated.CPU.Animation;
 using SkiaSharp;
 
@@ -77,9 +78,26 @@ namespace Animated.CPU.Model
         {
         }
 
+        public override void Init(SKSurface surface)
+        {
+            var bytes = new byte[8];
+            this.Bytes = Add(new ByteArrayElement(this, new ByteArrayModel(bytes, "", ""))
+            {
+                Block = Block.Inset(30, 25)
+            });
+        }
+        
+        public ByteArrayElement Bytes { get; set; }
+
         public override void Step(TimeSpan step)
         {
-        
+            Bytes.IsHidden = Animator.IsActive;
+            
+            var bytes = BitConverter.GetBytes(Model.Value);
+            Array.Reverse(bytes);   // hack
+            Bytes.Model.Bytes       = bytes;
+            Bytes.Model.ParsedValue = Model.Value.ToString("#,##0");
+
         }
 
         public PropFloat Alpha { get; } = new PropFloat();
@@ -93,9 +111,10 @@ namespace Animated.CPU.Model
             var sVal  = Scene.StyleFactory.GetPaint(this, "Value");
             var sId   = Scene.StyleFactory.GetPaint(this, "Id");
             var sBg   = Scene.StyleFactory.GetPaint(this, "bg");
+            var i     = (byte)60;
             sBg = new SKPaint()
             {
-                Color = new SKColor(100,100,100, (byte)Alpha.Value)
+                Color = new SKColor(i,i,i, (byte)Alpha.Value)
             };
                 
             
@@ -111,7 +130,7 @@ namespace Animated.CPU.Model
             
             draw.DrawText($"[{Model.Id}]", sId, Block, BlockAnchor.TL);
             draw.DrawText(Model.Name ?? "", sName, Block, BlockAnchor.TR);
-            draw.DrawText(Model.Value.ToString("X"), sVal, Block, BlockAnchor.BR);
+            //draw.DrawText(Model.Value.ToString("X"), sVal, Block, BlockAnchor.BR);
             
         }
     }

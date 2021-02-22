@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using System.Reflection.Metadata;
 using Animated.CPU.Animation;
 using Animated.CPU.Model;
 using SkiaSharp;
@@ -30,6 +31,7 @@ namespace Animated.CPU
         public void DrawText(string txt, SKPaint t1, DBlock b,  BlockAnchor anchor)
             => DrawText(txt, t1, b, anchor, SKPoint.Empty);
         
+        // https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/basics/text
         public void DrawText(string txt, SKPaint t1, DBlock b,  BlockAnchor anchor, SKPoint offset )
         {
             if (string.IsNullOrWhiteSpace(txt)) return;
@@ -69,6 +71,12 @@ namespace Animated.CPU
                     c = b.Inner.BR+ offset;
                     canvas.DrawText(txt, c.X - bounds.Width- t1.TextSize * 0.2f, c.Y - t1.TextSize * 0.2f  , t1);
                     break;
+                
+                
+                case BlockAnchor.TM:
+                    c = b.Outer.TM+ offset;
+                    canvas.DrawText(txt, c.X -bounds.MidX/2, c.Y - bounds.Top + bounds.Bottom, t1);
+                    return;
                 
                 default:
                     c = b.Outer.MM+ offset;
@@ -112,6 +120,21 @@ namespace Animated.CPU
                     b.W - b.Margin.Left - b.Margin.Right - b.Border.Left - b.Border.Right , 
                     b.H - b.Margin.Top - b.Margin.Bottom - b.Border.Left - b.Border.Right,
                     p);
+        }
+
+        public static void MeasureText(string txt, float x, float y, SKPaint p, float borderSize, out SKRect textRegion, out SKRect border)
+        {
+            var bounds = new SKRect();
+            p.MeasureText(txt, ref bounds);
+
+            var tx = x ;
+            var ty = y - bounds.Top;
+            
+            textRegion = new SKRect(x, y, x + bounds.Width, y + bounds.Height);
+                
+            
+            border = new SKRect(textRegion.Left - borderSize, textRegion.Top - borderSize, textRegion.Right + borderSize + borderSize, textRegion.Bottom + borderSize + borderSize);
+            
         }
 
 

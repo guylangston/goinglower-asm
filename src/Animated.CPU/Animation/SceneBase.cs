@@ -41,10 +41,17 @@ namespace Animated.CPU.Animation
             // nothing,handled in Draw
         }
 
+        public virtual void StepScene(TimeSpan s)
+        {
+            
+        }
+
         public sealed override void Step(TimeSpan step)
         {
             Elapsed += step;
             Steps++;
+            
+            StepScene(step);
             foreach (var element in ChildrenRecursive())
             {
                 if (element == this) continue;

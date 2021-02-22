@@ -14,6 +14,8 @@ namespace Animated.CPU.Model
         {
         }
         
+        public BlockAnchor Anchor { get; set; }
+        
         public override void Step(TimeSpan step)
         { 
             
@@ -26,7 +28,8 @@ namespace Animated.CPU.Model
             var sBorder = Scene.StyleFactory.GetPaint(this, "border");
             var sText = Scene.StyleFactory.GetPaint(this, "h1");
             draw.DrawRect(Block, sBorder);
-            draw.DrawTextCenter(Model?.ToString(), sText, Block.Inner.MM);
+            draw.DrawText(Model?.ToString(), sText, Block, Anchor);
         }
+        
     }
 }

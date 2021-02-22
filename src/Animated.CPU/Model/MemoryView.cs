@@ -106,6 +106,14 @@ namespace Animated.CPU.Model
         public SegmentElement(IElement parent, MemoryView.Segment model, DBlock block) : base(parent, model, block)
         {
         }
+
+        public override void Init(SKSurface surface)
+        {
+            Add(new ByteArrayElement(this, 
+                new ByteArrayModel(Model.Raw, Model.Source, Model.Comment), 
+                new DBlock(Block.Inner.X + 10, Block.Inner.Y + 30, Block.Inner.W - 20, Block.Inner.H-20)));
+        }
+
         public override void Step(TimeSpan step)
         {
             
@@ -120,12 +128,11 @@ namespace Animated.CPU.Model
             draw.DrawRect(Block, sBorder);
             
             //draw.DrawTextCenter(Model?.ToString(), sText, Block.Inner.MM);
-            draw.DrawText($"+{Model.Offset,-10} -> {Model.RawAsString()}", sText, Block, BlockAnchor.TL);
-            draw.DrawText(""+Model.Source, sText, Block, BlockAnchor.ML, new SKPoint(70, 0));
-            
+            draw.DrawText($"+{Model.Offset}", sText, Block, BlockAnchor.TL);
+
             draw.DrawText(""+Model.Comment, sText, Block, BlockAnchor.MR);
             
-            draw.DrawText(""+Model.Label, sText, Block, BlockAnchor.BL);
+            draw.DrawText(""+Model.Label, sText, Block, BlockAnchor.BR);
         }
     }
 

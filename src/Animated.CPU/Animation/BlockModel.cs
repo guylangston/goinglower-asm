@@ -153,6 +153,14 @@ namespace Animated.CPU.Animation
         {
         }
 
+        public DBlock(float x, float y, float w, float h)
+        {
+            X = x;
+            Y = y;
+            W = w;
+            H = h;
+        }
+
         public DBlock(DBlockProps copy) : base(copy)
         {
         }
@@ -170,7 +178,10 @@ namespace Animated.CPU.Animation
             W - (Padding.Left + Border.Left + Margin.Left) - (Padding.Right + Border.Right + Margin.Right),
             H - (Padding.Top + Border.Top + Margin.Top) - (Padding.Bottom + Border.Bottom + Margin.Bottom)
         );
-        
+
+        public DBlock Inset(float x, float y) => new DBlock(Inner.X + x, Inner.Y + y, Inner.W - x - x, Inner.H - y - y);
+
+
     }
     
 
