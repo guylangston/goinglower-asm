@@ -66,6 +66,8 @@ namespace Animated.CPU.Animation
             foreach (var element in ChildrenRecursive())
             {
                 if (element == this) continue;
+                if (element is ElementBase eb && eb.IsHidden) continue;
+                
                 element.Draw(surface);
             }
             DrawOverlay(surface);

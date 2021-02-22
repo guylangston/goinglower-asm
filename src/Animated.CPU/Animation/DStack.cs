@@ -22,11 +22,10 @@ namespace Animated.CPU.Animation
         private float offset;
         private float size;
 
-        public IEnumerable<(T model, DBlock block)> Divide<T>(IReadOnlyList<T> items)
+        public IEnumerable<(T model, DBlock block, int index)> Divide<T>(IReadOnlyList<T> items)
         {
             inner  = Container.Inner;
             offset = 0f;
-            
             
             if (Orient == DOrient.Vert)
             {
@@ -42,7 +41,7 @@ namespace Animated.CPU.Animation
                         H = inner.H
                     };
 
-                    yield return (items[i], b);
+                    yield return (items[i], b, i);
                     
                     offset += size;
                 }
@@ -61,7 +60,7 @@ namespace Animated.CPU.Animation
                         W = inner.W,
                         H = size
                     };
-                    yield return (items[i], b);
+                    yield return (items[i], b, i);
                     offset += size;
                 }
             }

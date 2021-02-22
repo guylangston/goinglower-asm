@@ -31,10 +31,11 @@ namespace Animated.CPU.Animation
         }
         
 
-        public IScene   Scene  { get; private set; }
-        public IElement? Parent { get; private set; }
-        public object?   Model  { get; set; }
-        public DBlock?   Block  { get; set; }
+        public IScene    Scene    { get; private set; }
+        public IElement? Parent   { get; private set; }
+        public object?   Model    { get; set; }
+        public DBlock?   Block    { get; set; }
+        public bool      IsHidden { get; set; }
         
         public virtual void Init(SKSurface surface) {}
         public abstract void Step(TimeSpan step);
@@ -57,13 +58,16 @@ namespace Animated.CPU.Animation
                 }
             }
         }
+        
+        
 
-        public void Add(IElement e)
+        public T Add<T>(T e) where T:IElement
         {
             if (e.Scene == null) throw new Exception();
             if (e.Parent != this) throw new Exception($"Bad parent. Should be {this}, but was {e.Parent}");
             elements ??= new List<IElement>();
             elements.Add(e);
+            return e;
         }
         public void Remove(IElement el)
         {

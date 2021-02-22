@@ -7,7 +7,6 @@ namespace Animated.CPU.Model
 {
     public class InstructionStack : Element<Scene>
     {
-
         private List<string> items = new List<string>();
         private int curr = 20;
 
@@ -25,9 +24,6 @@ namespace Animated.CPU.Model
             }
         }
 
-
-
-      
         public override void Step(TimeSpan step)
         {
             if (cd.Step(step))

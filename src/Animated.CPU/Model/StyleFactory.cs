@@ -47,6 +47,10 @@ namespace Animated.CPU.Model
         {
             if (e.Model is Register r)
             {
+                if (id == "Id") return t1;
+                if (id == "Name") return t1a;
+                if (id == "Value") return t2;
+                
                 var grad_clr = new[]
                 {
                     SKColor.Parse("#C0666666"),
@@ -68,6 +72,7 @@ namespace Animated.CPU.Model
             
             switch (id)
             {
+                
                 case "debug": return debug;
                 case "border": return borderGray;
             }
@@ -78,6 +83,12 @@ namespace Animated.CPU.Model
         
         public SKColor GetColor(IElement e, string id)
         {
+            switch (id)
+            {
+                case "bg": return bg;
+                
+            }
+            
             //Console.WriteLine("Unknown Color Style {e}#{id");
             return def.Color;
         }

@@ -17,9 +17,8 @@ namespace Animated.CPU.Animation
         
         IReadOnlyList<IElement>? Children { get; }
         IEnumerable<IElement> ChildrenRecursive();
-        void Add(IElement el);
+        T Add<T>(T e) where T:IElement;
         void Remove(IElement el);
-        
     }
 
     public interface IStyleFactory
