@@ -87,5 +87,29 @@ namespace Animated.CPU.Model
 
             return new MemoryView(BuildAll());
         }
+        public static Cpu BuildCPU()
+        {
+            var cpu = new Cpu();
+            cpu.Instructions = Build_Print_Rax();
+            cpu.Stack = new MemoryView(new[]
+            {
+                new MemoryView.Segment()
+                {
+                    Source = "Hello World",
+                    Raw    = ExampleCPU.RandomBytes(10)
+                },
+                new MemoryView.Segment()
+                {
+                    Source = "RAX",
+                    Raw    = ExampleCPU.RandomBytes(4)
+                },
+                new MemoryView.Segment()
+                {
+                    Source = "RBX",
+                    Raw = ExampleCPU.RandomBytes(4)
+                }
+            });
+            return cpu;
+        }
     }
 }

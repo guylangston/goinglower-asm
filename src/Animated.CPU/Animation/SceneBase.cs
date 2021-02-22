@@ -23,6 +23,7 @@ namespace Animated.CPU.Animation
 
         public TimeSpan      Elapsed      { get; private set; }
         public IStyleFactory StyleFactory { get; private set; }
+        
         public int           Steps        { get; private set; }
         
         public new TModel Model
@@ -47,6 +48,8 @@ namespace Animated.CPU.Animation
             foreach (var element in ChildrenRecursive())
             {
                 if (element == this) continue;
+
+                element.Animator?.Step(step);
                 element.Step(step);
             }
         }
@@ -76,7 +79,12 @@ namespace Animated.CPU.Animation
         protected abstract void DrawOverlay(SKSurface surface);
         protected abstract void DrawBackGround(SKSurface surface);
         
+        public abstract bool TryGetElementFromModel<T>(T model, out IElement found);
+
+
         
+
+
     }
 
 }

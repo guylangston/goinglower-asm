@@ -27,6 +27,57 @@ namespace Animated.CPU
             
             canvas.DrawText(txt, c.X, c.Y + bounds.Height, t1);
         }
+        public void DrawText(string txt, SKPaint t1, DBlock b,  BlockAnchor anchor)
+            => DrawText(txt, t1, b, anchor, SKPoint.Empty);
+        
+        public void DrawText(string txt, SKPaint t1, DBlock b,  BlockAnchor anchor, SKPoint offset )
+        {
+            if (string.IsNullOrWhiteSpace(txt)) return;
+            
+            SKRect bounds = new SKRect();
+            t1.MeasureText(txt, ref bounds);
+            SKPoint c;
+            switch (anchor)
+            {
+                case BlockAnchor.TL:
+                    c = b.Inner.TL + offset;
+                    canvas.DrawText(txt, c.X, c.Y + bounds.Height, t1);
+                    break;
+                
+                case BlockAnchor.ML:
+                    c = b.Inner.ML+ offset;
+                    canvas.DrawText(txt, c.X, c.Y, t1);
+                    break;
+                
+                case BlockAnchor.BL:
+                    c = b.Inner.BL+ offset;
+                    canvas.DrawText(txt, c.X, c.Y- t1.TextSize * 0.2f, t1);
+                    break;
+                
+                
+                case BlockAnchor.TR:
+                    c = b.Inner.TR+ offset;
+                    canvas.DrawText(txt, c.X - bounds.Width - t1.TextSize * 0.2f, c.Y+ bounds.Height, t1);
+                    break;
+                
+                case BlockAnchor.MR:
+                    c = b.Inner.MR+ offset;
+                    canvas.DrawText(txt, c.X - bounds.Width, c.Y, t1);
+                    break;
+                
+                case BlockAnchor.BR:
+                    c = b.Inner.BR+ offset;
+                    canvas.DrawText(txt, c.X - bounds.Width- t1.TextSize * 0.2f, c.Y - t1.TextSize * 0.2f  , t1);
+                    break;
+                
+                default:
+                    c = b.Outer.MM+ offset;
+                    canvas.DrawText(txt, c.X, c.Y + bounds.Height, t1);
+                    return;
+            }
+            
+
+        }
        
         
         public void DrawTextCenter(string txt, SKPaint t1, SKPoint c)
@@ -72,3 +123,4 @@ namespace Animated.CPU
    
     
 }
+

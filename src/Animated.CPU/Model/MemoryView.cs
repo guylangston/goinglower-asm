@@ -23,7 +23,7 @@ namespace Animated.CPU.Model
             foreach (var item in setup)
             {
                 item.Offset = cc;
-                segments.Add(item);
+                Segments.Add(item);
 
                 cc += (uint)item.Raw.Length;
             }
@@ -34,7 +34,7 @@ namespace Animated.CPU.Model
         public uint Offset { get; }
         public uint Length { get; }
 
-        public List<Segment> segments { get; } = new List<Segment>();
+        public List<Segment> Segments { get; } = new List<Segment>();
 
         public class Segment
         {
@@ -46,24 +46,38 @@ namespace Animated.CPU.Model
             public string Source  { get; set; }
             public string Comment { get; set; }
 
-            public override string ToString()
-            {
-                return $"[{Offset}] {String.Join("", Raw.Select(x=>x.ToString("X")))}, {Label} {Source} {Comment}";
-            }
+            public override string ToString() => $"[{Offset}] {RawAsString()}, {Label} {Source} {Comment}";
+
+            public string RawAsString() => String.Join("", Raw.Select(x => x.ToString("X")));
+            
         }
         
         
     }
     
-    public class MemoryViewElement : Element<Scene>
+    public class MemoryViewElement : Element<Scene, MemoryView>
     {
 
-        public MemoryViewElement(Scene scene, DBlock b, MemoryView memory) : base(scene, b)
+        public MemoryViewElement(Scene scene, DBlock b, MemoryView memory) : base(scene, memory, b)
         {
-            Memory = memory;
+            
         }
 
-        public MemoryView Memory { get; set; }
+        
+        
+        public override void Init(SKSurface surface)
+        {
+            var stack = new DStack(this.Block, DOrient.Horz);
+
+            foreach (var item in stack.Layout(Model.Segments))
+            {
+                item.block.Set(0, 1, 2, null);
+                var e = Add(new SegmentElement(this, item.model, item.block)
+                {
+                    
+                });
+            }
+        }
 
         
         public override void Step(TimeSpan step)
@@ -73,20 +87,45 @@ namespace Animated.CPU.Model
         
         public override void Draw(SKSurface surface)
         {
-            // var stack = new DStack(this.Block, DOrient.Horz);
-            // stack.Divide(Memory.segments);
-            //
-            // var txt = new SKPaint()
-            // {
-            //     Color = new SKColor(100, 200, 240)
-            // };
-            //
-            // var drawing = new Drawing(surface.Canvas);
-            // foreach (var seg in stack.Children)
-            // {
-            //     drawing.DrawRect(seg);
-            //     drawing.DrawText(seg.Domain?.ToString(), txt, seg.Inner.ML);
-            // }
+            
+        }
+    }
+
+    public class SegmentElement : Element<Scene, MemoryView.Segment>
+    {
+
+        public SegmentElement(Scene scene, MemoryView.Segment model) : base(scene, model)
+        {
+        }
+        public SegmentElement(IElement parent, MemoryView.Segment model) : base(parent, model)
+        {
+        }
+        public SegmentElement(Scene scene, MemoryView.Segment model, DBlock block) : base(scene, model, block)
+        {
+        }
+        public SegmentElement(IElement parent, MemoryView.Segment model, DBlock block) : base(parent, model, block)
+        {
+        }
+        public override void Step(TimeSpan step)
+        {
+            
+        }
+        public override void Draw(SKSurface surface)
+        {
+            var canvas = surface.Canvas;
+            var draw   = new Drawing(canvas);
+            
+            var sBorder = Scene.StyleFactory.GetPaint(this, "border");
+            var sText   = Scene.StyleFactory.GetPaint(this, "text");
+            draw.DrawRect(Block, sBorder);
+            
+            //draw.DrawTextCenter(Model?.ToString(), sText, Block.Inner.MM);
+            draw.DrawText($"+{Model.Offset,-10} -> {Model.RawAsString()}", sText, Block, BlockAnchor.TL);
+            draw.DrawText(""+Model.Source, sText, Block, BlockAnchor.ML, new SKPoint(70, 0));
+            
+            draw.DrawText(""+Model.Comment, sText, Block, BlockAnchor.MR);
+            
+            draw.DrawText(""+Model.Label, sText, Block, BlockAnchor.BL);
         }
     }
 

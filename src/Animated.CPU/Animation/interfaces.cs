@@ -1,15 +1,17 @@
 using System;
 using System.Collections.Generic;
+using Animated.CPU.Model;
 using SkiaSharp;
 
 namespace Animated.CPU.Animation
 {
     public interface IElement
     {
-        IScene    Scene  { get;  }
-        IElement? Parent { get;  }
-        object    Model  { get; }
-        DBlock    Block  { get; set; }
+        IScene     Scene    { get;  }
+        IElement?  Parent   { get;  }
+        object     Model    { get; }
+        DBlock?    Block    { get; set; }
+        IAnimator? Animator { get; set; }
         
         void Init(SKSurface surface);
         void Step(TimeSpan step);
@@ -19,6 +21,21 @@ namespace Animated.CPU.Animation
         IEnumerable<IElement> ChildrenRecursive();
         T Add<T>(T e) where T:IElement;
         void Remove(IElement el);
+    }
+
+    public interface IAnimation
+    {
+        bool IsActive { get;  }
+        void Start();
+        bool Step(TimeSpan t);
+        void Stop();
+        
+    }
+
+    public interface IAnimator : IAnimation // Does not draw, just
+    {
+        void Add(IAnimation a);
+        IEnumerable<IAnimation> Animations { get; }
     }
 
     public interface IStyleFactory
@@ -34,6 +51,8 @@ namespace Animated.CPU.Animation
         TimeSpan Elapsed { get; }
         
         IStyleFactory StyleFactory { get; }
+        
+        bool TryGetElementFromModel<T>(T model, out IElement found);
     }
 
     public static class SceneHelper

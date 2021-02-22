@@ -18,14 +18,9 @@ namespace Animated.CPU
 
         public void Draw(SKCanvas canvas)
         {
-            
-            
-            
             if (!WayPointA.IsEmpty)
             {
                 IRect rect = new Rect(Start, End);
-                WayPointA = rect.TM;
-                WayPointB = rect.BM;
                 canvas.DrawLine(Start, WayPointA, Style);
                 canvas.DrawLine(WayPointA, WayPointB, Style);
                 canvas.DrawLine(WayPointB, End, Style);    

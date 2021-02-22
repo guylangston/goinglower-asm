@@ -7,15 +7,14 @@ using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
-
+    
 
     public class Scene : SceneBase<Cpu>
     {
         public Scene() : base(new StyleFactory())
         {
-            Model = new Cpu();
+            Model = ExampleCPU.BuildCPU();
         }
-        
 
         protected override void InitScene(SKSurface surface)
         {
@@ -38,26 +37,20 @@ namespace Animated.CPU.Model
             main.Set(10, 1, 4, new SKColor(100, 0, 100));
             
             var stack = new DStack(main, DOrient.Vert);
-            var items = stack.Divide(new IElement[]
+            var items = stack.Layout(new IElement[]
             {
                 new ElementRegisterFile(this, Model.RegisterFile, null),
-                new ALUElement(this, null),
-                new MemoryViewElement(this, null, ExampleCPU.Build_Print_Rax()),
-                new MemoryViewElement(this, null, new MemoryView(new []
-                {
-                    new MemoryView.Segment()
-                    {
-                        Source = "Hello World",
-                        Raw    = ExampleCPU.RandomBytes(10)
-                    }
-                }))
+                new ALUElement(this, Model.ALU, null),
+                new MemoryViewElement(this, null, Model.Instructions),
+                new MemoryViewElement(this, null, Model.Stack)
             });
 
             foreach (var kid in items)
             {
-                kid.model.Block = kid.block;
                 Add(kid.model);
             }
+
+            
 
 
         }
@@ -66,6 +59,54 @@ namespace Animated.CPU.Model
         {
             var canvas = surface.Canvas;
             canvas.DrawText($"{Steps} frames at {Elapsed.TotalSeconds:0.00} sec", 10, 10, StyleFactory.GetPaint(this, "debug"));
+            
+            Drawing d = new Drawing(surface.Canvas);
+
+
+            
+
+
+            if (TryGetElementFromModel(Model.RIP, out var eRip)
+                && TryGetElementFromModel(Model.Instructions.Segments[3], out var eSeg))
+            {
+                if (eRip is ElementBase eb && !eb.Animator.IsActive)
+                {
+                    
+                    
+                    var a = new Arrow()
+                    {
+                    
+                        Start     = eRip.Block.Outer.MR,
+                        WayPointA = eRip.Block.Outer.MR + new SKPoint(50, 0),
+                    
+                        End       = eSeg.Block.Outer.ML,
+                        WayPointB = eSeg.Block.Outer.ML + new SKPoint(-50, 0),
+                    
+                        Style     = StyleFactory.GetPaint(this, "arrow"),
+                        LabelText = "Get Next Instruction",
+                        ShowHead  = true
+                    };
+                    a.Draw(surface.Canvas);
+                    
+                    if (TryGetElementFromModel(Model.ALU.Decode, out var eDecode))
+                    {
+                        a = new Arrow()
+                        {
+                            Start = eSeg.Block.Outer.ML,
+                     
+                            End = eDecode.Block.Outer.MM,
+                     
+                            Style     = StyleFactory.GetPaint(this, "arrow"),
+                            LabelText = "Get Next Instruction",
+                            ShowHead  = true
+                        };
+                        a.Draw(surface.Canvas);    
+                    }
+                }
+
+                
+                
+            }
         }
         
         protected override void DrawBackGround(SKSurface surface)
@@ -73,22 +114,34 @@ namespace Animated.CPU.Model
             var canvas = surface.Canvas;
             canvas.Clear(StyleFactory.GetColor(this, "bg"));
 
-            Drawing d = new Drawing(surface.Canvas);
-            //
-            // foreach (var item in stack.Children)
-            // {
-            //     d.DrawRect(item);
-            // }
-            //
+           
             
-            // Highlight RIP
-            // Arrow RIP -> Instruction
-            // Highlight Instruction
-            // Arrow Instration -> Decoder
+           
+           
 
         }
-
         
+        
+        
+        public override bool TryGetElementFromModel<T>(T findThis, out IElement found)
+        {
+            foreach (var element in ChildrenRecursive())
+            {
+                if (object.ReferenceEquals(element.Model, findThis))
+                {
+                    found = element;
+                    return true;
+                }
+            }
+
+            found = null;
+            return false;
+        }
+
+
+
+
+
     }
 
 

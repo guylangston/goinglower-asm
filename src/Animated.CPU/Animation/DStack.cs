@@ -4,9 +4,6 @@ using System.Linq;
 
 namespace Animated.CPU.Animation
 {
-    
-    
-    
     public class DStack
     {
         public DStack(DBlock container, DOrient orient)
@@ -22,7 +19,7 @@ namespace Animated.CPU.Animation
         private float offset;
         private float size;
 
-        public IEnumerable<(T model, DBlock block, int index)> Divide<T>(IReadOnlyList<T> items)
+        public IEnumerable<(T model, DBlock block, int index)> Layout<T>(IReadOnlyList<T> items)
         {
             inner  = Container.Inner;
             offset = 0f;
@@ -33,6 +30,7 @@ namespace Animated.CPU.Animation
                 
                 for (int i = 0; i < items.Count; i++)
                 {
+                    var model = items[i];
                     var b = new DBlock()
                     {
                         X = inner.X + offset,
@@ -40,19 +38,17 @@ namespace Animated.CPU.Animation
                         W = size,
                         H = inner.H
                     };
-
-                    yield return (items[i], b, i);
-                    
+                    if (model is ElementBase eb) eb.Block = b;
+                    yield return (model, b, i);
                     offset += size;
                 }
             }
             else
             {
-                
                 var size   = inner.H / items.Count;
-                
                 for (int i = 0; i < items.Count; i++)
                 {
+                    var model = items[i];
                     var b = new DBlock()
                     {
                         X = inner.X ,
@@ -60,7 +56,8 @@ namespace Animated.CPU.Animation
                         W = inner.W,
                         H = size
                     };
-                    yield return (items[i], b, i);
+                    if (model is ElementBase eb) eb.Block = b;
+                    yield return (model, b, i);
                     offset += size;
                 }
             }

@@ -73,13 +73,33 @@ namespace Animated.CPU.Model
 
         public List<Register> RegisterFile { get; }
         
-        public IMemory L1 { get; set; }
-        public IMemory L2 { get; set; }
-        public IMemory L3 { get; set; }
-        public IMemory Main { get; set; }
-
-       
+        public IMemory L1           { get; set; }
+        public IMemory L2           { get; set; }
+        public IMemory L3           { get; set; }
+        public IMemory Main         { get; set; }
         
+        
+        public MemoryView Instructions { get; set; }
+        public MemoryView Stack { get; set; }
+
+        public ArithmeticLogicUnit ALU { get; set; } = new ArithmeticLogicUnit();
+        
+    }
+
+    public class ArithmeticLogicUnit
+    {
+        public object                Fetch   { get; set; } = "Fetch";
+        public object                Decode  { get; set; } = "Decode";
+        public object                Execute { get; set; } = "Execute";
+        public object                Step    { get; set; } = "Step";
+
+        public IEnumerable<object> Phases()
+        {
+            yield return Fetch;
+            yield return Decode;
+            yield return Execute;
+            yield return Step;
+        }
     }
 
     class Operation

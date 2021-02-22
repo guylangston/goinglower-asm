@@ -9,6 +9,7 @@ namespace Animated.CPU.Model
         private SKPaint def = new SKPaint()
         {
             Color       = SKColors.Pink,
+            Style = SKPaintStyle.Stroke,
             StrokeWidth = 1,
             PathEffect  = SKPathEffect.CreateDash(new []{5f,5f}, 20)
         };
@@ -34,6 +35,18 @@ namespace Animated.CPU.Model
         internal SKPaint t1a   =  new SKPaint { TextSize = 15, Color = SKColor.Parse("#00fa00")};
         internal SKPaint t2    =  new SKPaint { TextSize = 20, Color = SKColor.Parse("#00ff00")};
         internal SKPaint debug =  new SKPaint { TextSize = 10, Color = SKColor.Parse("#ffffff")};
+
+        public SKPaint text = new SKPaint()
+        {
+            TextSize = 15,
+            Color    = SKColor.Parse("#eee")
+        };
+        
+        public SKPaint h1 = new SKPaint()
+        {
+            TextSize = 25,
+            Color    = SKColors.Yellow
+        };
 
         
 
@@ -72,7 +85,8 @@ namespace Animated.CPU.Model
             
             switch (id)
             {
-                
+                case "h1": return h1;
+                case "text": return text;
                 case "debug": return debug;
                 case "border": return borderGray;
             }
