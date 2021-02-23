@@ -1,3 +1,4 @@
+using System.Runtime.Intrinsics.X86;
 using SkiaSharp;
 
 namespace Animated.CPU.Animation
@@ -80,6 +81,8 @@ namespace Animated.CPU.Animation
         public SKPoint BL => new SKPoint(X, Y2);
         public SKPoint BM => new SKPoint(XC, Y2);
         public SKPoint BR => new SKPoint(X2, Y2);
+
+        public SKRect ToSkRect() => new SKRect(X, Y, X2, Y2);
     }
         
     

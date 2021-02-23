@@ -30,12 +30,12 @@ namespace Animated.CPU.Animation
         }
         
 
-        public IScene     Scene    { get; private set; }
-        public IElement?  Parent   { get; private set; }
-        public object?    Model    { get; set; }
-        public DBlock?    Block    { get; set; }
-        public IAnimator? Animator { get; set; }
-        public bool       IsHidden { get; set; }
+        public IScene    Scene    { get; private set; }
+        public IElement? Parent   { get; private set; }
+        public object?   Model    { get; set; }
+        public DBlock    Block    { get; set; }
+        public IAnimator Animator { get; set; } = EmptyAnimator.Instance;
+        public bool      IsHidden { get; set; }
         
         public virtual void Init(SKSurface surface) {}
         public abstract void Step(TimeSpan step);

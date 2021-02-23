@@ -61,7 +61,13 @@ namespace Animated.CPU.Model
             Color    = SKColors.Yellow
         };
 
-        
+        private SKPaint arrow = new SKPaint()
+        {
+            Style       = SKPaintStyle.Stroke,
+            StrokeWidth = 3,
+            Color       = SKColors.Fuchsia
+        };
+
 
         private SKPaint borderGray = new SKPaint()
         {
@@ -120,6 +126,7 @@ namespace Animated.CPU.Model
                 case "hex": return hex;
                 case "text": return text;
                 case "debug": return debug;
+                case "arrow": return arrow;
                 case "border": return borderGray;
             }
             

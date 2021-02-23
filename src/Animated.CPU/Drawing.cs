@@ -140,6 +140,27 @@ namespace Animated.CPU
 
 
         public static float Scale(float normalised, float a, float b) => a + (b - a) * normalised;
+
+
+        public void DrawHighlight(SKRect r, SKPaint f, float s)
+        {
+            var p = new SKPath();
+            p.FillType = SKPathFillType.EvenOdd;
+            p.MoveTo(r.Left -s, r.Top -s);
+            p.LineTo(r.Right +s, r.Top -s);
+            p.LineTo(r.Right +s, r.Bottom +s);
+            p.LineTo(r.Left -s, r.Bottom +s);
+            p.LineTo(r.Left -s, r.Top -s);
+            
+            p.MoveTo(r.Left, r.Top);
+            p.LineTo(r.Right, r.Top);
+            p.LineTo(r.Right, r.Bottom);
+            p.LineTo(r.Left, r.Bottom);
+            p.LineTo(r.Left, r.Top);
+            
+                
+            canvas.DrawPath(p, f);
+        }
         
     }
 

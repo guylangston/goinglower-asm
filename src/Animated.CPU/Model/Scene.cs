@@ -64,16 +64,26 @@ namespace Animated.CPU.Model
             
             Drawing d = new Drawing(surface.Canvas);
 
-
             
-
 
             if (TryGetElementFromModel(Model.RIP, out var eRip)
                 && TryGetElementFromModel(Model.Instructions.Segments[3], out var eSeg))
             {
+            
+                var high = new SKPaint()
+                {
+                    Style       = SKPaintStyle.Fill,
+                    Shader      = SKShader.CreateLinearGradient(
+                        eRip.Block.Outer.TL + new SKPoint(-4, -4),
+                        eRip.Block.Outer.BR + new SKPoint(4, 40),
+                        new []{SKColors.Orange, SKColors.Yellow, SKColors.Red }, 
+                        SKShaderTileMode.Repeat)
+
+                };
+                d.DrawHighlight(eRip.Block.Outer.ToSkRect(), high, 4);
+                
                 if (eRip is ElementBase eb && !eb.Animator.IsActive)
                 {
-                    
                     
                     var a = new Arrow()
                     {
@@ -109,18 +119,15 @@ namespace Animated.CPU.Model
                 
                 
             }
+            
+            
+            
         }
         
         protected override void DrawBackGround(SKSurface surface)
         {
             var canvas = surface.Canvas;
             canvas.Clear(StyleFactory.GetColor(this, "bg"));
-
-           
-            
-           
-           
-
         }
         
         
