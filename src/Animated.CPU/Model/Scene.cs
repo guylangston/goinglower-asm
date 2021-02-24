@@ -63,9 +63,7 @@ namespace Animated.CPU.Model
             canvas.DrawText($"{Steps} frames at {Elapsed.TotalSeconds:0.00} sec", 10, 10, StyleFactory.GetPaint(this, "debug"));
             
             Drawing d = new Drawing(surface.Canvas);
-
             
-
             if (TryGetElementFromModel(Model.RIP, out var eRip)
                 && TryGetElementFromModel(Model.Instructions.Segments[3], out var eSeg))
             {

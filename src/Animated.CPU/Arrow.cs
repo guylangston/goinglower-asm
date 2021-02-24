@@ -46,22 +46,10 @@ namespace Animated.CPU
 
         public void DrawHead(SKCanvas canvas, SKPoint a, SKPoint b)
         {
-            // var l = new Line(a, b);
-            //
-            // var p = new SKPoint(a.X + (b.X - a.X)/2f, 
-            //     a.Y + (b.Y - a.Y)/2f);
-            //
-            //
-            // const double cos = 0.866;
-            // const double sin = 0.500;
-            // SKPoint end1 = new SKPoint(
-            //     (float)(p.X + (l.DX * cos + dy * -sin)),
-            //     (float)(p.Y + (dx * sin + dy * cos)));
-            // SKPoint end2 = new SKPoint(
-            //     (float)(p.X + (dx * cos + dy * sin)),
-            //     (float)(p.Y + (dx * -sin + dy * cos)));
-            // canvas.DrawLine(b, end1, Style);
-            // canvas.DrawLine(b, end2, Style);
+            var l = new Line(a, b);
+            
+            
+
         }
 
         public static void DrawScaledLine(SKCanvas canvas, SKPoint a, SKPoint b, float scale, SKPaint style)
