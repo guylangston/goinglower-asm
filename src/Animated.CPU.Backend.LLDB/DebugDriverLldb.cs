@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
@@ -10,14 +11,22 @@ using Animated.CPU.Model;
 namespace Animated.CPU.Backend.LLDB
 {
 
+
     public class DebugDriverLldb : ConsoleDriver
     {
         private (string addr, string inst) next;
         private (string addr, string inst) curr;
         private Regex matchBP = new Regex("--address 0x[0-9A-F]{16}");
+        private SourceProvider source;
         
         public void Start()
         {
+            source = new SourceProvider()
+            {
+                TargetBinary = "/home/guy/RiderProjects/ConsoleApp1/ConsoleApp1/bin/Debug/net5.0/ConsoleApp1"
+            };
+            source.Load("/home/guy/RiderProjects/ConsoleApp1/ConsoleApp1/Program.cs");
+            
             var start = new ProcessStartInfo()
             {
                 FileName         = "/usr/bin/lldb",
@@ -45,7 +54,11 @@ namespace Animated.CPU.Backend.LLDB
             if (bpAddr == null) throw new Exception("BP not found");
             
             //ExecuteAndWaitForResults("clrstack");
-            DisassembleMethod(bpAddr);
+            var source = DisassembleMethod(bpAddr).ToArray();
+            foreach (var inst in source)
+            {
+                Console.WriteLine($"// {inst}");
+            }
             
 
 
@@ -61,12 +74,65 @@ namespace Animated.CPU.Backend.LLDB
         }
         
         
-        private void DisassembleMethod(string bpAddr)
+        private IEnumerable<MemoryView.Segment> DisassembleMethod(string bpAddr)
         {
-            ExecuteAndWaitForResults($"clru {bpAddr}");
+            var lines = ExecuteAndWaitForResults($"clru {bpAddr}", 1, false);
+            
+            // 1. Scan to "Begin 00007FFF7DD360B0, size 82"
+            // 2. if line starts with path => Capture SourceMap
+            // 3. Append instructions until empty line
+
+            var i = 0;
+            while (i < lines.Count && !lines[i].StartsWith("Begin "))
+            {
+                i++;
+            }
+            if (i >= lines.Count) throw new Exception("Bad Parse");
+
+            var minLengh = "00007fff7dd360ff 8b45e4               mov     eax".Length;
+
+            string currSource = null;
+            uint    offset     = 0;
+            while (i < lines.Count)
+            {
+                var ll = lines[i];
+                if (ll.StartsWith("/"))
+                {
+                    currSource = ll;
+                }
+                else if (ll.Length >= minLengh && char.IsLetterOrDigit(ll[0]))
+                {
+                    var inst = ParseInstruction(ll, currSource);
+                    if (inst != null)
+                    {
+                        inst.Offset =  offset;
+                        offset      += (uint)inst.Raw.Length;
+                        yield return inst;
+                    }
+                }
+                i++;
+            }
+
+        }
+        
+        MemoryView.Segment ParseInstruction(string ll, string currSource)
+        {
+            //---------|---------|---------|---------|---------|---------|
+            //012345678901234567890123456789012345678901234567890123456789
+            //00007fff7dd360ff 8b45e4               mov     eax
+
+            var bytes = ll[17..37].Trim();
+            var arr   = ll[0..16];
+            return new MemoryView.Segment()
+            {
+                Address   = ulong.Parse(arr, NumberStyles.HexNumber),
+                Raw       = Convert.FromHexString(bytes),
+                SourceAsm = ll[38..],
+                Anchor    = source.FindAnchor(currSource)
+            };
         }
 
-        
+
 
         void Step(Cpu cpu)
         {

@@ -1,11 +1,82 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using Animated.CPU.Animation;
 using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
+    public class SourceProvider
+    {
+        private Dictionary<string, SourceFile> files;
+        
+        public SourceProvider()
+        {
+            files = new Dictionary<string, SourceFile>();
+            
+        }
+        
+        public string                                  TargetBinary { get; set; }
+        public IReadOnlyDictionary<string, SourceFile> Files        => files;
+        
+        
+        public SourceFile Load(string txtFile)
+        {
+            if (Files.ContainsKey(txtFile)) return Files[txtFile];
+            
+            var s = new SourceFile()
+            {
+                ShortName = Path.GetFileName(txtFile),
+                FileName = txtFile,
+                Lines    = File.ReadAllLines(txtFile)
+            };
+            files[s.FileName] = s;
+            return s;
+        }
+        
+        public SourceFileAnchor? FindAnchor(string currSource)
+        {
+            // "home/guy/RiderProjects/ConsoleApp1/ConsoleApp1/Program.cs @ 37:"
+            
+            if (StringHelper.TrySplitExclusive(currSource.Trim(':'), " @ ", out var res))
+            {
+                var file = Load(res.l);
+                if (uint.TryParse(res.r, out var lineNo) && lineNo < file.Lines.Count)
+                {
+                    return new SourceFileAnchor()
+                    {
+                        File = file,
+                        Line = lineNo,
+                    };
+                }
+            }
+
+            return null;
+
+        }
+    }
+    
+    public class SourceFile
+    {
+        public string                ShortName { get; set; }
+        public string                FileName  { get; set; }
+        public IReadOnlyList<string> Lines     { get; set; }
+
+        public override string ToString() => ShortName ?? FileName;
+    }
+
+    public class SourceFileAnchor
+    {
+        public SourceFile File        { get; set; }
+        public uint       Line        { get; set; }
+        public int        RegionStart { get; set; } = -1;
+        public int        RegionEnd   { get; set; } = -1;
+
+        public override string ToString() => File.Lines[(int)Line].Trim();
+    }
+    
     public enum MemoryHint
     {
         Decimal,
@@ -35,18 +106,22 @@ namespace Animated.CPU.Model
         public uint Length { get; }
 
         public List<Segment> Segments { get; } = new List<Segment>();
+        
 
         public class Segment
         {
             public uint   Offset { get; set; }
             public byte[] Raw    { get; set; }
              
-            public string Header  { get; set; }
-            public string Label   { get; set; }
-            public string Source  { get; set; }
-            public string Comment { get; set; }
+            public string            Header    { get; set; }
+            public string            Label     { get; set; }
+            public string            SourceAsm { get; set; }
+            public string            Comment   { get; set; }
+            public ulong             Address   { get; set; }
+            public SourceFileAnchor? Anchor    { get; set; }
 
-            public override string ToString() => $"[{Offset}] {RawAsString()}, {Label} {Source} {Comment}";
+            public override string ToString() => 
+                $"[{Address:X}|{Offset}] {RawAsString(),16}, {Label} {SourceAsm} {Comment} // {Anchor}";
 
             public string RawAsString() => String.Join("", Raw.Select(x => x.ToString("X")));
             
@@ -110,7 +185,7 @@ namespace Animated.CPU.Model
         public override void Init(SKSurface surface)
         {
             Add(new ByteArrayElement(this, 
-                new ByteArrayModel(Model.Raw, Model.Source, Model.Comment), 
+                new ByteArrayModel(Model.Raw, Model.SourceAsm, Model.Comment), 
                 new DBlock(Block.Inner.X + 10, Block.Inner.Y + 30, Block.Inner.W - 20, Block.Inner.H-20)));
         }
 

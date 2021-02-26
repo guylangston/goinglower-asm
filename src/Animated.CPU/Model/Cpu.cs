@@ -132,11 +132,7 @@ namespace Animated.CPU.Model
         }
     }
 
-    class Operation
-    {
-        public Instruction Instruction { get; set; }
-        public Arg[]       Args        { get; set; }
-    }
+    
 
     
     
@@ -211,64 +207,7 @@ namespace Animated.CPU.Model
         }
     }
 
-    public abstract class Arg
-    {
-        public Register AsRegister(Cpu cpu)
-        {
-            return cpu.R0; // todo
-        }
-        
-        public ulong AsImmediate()
-        {
-            return 123;
-        }
-    }
+  
 
-    public class ArgImmediate : Arg
-    {
-        public ulong Value { get; }
-    }
 
-    public class ArgRegister : Arg
-    {
-        public Register Register { get; }
-    }
-
-    public abstract class Instruction
-    {
-        public string Id { get; set; }
-        public string Name { get; set; }
-
-        public abstract void Execute(Cpu cpu, Arg[] args);
-    }
-    
-    public  class InstructionZeroArg : Instruction
-    {
-        public string Id   { get; set; }
-        public string Name { get; set; }
-
-        public override void Execute(Cpu cpu, Arg[] args)
-        {
-            
-        }
-    }
-    
-
-    public class InstructionMOV : Instruction
-    {
-        public InstructionMOV()
-        {
-            Id   = "MOV";
-            Name = "Move";
-        }
-
-        public override void Execute(Cpu cpu, Arg[] args)
-        {
-            // dest:reg, immediate
-            args[0].AsRegister(cpu).Value = args[1].AsImmediate();
-
-        }
-    }
-
-    
 }

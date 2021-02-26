@@ -79,7 +79,7 @@ namespace Animated.CPU.Model
                             Raw     = RandomBytes(Random.Next(1, 6)),
                             Label   = lbl,
                             Comment = comment?.Trim(),
-                            Source  = l?.Trim()
+                            SourceAsm  = l?.Trim()
                         };
                     }
                 }
@@ -95,17 +95,17 @@ namespace Animated.CPU.Model
             {
                 new MemoryView.Segment()
                 {
-                    Source = "Hello World",
+                    SourceAsm = "Hello World",
                     Raw    = ExampleCPU.RandomBytes(10)
                 },
                 new MemoryView.Segment()
                 {
-                    Source = "RAX",
+                    SourceAsm = "RAX",
                     Raw    = ExampleCPU.RandomBytes(4)
                 },
                 new MemoryView.Segment()
                 {
-                    Source = "RBX",
+                    SourceAsm = "RBX",
                     Raw = ExampleCPU.RandomBytes(4)
                 }
             });
