@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using Animated.CPU.Primitives;
 
 namespace Animated.CPU.Model
 {
@@ -91,7 +93,27 @@ namespace Animated.CPU.Model
         {
             CLK.Value++;
         }
-        
+
+        public Register? SetReg(string name, string value)
+        {
+            foreach (var register in RegisterFile)
+            {
+                if (string.Equals(register.Id, name, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    if (value.StartsWith("0x")) value = value.Remove(0, 2);
+                    if (ulong.TryParse(value, NumberStyles.HexNumber, CultureInfo.DefaultThreadCurrentCulture, out var rr))
+                    {
+                        if (register.SetValue(rr))
+                        {
+                            return register;
+                        }
+                        
+                    }
+                    return null;
+                }
+            }
+            return null;
+        }
     }
 
     public class ArithmeticLogicUnit
@@ -115,12 +137,12 @@ namespace Animated.CPU.Model
         public Instruction Instruction { get; set; }
         public Arg[]       Args        { get; set; }
     }
+
     
     
-    
-    public class Register 
+    public class Register : Prop<ulong>
     {
-        public Register(string id, string name)
+        public Register(string id, string name) : base(PropHelper.DefaultCompareULong, 0, null)
         {
             Id   = id;
             Name = name;
@@ -129,7 +151,7 @@ namespace Animated.CPU.Model
         public string Id          { get; set; }
         public string Name        { get; set; }
         public string Description { get; set; }
-        public ulong  Value       { get; set; }
+        
 
         public override string ToString() => $"{Id}/{Name} = {Value:X}";
     }

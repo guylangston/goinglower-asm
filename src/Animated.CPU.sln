@@ -6,6 +6,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Animated.CPU.GTK", "Animate
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Animated.CPU.Tests", "Animated.CPU.Tests\Animated.CPU.Tests.csproj", "{F7D245A3-5660-4676-B230-B0091AF20A68}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Animated.CPU.Backend.LLDB", "Animated.CPU.Backend.LLDB\Animated.CPU.Backend.LLDB.csproj", "{9D632DA2-547A-47F1-ABF8-656FEA3212AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Animated.CPU.Console", "Animated.CPU.Console\Animated.CPU.Console.csproj", "{530D6BE1-A007-44FE-A679-78F7C10877B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +28,13 @@ Global
 		{F7D245A3-5660-4676-B230-B0091AF20A68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7D245A3-5660-4676-B230-B0091AF20A68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7D245A3-5660-4676-B230-B0091AF20A68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D632DA2-547A-47F1-ABF8-656FEA3212AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D632DA2-547A-47F1-ABF8-656FEA3212AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D632DA2-547A-47F1-ABF8-656FEA3212AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D632DA2-547A-47F1-ABF8-656FEA3212AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{530D6BE1-A007-44FE-A679-78F7C10877B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{530D6BE1-A007-44FE-A679-78F7C10877B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{530D6BE1-A007-44FE-A679-78F7C10877B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{530D6BE1-A007-44FE-A679-78F7C10877B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

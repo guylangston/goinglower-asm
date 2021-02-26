@@ -11,7 +11,6 @@ namespace Animated.CPU
 {
 
 
-
     public class Drawing
     {
         private SKCanvas canvas;
