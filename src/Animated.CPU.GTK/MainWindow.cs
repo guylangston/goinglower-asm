@@ -1,5 +1,6 @@
 using System;
 using Animated.CPU.Animation;
+using Animated.CPU.Backend.LLDB;
 using Animated.CPU.Model;
 using Gtk;
 using SkiaSharp;
@@ -19,11 +20,25 @@ namespace Animated.CPU.GTK
         public MainWindow()
             : this(new Builder("MainWindow.glade"))
         {
+            
         }
 
         private MainWindow(Builder builder)
             : base(builder.GetObject("MainWindow").Handle)
         {
+            var dir            = "/home/guy/RiderProjects/ConsoleApp1/ConsoleApp1/bin/Release/net5.0";
+            var sourceProvider = new SourceProvider();
+            sourceProvider.Load("/home/guy/RiderProjects/ConsoleApp1/ConsoleApp1/Program.cs");
+            var parser = new Parser(sourceProvider);
+            var setup  = new Setup();
+            var cpu    = new Cpu();
+            setup.InitFromDisk(dir, cpu, sourceProvider);
+            scene = new Scene()
+            {
+                Model = cpu
+            };
+            
+            
             builder.Autoconnect(this);
             DeleteEvent        += OnWindowDeleteEvent;
             
@@ -38,12 +53,9 @@ namespace Animated.CPU.GTK
             
             skiaView.Show();
             Child = skiaView;
-
-
-            scene = new Scene();
+            
             
             interval = TimeSpan.FromSeconds(1/60f);
-
             if (timerId == 0)
             {
                 timerId = GLib.Timeout.Add((uint)interval.TotalMilliseconds, OnUpdateTimer);    
@@ -52,9 +64,9 @@ namespace Animated.CPU.GTK
         }
         private void KeyPress(object o, KeyPressEventArgs args)
         {
-            scene?.Step(interval);
-            skiaView.QueueDraw();
+            scene.KeyPress(args.Event, args.Event.Key.ToString());
         }
+        
         private void OnShow(object? sender, EventArgs e)
         {
             //timerId = GLib.Timeout.Add((uint)interval.Ticks, OnUpdateTimer);

@@ -75,8 +75,7 @@ namespace Animated.CPU.Backend.LLDB
             };
         }
 
-     
-         
+
         public IEnumerable<RegisterDelta> ParseRegisters(IEnumerable<string> lines)
         {
             foreach (var line in lines)
@@ -85,9 +84,9 @@ namespace Animated.CPU.Backend.LLDB
                 {
                     yield return new RegisterDelta()
                     {
-                        Register     = r.l,
-                        ValueString  = r.r,
-                        ValueParsed = LossyParseULong(r.r)
+                        Register     = r.l.Trim(),
+                        ValueString  = r.r.Trim(),
+                        ValueParsed = LossyParseULong(r.r.Trim())
                     };
                 }
             }
@@ -121,7 +120,7 @@ namespace Animated.CPU.Backend.LLDB
 
         public StoryStep ParseStep(string[] readAllLines)
         {
-            var clean = readAllLines[0].Remove(0, 7).TrimEnd(')');
+            var clean = readAllLines[0].Remove(0, 8).TrimEnd(')');
             if (StringHelper.TrySplitExclusive(clean, ", ", out var res))
             {
                 return new StoryStep()

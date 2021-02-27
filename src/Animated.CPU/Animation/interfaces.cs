@@ -53,6 +53,9 @@ namespace Animated.CPU.Animation
         IStyleFactory StyleFactory { get; }
         
         bool TryGetElementFromModel<T>(T model, out IElement found);
+
+
+        void KeyPress(object platformKeyObject, string key);
     }
 
     public static class SceneHelper

@@ -13,14 +13,14 @@ namespace Animated.CPU.Model
     {
         public Scene() : base(new StyleFactory())
         {
-            Model = ExampleCPU.BuildCPU();
+            
         }
 
         protected override void InitScene(SKSurface surface)
         {
             Debug.WriteLine("Init");
             Console.WriteLine("Init2");
-            
+
             var size = surface.Canvas.LocalClipBounds;
             var main = new DBlock()
             {
@@ -143,6 +143,31 @@ namespace Animated.CPU.Model
 
             found = null;
             return false;
+        }
+        
+        public override void KeyPress(object platformKeyObject, string key)
+        {
+            if (Model.Story != null)
+            {
+                if (Model.Story.Current < Model.Story.Steps.Count-1)
+                {
+                    Model.Story.Current++;
+                    var next = Model.Story.Steps[Model.Story.Current];
+                    if (next != null)
+                    {
+                        foreach (var rd in next.Delta)
+                        {
+                            if (rd.ValueString != null)
+                            {
+                                Model.SetReg(rd.Register, rd.ValueParsed.Value);
+                            }
+                        }    
+                    }
+                    
+                    
+                        
+                }
+            }
         }
 
 

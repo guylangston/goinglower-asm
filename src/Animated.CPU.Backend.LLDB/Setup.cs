@@ -26,8 +26,16 @@ namespace Animated.CPU.Backend.LLDB
 
             cpu.Story = new Story()
             {
-                Steps = new List<StoryStep>()
+                Steps = new List<StoryStep>(),
             };
+            cpu.Stack = new MemoryView(new[]
+            {
+                new MemoryView.Segment()
+                {
+                    SourceAsm = "TODO",
+                    Raw       = ExampleCPU.RandomBytes(10)
+                }
+            });
 
             foreach (var stepFile in FindStepFiles(folder))
             {
@@ -40,7 +48,7 @@ namespace Animated.CPU.Backend.LLDB
             int cc = 2;
             while(true)
             {
-                var file = Path.Combine(folder, $"S{cc,0000}-step.state");
+                var file = Path.Combine(folder, $"S{cc.ToString().PadLeft(4, '0')}-step.state");
                 if (File.Exists(file))
                 {
                     yield return file;

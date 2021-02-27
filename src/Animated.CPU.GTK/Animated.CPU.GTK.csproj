@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Animated.CPU.Backend.LLDB\Animated.CPU.Backend.LLDB.csproj" />
     <ProjectReference Include="..\Animated.CPU\Animated.CPU.csproj" />
   </ItemGroup>
 
