@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 
 namespace Animated.CPU.Backend.LLDB
@@ -16,9 +17,15 @@ namespace Animated.CPU.Backend.LLDB
         private List<string> currResult = new List<string>();
         private readonly object locker = new object();
         private bool echo = true;
+        private int seq;
         
         public void Open(ProcessStartInfo start)
         {
+            if (CapturePath != null)
+            {
+                WriteStatus("CTL", TimeSpan.Zero, CapturePath);
+            }
+            
             using (proc = new Process()
             {
                 StartInfo           = start,
@@ -41,10 +48,24 @@ namespace Animated.CPU.Backend.LLDB
             }
         }
         
-        protected bool                  IsReady    { get; private set; }
-        protected IReadOnlyList<string> LastResult { get; private set; }
+        protected bool                  IsReady     { get; private set; }
+        protected IReadOnlyList<string> LastResult  { get; private set; }
+        public    string                CapturePath { get; set; }
         
         protected abstract void ProcessOutput();
+
+        public void Capture(IEnumerable<string> lines, string name, string ext)
+        {
+            if (CapturePath is {})
+            {
+                var fileName = $"S{seq:0000}-{name}.{ext}";
+                var fullPath = Path.Combine(CapturePath, fileName);
+                File.WriteAllLines(fullPath, lines); 
+                WriteStatus("CTL", TimeSpan.Zero, fileName);
+                seq++;
+            }
+            
+        }
 
 
         private void ProcOnExited(object? sender, EventArgs e)

@@ -35,11 +35,7 @@ namespace Animated.CPU.Model
                 CLK
                 
             };
-
             Main = new Memory((int)Math.Pow(2, 16));
-
-            RIP.Value = 6000;
-            
         }
         
         // https://en.wikibooks.org/wiki/X86_Assembly/X86_Architecture
@@ -147,6 +143,8 @@ namespace Animated.CPU.Model
         public string Id          { get; set; }
         public string Name        { get; set; }
         public string Description { get; set; }
+
+        public string ValueHex => Value.ToString("X").PadLeft(64 / 8 * 2, '0');
         
 
         public override string ToString() => $"{Id}/{Name} = {Value:X}";

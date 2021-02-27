@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
@@ -23,15 +24,16 @@ namespace Animated.CPU.Backend.LLDB
         {
             source = new SourceProvider()
             {
-                TargetBinary = "/home/guy/RiderProjects/ConsoleApp1/ConsoleApp1/bin/Debug/net5.0/ConsoleApp1"
+                TargetBinary = "/home/guy/RiderProjects/ConsoleApp1/ConsoleApp1/bin/Release/net5.0/ConsoleApp1"
             };
+            CapturePath = Path.GetDirectoryName(source.TargetBinary);
             source.Load("/home/guy/RiderProjects/ConsoleApp1/ConsoleApp1/Program.cs");
             
             var start = new ProcessStartInfo()
             {
                 FileName         = "/usr/bin/lldb",
                 Arguments        = "./ConsoleApp1",
-                WorkingDirectory = "/home/guy/RiderProjects/ConsoleApp1/ConsoleApp1/bin/Debug/net5.0/",
+                WorkingDirectory = "/home/guy/RiderProjects/ConsoleApp1/ConsoleApp1/bin/Release/net5.0/",
                 WindowStyle = ProcessWindowStyle.Normal,
                 RedirectStandardError = true,
                 RedirectStandardInput = true,
@@ -53,14 +55,13 @@ namespace Animated.CPU.Backend.LLDB
             var bpAddr = ConfirmBreakPoint("ProgramC.M3()");
             if (bpAddr == null) throw new Exception("BP not found");
             
-            //ExecuteAndWaitForResults("clrstack");
             var source = DisassembleMethod(bpAddr).ToArray();
             foreach (var inst in source)
             {
                 Console.WriteLine($"// {inst}");
             }
-            
 
+            CaptureRegisters(cpu, true);
 
             for (int i = 0; i < 20; i++)
             {
@@ -77,6 +78,8 @@ namespace Animated.CPU.Backend.LLDB
         private IEnumerable<MemoryView.Segment> DisassembleMethod(string bpAddr)
         {
             var lines = ExecuteAndWaitForResults($"clru {bpAddr}", 1, false);
+
+            Capture(lines, "method", "clru");
             
             // 1. Scan to "Begin 00007FFF7DD360B0, size 82"
             // 2. if line starts with path => Capture SourceMap
@@ -149,9 +152,18 @@ namespace Animated.CPU.Backend.LLDB
             }
         }
         
-        private void CaptureRegisters(Cpu cpu)
+        private void CaptureRegisters(Cpu cpu, bool all = false)
         {
-            var lines = ExecuteAndWaitForResults("register read", echo: false);
+            var lines = ExecuteAndWaitForResults("register read" + (all ? " --all":""), echo: false);
+            Capture(Enumerable.Union(
+                (IEnumerable<string>)new string[]
+                {
+                    $"curr={curr}",
+                    $"next={next}",
+                    $"RIP={cpu.RIP.ValueHex}"
+                },
+                (IEnumerable<string>)lines
+            ), "step", "state");
             if (curr.addr != null) Console.WriteLine($"[{curr.addr}] {curr.inst}");
             foreach (var line in lines)
             {
