@@ -5,11 +5,8 @@ using Animated.CPU.Primitives;
 
 namespace Animated.CPU.Model
 {
-
-    
-
     // https://software.intel.com/content/www/us/en/develop/articles/introduction-to-x64-assembly.html
-    public class Cpu 
+    public class Cpu
     {
         public Cpu()
         {
@@ -34,13 +31,12 @@ namespace Animated.CPU.Model
                 R14,
                 R15,
                 CLK
-                
             };
             Main = new Memory((int)Math.Pow(2, 16));
         }
-        
+
         // https://en.wikibooks.org/wiki/X86_Assembly/X86_Architecture
-        public Register RAX { get; } = new Register("RAX", "Accumulator") { Description =  "Used in arithmetic operations"}; 
+        public Register RAX { get; } = new Register("RAX", "Accumulator") { Description = "Used in arithmetic operations" };
         public Register RBX { get; } = new Register("RBX", "Base");
         public Register RCX { get; } = new Register("RCX", "Count");
         public Register RDX { get; } = new Register("RDX", "Data");
@@ -48,7 +44,7 @@ namespace Animated.CPU.Model
         public Register RSI { get; } = new Register("RSI", "Source Index");
         public Register RDI { get; } = new Register("RDI", "Destination Index");
         public Register RSP { get; } = new Register("RSP", "Stack Pointer");
-        
+
 
         public Register R0 => RAX;
         public Register R1 => RBX;
@@ -58,34 +54,34 @@ namespace Animated.CPU.Model
         public Register R5 => RSI;
         public Register R6 => RDI;
         public Register R7 => RSP;
-        
-        public Register R8  { get; } = new Register("R8",  "Register 8");
-        public Register R9  { get; } = new Register("R9",  "Register 9");
+
+        public Register R8 { get; } = new Register("R8", "Register 8");
+        public Register R9 { get; } = new Register("R9", "Register 9");
         public Register R10 { get; } = new Register("R10", "Register 10");
         public Register R11 { get; } = new Register("R11", "Register 11");
         public Register R12 { get; } = new Register("R12", "Register 12");
         public Register R13 { get; } = new Register("R13", "Register 13");
         public Register R14 { get; } = new Register("R14", "Register 14");
         public Register R15 { get; } = new Register("R15", "Register 15");
-        
-        public Register RIP    { get; } = new Register("RIP", "Instruction Pointer");
+
+        public Register RIP { get; } = new Register("RIP", "Instruction Pointer");
         public Register RFLAGS { get; } = new Register("RFLAGS", "Flags");
         public Register CLK { get; } = new Register("CLK", "Clock");
 
         public List<Register> RegisterFile { get; }
-        
-        public IMemory L1           { get; set; }
-        public IMemory L2           { get; set; }
-        public IMemory L3           { get; set; }
-        public IMemory Main         { get; set; }
-        
-        
+
+        public IMemory L1 { get; set; }
+        public IMemory L2 { get; set; }
+        public IMemory L3 { get; set; }
+        public IMemory Main { get; set; }
+
+
         public MemoryView Instructions { get; set; }
         public MemoryView Stack { get; set; }
 
-        public ArithmeticLogicUnit   ALU             { get; set; } = new ArithmeticLogicUnit();
-        
-        
+        public ArithmeticLogicUnit ALU { get; set; } = new ArithmeticLogicUnit();
+
+
         // Animation & Story Replay
         public Story Story { get; set; }
 
@@ -101,13 +97,13 @@ namespace Animated.CPU.Model
             {
                 if (string.Equals(register.Id, name, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    
-                        if (register.SetValue(value))
-                        {
-                            return register;
-                        }
-                        
-                    
+
+                    if (register.SetValue(value))
+                    {
+                        return register;
+                    }
+
+
                     return null;
                 }
             }
@@ -117,10 +113,10 @@ namespace Animated.CPU.Model
 
     public class ArithmeticLogicUnit
     {
-        public object                Fetch   { get; set; } = "Fetch";
-        public object                Decode  { get; set; } = "Decode";
-        public object                Execute { get; set; } = "Execute";
-        public object                Step    { get; set; } = "Step";
+        public object Fetch { get; set; } = "Fetch";
+        public object Decode { get; set; } = "Decode";
+        public object Execute { get; set; } = "Execute";
+        public object Step { get; set; } = "Step";
 
         public IEnumerable<object> Phases()
         {
@@ -131,24 +127,24 @@ namespace Animated.CPU.Model
         }
     }
 
-    
 
-    
-    
+
+
+
     public class Register : Prop<ulong>
     {
         public Register(string id, string name) : base(PropHelper.DefaultCompareULong, 0, null)
         {
-            Id   = id;
+            Id = id;
             Name = name;
         }
 
-        public string Id          { get; set; }
-        public string Name        { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
         public string Description { get; set; }
 
         public string ValueHex => Value.ToString("X").PadLeft(64 / 8 * 2, '0');
-        
+
 
         public override string ToString() => $"{Id}/{Name} = {Value:X}";
     }
@@ -159,7 +155,7 @@ namespace Animated.CPU.Model
         ushort GetWord(ulong ptr);     // 16
         uint GetDWord(ulong ptr);      // 32
         ulong GetQWord(ulong ptr);     // 64
-        
+
         void SetByte(ulong ptr, byte val);        // 8
         void SetWord(ulong ptr, ushort val);      // 16
         void SetDWord(ulong ptr, uint val);       // 32
@@ -189,7 +185,7 @@ namespace Animated.CPU.Model
         {
             throw new System.NotImplementedException();
         }
-        
+
         public void SetByte(ulong ptr, byte val)
         {
             block[ptr] = val;
@@ -208,7 +204,7 @@ namespace Animated.CPU.Model
         }
     }
 
-  
+
 
 
 }

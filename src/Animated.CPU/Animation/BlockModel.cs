@@ -99,7 +99,6 @@ namespace Animated.CPU.Animation
             this.Style  = copy.Style;
         }
 
-
         public float    Top    { get; }
         public float    Bottom { get; }
         public float    Left   { get; }
