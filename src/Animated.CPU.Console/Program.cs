@@ -7,8 +7,8 @@ namespace Animated.CPU.Console
     {
         static void Main(string[] args)
         {
-            var p = new DebugDriverLldb();
-            p.Start();
+            var p = new DebuggerDriver();
+            p.Start(new DebuggerDriver.ConfigArgs());
         }
     }
 } 
