@@ -1,8 +1,4 @@
-using System;
 using System.Text;
-using Animated.CPU.Animation;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace Animated.CPU.Tests
 {
@@ -21,21 +17,5 @@ namespace Animated.CPU.Tests
             return sb.ToString();
         }
         
-    }
-    
-    public class CodeGenStratch
-    {
-
-        private ITestOutputHelper outp;
-        public CodeGenStratch(ITestOutputHelper outp)
-        {
-            this.outp = outp;
-        }
-        
-        [Fact]
-        public void CopyConstructor()
-        {
-            outp.WriteLine(CodeGen.GenerateCopyConstructor<DBorderStyled>());
-        }
     }
 }

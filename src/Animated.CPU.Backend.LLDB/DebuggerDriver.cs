@@ -123,7 +123,15 @@ namespace Animated.CPU.Backend.LLDB
                 (IEnumerable<string>)lines
             ), "step", "state");
             if (curr.addr != null) Console.WriteLine($"[{curr.addr}] {curr.inst}");
-            parser.ParseRegisters(cpu, lines);
+            foreach (var rd in parser.ParseRegisters(lines))
+            {
+                if (rd.ValueParsed != null)
+                {
+                    cpu.SetReg(rd.Register, rd.ValueParsed.Value);    
+                }
+                
+            }
+             
         }
        
 

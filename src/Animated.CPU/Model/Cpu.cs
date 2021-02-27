@@ -6,6 +6,7 @@ using Animated.CPU.Primitives;
 namespace Animated.CPU.Model
 {
 
+    
 
     // https://software.intel.com/content/www/us/en/develop/articles/introduction-to-x64-assembly.html
     public class Cpu 
@@ -82,7 +83,11 @@ namespace Animated.CPU.Model
         public MemoryView Instructions { get; set; }
         public MemoryView Stack { get; set; }
 
-        public ArithmeticLogicUnit ALU { get; set; } = new ArithmeticLogicUnit();
+        public ArithmeticLogicUnit   ALU             { get; set; } = new ArithmeticLogicUnit();
+        
+        
+        // Animation & Story Replay
+        public Story Story { get; set; }
 
 
         public void Step()
@@ -90,21 +95,19 @@ namespace Animated.CPU.Model
             CLK.Value++;
         }
 
-        public Register? SetReg(string name, string value)
+        public Register? SetReg(string name, ulong value)
         {
             foreach (var register in RegisterFile)
             {
                 if (string.Equals(register.Id, name, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    if (value.StartsWith("0x")) value = value.Remove(0, 2);
-                    if (ulong.TryParse(value, NumberStyles.HexNumber, CultureInfo.DefaultThreadCurrentCulture, out var rr))
-                    {
-                        if (register.SetValue(rr))
+                    
+                        if (register.SetValue(value))
                         {
                             return register;
                         }
                         
-                    }
+                    
                     return null;
                 }
             }

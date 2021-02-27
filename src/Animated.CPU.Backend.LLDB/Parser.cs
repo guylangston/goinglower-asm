@@ -1,6 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
+using System.Linq;
 using Animated.CPU.Model;
 
 namespace Animated.CPU.Backend.LLDB
@@ -13,6 +16,9 @@ namespace Animated.CPU.Backend.LLDB
         {
             this.source = source;
         }
+        
+        public static ulong ParseHexWord(string txt) => ulong.Parse(txt, NumberStyles.HexNumber);
+        public static byte[] ParseHexByteArray(string txt) => Convert.FromHexString(txt);
 
         public IEnumerable<MemoryView.Segment> ParseCLRU(IReadOnlyList<string> lines)
         {
@@ -62,30 +68,73 @@ namespace Animated.CPU.Backend.LLDB
             var arr   = ll[0..16];
             return new MemoryView.Segment()
             {
-                Address   = ulong.Parse(arr, NumberStyles.HexNumber),
-                Raw       = Convert.FromHexString(bytes),
+                Address   =  ParseHexWord(arr),
+                Raw       =  ParseHexByteArray(bytes),
                 SourceAsm = ll[38..],
                 Anchor    = source.FindAnchor(currSource)
             };
         }
-        
+
+     
          
-        public void ParseRegisters(Cpu cpu, IReadOnlyList<string> lines)
+        public IEnumerable<RegisterDelta> ParseRegisters(IEnumerable<string> lines)
         {
             foreach (var line in lines)
             {
                 if (StringHelper.TrySplitExclusive(line, " = ", out var r))
                 {
-                    var reg = cpu.SetReg(r.l.Trim(), r.r.Trim());
-                    if (reg != null)
+                    yield return new RegisterDelta()
                     {
-                        var diff = reg.Value > reg.Prev
-                            ? reg.Value - reg.Prev
-                            : reg.Prev - reg.Value;
-                        Console.WriteLine($"\t{reg.Id,8}: {reg.Prev.ToString("X"),16} -> {reg.Value.ToString("X"),16} (diff: {diff.ToString("X"),16})");
-                    }
+                        Register     = r.l,
+                        ValueString  = r.r,
+                        ValueParsed = LossyParseULong(r.r)
+                    };
                 }
             }
         }
+        
+        public static ulong? LossyParseULong(string txt)
+        {
+            if (txt.StartsWith("0x"))
+            {
+                txt = txt.Remove(0, 2);
+                if (ulong.TryParse(txt, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var c))
+                {
+                    return c;
+                }
+            }
+            
+            if (ulong.TryParse(txt, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var a))
+            {
+                return a;
+            }
+            
+            if (ulong.TryParse(txt, NumberStyles.Number, CultureInfo.InvariantCulture, out var b))
+            {
+                return b;
+            }
+
+            return null;
+        }
+
+
+
+        public StoryStep ParseStep(string[] readAllLines)
+        {
+            var clean = readAllLines[0].Remove(0, 7).TrimEnd(')');
+            if (StringHelper.TrySplitExclusive(clean, ", ", out var res))
+            {
+                return new StoryStep()
+                {
+                    RIP = ParseHexWord(res.l),
+                    Asm = res.r,
+                    Delta = ParseRegisters(readAllLines.Skip(5)).ToImmutableArray()
+                };    
+            }
+            return null;
+        }
+        
+        
     }
+
 }
