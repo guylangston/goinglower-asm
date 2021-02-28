@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using SkiaSharp;
 
 namespace Animated.CPU.Animation
@@ -58,6 +59,12 @@ namespace Animated.CPU.Animation
                 }
             }
         }
+
+        public T GetChild<T>(int index) where T: IElement
+            => (T)Children[index];
+        
+        public T GetChild<T>() where T: IElement
+            => (T)Children.First(x=>x  is T);
         
         
 

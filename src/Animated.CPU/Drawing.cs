@@ -25,15 +25,16 @@ namespace Animated.CPU
 
             canvas.DrawText(txt, c.X, c.Y + bounds.Height, t1);
         }
-        public void DrawText(string txt, SKPaint t1, DBlock b, BlockAnchor anchor)
+        public SKRect DrawText(string txt, SKPaint t1, DBlock b, BlockAnchor anchor)
             => DrawText(txt, t1, b, anchor, SKPoint.Empty);
 
         // https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/basics/text
-        public void DrawText(string txt, SKPaint t1, DBlock b, BlockAnchor anchor, SKPoint offset)
+        public SKRect DrawText(string txt, SKPaint t1, DBlock b, BlockAnchor anchor, SKPoint offset)
         {
-            if (string.IsNullOrWhiteSpace(txt)) return;
-
             SKRect bounds = new SKRect();
+            if (string.IsNullOrWhiteSpace(txt)) return bounds;
+
+            
             t1.MeasureText(txt, ref bounds);
             SKPoint c;
             switch (anchor)
@@ -63,6 +64,11 @@ namespace Animated.CPU
                     c = b.Inner.MR + offset;
                     canvas.DrawText(txt, c.X - bounds.Width, c.Y, t1);
                     break;
+                
+                case BlockAnchor.MM:
+                    c = b.Inner.MM + offset;
+                    canvas.DrawText(txt, c.X  - bounds.Width/ 2, c.Y - bounds.Top + bounds.Bottom, t1);
+                    break;
 
                 case BlockAnchor.BR:
                     c = b.Inner.BR + offset;
@@ -73,14 +79,14 @@ namespace Animated.CPU
                 case BlockAnchor.TM:
                     c = b.Outer.TM + offset;
                     canvas.DrawText(txt, c.X - bounds.MidX / 2, c.Y - bounds.Top + bounds.Bottom, t1);
-                    return;
+                    break;
 
                 default:
                     c = b.Outer.MM + offset;
                     canvas.DrawText(txt, c.X, c.Y + bounds.Height, t1);
-                    return;
+                    break;
             }
-
+            return bounds;
 
         }
 

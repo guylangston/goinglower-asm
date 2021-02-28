@@ -80,39 +80,39 @@ namespace Animated.CPU.Model
                 };
                 d.DrawHighlight(eRip.Block.Outer.ToSkRect(), high, 4);
                 
-                if (eRip is ElementBase eb && !eb.Animator.IsActive)
-                {
-                    
-                    var a = new Arrow()
-                    {
-                    
-                        Start     = eRip.Block.Outer.MR,
-                        WayPointA = eRip.Block.Outer.MR + new SKPoint(50, 0),
-                    
-                        End       = eSeg.Block.Outer.ML,
-                        WayPointB = eSeg.Block.Outer.ML + new SKPoint(-50, 0),
-                    
-                        Style     = StyleFactory.GetPaint(this, "arrow"),
-                        LabelText = "Get Next Instruction",
-                        ShowHead  = true
-                    };
-                    a.Draw(surface.Canvas);
-                    
-                    if (TryGetElementFromModel(Model.ALU.Decode, out var eDecode))
-                    {
-                        a = new Arrow()
-                        {
-                            Start = eSeg.Block.Outer.ML,
-                     
-                            End = eDecode.Block.Outer.MM,
-                     
-                            Style     = StyleFactory.GetPaint(this, "arrow"),
-                            LabelText = "Get Next Instruction",
-                            ShowHead  = true
-                        };
-                        a.Draw(surface.Canvas);    
-                    }
-                }
+                // if (eRip is ElementBase eb && !eb.Animator.IsActive)
+                // {
+                //     
+                //     var a = new Arrow()
+                //     {
+                //     
+                //         Start     = eRip.Block.Outer.MR,
+                //         WayPointA = eRip.Block.Outer.MR + new SKPoint(50, 0),
+                //     
+                //         End       = eSeg.Block.Outer.ML,
+                //         WayPointB = eSeg.Block.Outer.ML + new SKPoint(-50, 0),
+                //     
+                //         Style     = StyleFactory.GetPaint(this, "arrow"),
+                //         LabelText = "Get Next Instruction",
+                //         ShowHead  = true
+                //     };
+                //     a.Draw(surface.Canvas);
+                //     
+                //     if (TryGetElementFromModel(Model.ALU.Decode, out var eDecode))
+                //     {
+                //         a = new Arrow()
+                //         {
+                //             Start = eSeg.Block.Outer.ML,
+                //      
+                //             End = eDecode.Block.Outer.MM,
+                //      
+                //             Style     = StyleFactory.GetPaint(this, "arrow"),
+                //             LabelText = "Get Next Instruction",
+                //             ShowHead  = true
+                //         };
+                //         a.Draw(surface.Canvas);    
+                //     }
+                // }
 
                 
                 
@@ -147,12 +147,16 @@ namespace Animated.CPU.Model
         
         public override void KeyPress(object platformKeyObject, string key)
         {
+            foreach (var register in Model.RegisterFile)
+            {
+                register.IsChanged = false;
+            }
             if (Model.Story != null)
             {
-                if (Model.Story.Current < Model.Story.Steps.Count-1)
+                if (Model.Story.CurrentIndex < Model.Story.Steps.Count-1)
                 {
-                    Model.Story.Current++;
-                    var next = Model.Story.Steps[Model.Story.Current];
+                    Model.Story.CurrentIndex++;
+                    var next = Model.Story.Steps[Model.Story.CurrentIndex];
                     if (next != null)
                     {
                         foreach (var rd in next.Delta)

@@ -4,8 +4,10 @@ namespace Animated.CPU.Model
 {
     public class Story
     {
-        public int             Current { get; set; }
-        public List<StoryStep> Steps   { get; set; }
+        public int             CurrentIndex { get; set; }
+        public List<StoryStep> Steps        { get; set; }
+
+        public StoryStep Current => Steps[CurrentIndex];
     }
     
     public struct RegisterDelta

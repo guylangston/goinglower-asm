@@ -126,8 +126,10 @@ namespace Animated.CPU.Model
             public string RawAsString() => String.Join("", Raw.Select(x => x.ToString("X")));
             
         }
-        
-        
+
+
+        public Segment? GetByAddress(ulong addr) 
+            => Segments.FirstOrDefault(x => x.Address <= addr && addr < x.Address + (ulong)x.Raw.Length);
     }
     
     public class MemoryViewElement : Element<Scene, MemoryView>

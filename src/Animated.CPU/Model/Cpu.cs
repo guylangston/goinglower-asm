@@ -29,10 +29,13 @@ namespace Animated.CPU.Model
                 R12,
                 R13,
                 R14,
-                R15,
-                CLK
+                R15
             };
             Main = new Memory((int)Math.Pow(2, 16));
+            ALU = new ArithmeticLogicUnit()
+            {
+                Cpu = this
+            };
         }
 
         // https://en.wikibooks.org/wiki/X86_Assembly/X86_Architecture
@@ -64,9 +67,9 @@ namespace Animated.CPU.Model
         public Register R14 { get; } = new Register("R14", "Register 14");
         public Register R15 { get; } = new Register("R15", "Register 15");
 
-        public Register RIP { get; } = new Register("RIP", "Instruction Pointer");
-        public Register RFLAGS { get; } = new Register("RFLAGS", "Flags");
-        public Register CLK { get; } = new Register("CLK", "Clock");
+        public Register    RIP    { get; } = new Register("RIP", "Instruction Pointer");
+        public Register    RFLAGS { get; } = new Register("RFLAGS", "Flags");
+        public Prop<ulong> CLK    { get; } = new PropULong(0);
 
         public List<Register> RegisterFile { get; }
 
@@ -79,7 +82,7 @@ namespace Animated.CPU.Model
         public MemoryView Instructions { get; set; }
         public MemoryView Stack { get; set; }
 
-        public ArithmeticLogicUnit ALU { get; set; } = new ArithmeticLogicUnit();
+        public ArithmeticLogicUnit ALU { get; set; } 
 
 
         // Animation & Story Replay
@@ -113,6 +116,8 @@ namespace Animated.CPU.Model
 
     public class ArithmeticLogicUnit
     {
+        public Cpu Cpu { get; set; }
+        
         public object Fetch { get; set; } = "Fetch";
         public object Decode { get; set; } = "Decode";
         public object Execute { get; set; } = "Execute";

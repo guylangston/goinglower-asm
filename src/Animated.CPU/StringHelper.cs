@@ -1,3 +1,6 @@
+using System;
+using System.Globalization;
+
 namespace Animated.CPU
 {
     public static class StringHelper
@@ -18,5 +21,17 @@ namespace Animated.CPU
             return true;
 
         }
+    }
+
+    public static class DisplayHelper
+    {
+        public static string ToHex(ulong v) => v.ToString("X");
+        public static string ToHex64(ulong v) => v.ToString("X").PadLeft(64/8*2, '0');
+    }
+
+    public static class ParseHelper
+    {
+        public static ulong ParseHexWord(string txt) => ulong.Parse(txt, NumberStyles.HexNumber);
+        public static byte[] ParseHexByteArray(string txt) => Convert.FromHexString(txt);
     }
 }

@@ -23,7 +23,8 @@ namespace Animated.CPU.Primitives
             set => SetValue(value);
         }
 
-        public T Prev => prev;
+        public T    Prev      => prev;
+        public bool IsChanged { get; set; }
 
         public bool SetValue(T newVal)
         {
@@ -33,14 +34,25 @@ namespace Animated.CPU.Primitives
                 {
                     onchange(val, newVal);
                 }
-                prev = val;
-                val  = newVal;
+                prev      = val;
+                val       = newVal;
+                IsChanged = true;
                 return true;
 
             }
             return false;
         }
     }
+
+    public class PropULong : Prop<ulong>
+    {
+
+        public PropULong(ulong val, Action<ulong, ulong>? onchange = null) : base(PropHelper.DefaultCompareULong, val, onchange)
+        {
+        }
+    }
+    
+    
 
     public static class PropHelper
     {

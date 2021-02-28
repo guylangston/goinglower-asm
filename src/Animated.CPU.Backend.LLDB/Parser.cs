@@ -17,8 +17,7 @@ namespace Animated.CPU.Backend.LLDB
             this.source = source;
         }
         
-        public static ulong ParseHexWord(string txt) => ulong.Parse(txt, NumberStyles.HexNumber);
-        public static byte[] ParseHexByteArray(string txt) => Convert.FromHexString(txt);
+        
 
         public IEnumerable<MemoryView.Segment> ParseCLRU(IReadOnlyList<string> lines)
         {
@@ -68,8 +67,8 @@ namespace Animated.CPU.Backend.LLDB
             var arr   = ll[0..16];
             return new MemoryView.Segment()
             {
-                Address   =  ParseHexWord(arr),
-                Raw       =  ParseHexByteArray(bytes),
+                Address   =  ParseHelper.ParseHexWord(arr),
+                Raw       =  ParseHelper.ParseHexByteArray(bytes),
                 SourceAsm = ll[38..],
                 Anchor    = source.FindAnchor(currSource)
             };
@@ -125,8 +124,8 @@ namespace Animated.CPU.Backend.LLDB
             {
                 return new StoryStep()
                 {
-                    RIP = ParseHexWord(res.l),
-                    Asm = res.r,
+                    RIP   = ParseHelper.ParseHexWord(res.l),
+                    Asm   = res.r,
                     Delta = ParseRegisters(readAllLines.Skip(5)).ToImmutableArray()
                 };    
             }
