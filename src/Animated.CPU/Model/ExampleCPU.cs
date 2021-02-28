@@ -87,6 +87,7 @@ namespace Animated.CPU.Model
 
             return new MemoryView(BuildAll());
         }
+        
         public static Cpu BuildCPU()
         {
             var cpu = new Cpu();
