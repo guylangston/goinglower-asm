@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Animated.CPU.Backend.LLDB",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Animated.CPU.Console", "Animated.CPU.Console\Animated.CPU.Console.csproj", "{530D6BE1-A007-44FE-A679-78F7C10877B9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{06EC9A80-2E67-4D9D-93F9-BC87645BEF53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{530D6BE1-A007-44FE-A679-78F7C10877B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{530D6BE1-A007-44FE-A679-78F7C10877B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{530D6BE1-A007-44FE-A679-78F7C10877B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06EC9A80-2E67-4D9D-93F9-BC87645BEF53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06EC9A80-2E67-4D9D-93F9-BC87645BEF53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06EC9A80-2E67-4D9D-93F9-BC87645BEF53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06EC9A80-2E67-4D9D-93F9-BC87645BEF53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
