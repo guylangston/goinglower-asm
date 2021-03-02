@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using SkiaSharp;
 
@@ -67,7 +68,8 @@ namespace Animated.CPU.Animation
         public float Bottom { get; }
         public float Left   { get; }
         public float Right  { get; }
-        
+
+        public float All => Math.Max(Top, Math.Max(Bottom, Math.Max(Left, Right)));
     }
 
     public struct DBorderStyled : IBorderStyled
@@ -110,9 +112,9 @@ namespace Animated.CPU.Animation
     
     public class DBlockProps
     {
-        public DBorderStyled Border  { get; set; }
-        public DBorder               Padding { get; set; }
-        public DBorder               Margin  { get; set; } 
+        public DBorder Border  { get; set; }
+        public DBorder Padding { get; set; }
+        public DBorder Margin  { get; set; } 
         
         public DBlockProps()
         {
@@ -121,26 +123,19 @@ namespace Animated.CPU.Animation
 
         public DBlockProps(DBlockProps copy)
         {
-            Margin = new DBorder(copy.Margin);
-            Border = new DBorderStyled(copy.Border);
+            Margin  = new DBorder(copy.Margin);
+            Border  = new DBorder(copy.Border);
             Padding = new DBorder(copy.Padding);
         }
 
-        public DBlockProps Set(float margin, float border, float padding, SKColor c)
+        public DBlockProps Set(float margin, float border, float padding)
         {
             this.Margin  = new DBorder(margin);
-            this.Border  = new DBorderStyled(border, new SKPaint() { Style = SKPaintStyle.Stroke, Color =  c});
+            this.Border  = new DBorder(border);
             this.Padding = new DBorder(padding);
             return this;
         }
         
-        public DBlockProps Set(float margin, float border, float padding, SKPaint p)
-        {
-            this.Margin  = new DBorder(margin);
-            this.Border  = new DBorderStyled(border, p);
-            this.Padding = new DBorder(padding);
-            return this;
-        }
     }
 
 

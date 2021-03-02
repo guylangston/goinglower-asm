@@ -7,13 +7,10 @@ using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
-    
-
     public class Scene : SceneBase<Cpu>
     {
         public Scene() : base(new StyleFactory())
         {
-            
         }
 
         protected override void InitScene(SKSurface surface)
@@ -29,14 +26,13 @@ namespace Animated.CPU.Model
                 W = size.Width,
                 H = size.Height
             };
-            
+
             //
             // for (int cc = 0; cc < 100; cc++)
             //     Add(new BackGroundNoise(this, main));
-            
-            
-            main.Set(10, 1, 4, new SKColor(100, 0, 100));
-            
+
+            main.Set(10, 1, 4);
+
             var stack = new DStack(main, DOrient.Vert);
             var items = stack.Layout(new IElement[]
             {
@@ -59,126 +55,56 @@ namespace Animated.CPU.Model
 
         protected override void DrawOverlay(SKSurface surface)
         {
-            var canvas = surface.Canvas;
-            canvas.DrawText($"{Steps} frames at {Elapsed.TotalSeconds:0.00} sec", 10, 10, StyleFactory.GetPaint(this, "debug"));
-            
-            Drawing d = new Drawing(surface.Canvas);
-            
-            if (TryGetElementFromModel(Model.RIP, out var eRip)
-                && TryGetElementFromModel(Model.Instructions.Segments[3], out var eSeg))
-            {
-            
-                var high = new SKPaint()
-                {
-                    Style       = SKPaintStyle.Fill,
-                    Shader      = SKShader.CreateLinearGradient(
-                        eRip.Block.Outer.TL + new SKPoint(-4, -4),
-                        eRip.Block.Outer.BR + new SKPoint(4, 40),
-                        new []{SKColors.Orange, SKColors.Yellow, SKColors.Red }, 
-                        SKShaderTileMode.Repeat)
+            var canvas  = surface.Canvas;
+            var drawing = new Drawing(canvas);
+            drawing.DrawText($"{Steps} frames at {Elapsed.TotalSeconds:0.00} sec. {lastKey}", StyleFactory.GetPaint(this, "debug"), Block, BlockAnchor.BL);
 
-                };
-                d.DrawHighlight(eRip.Block.Outer.ToSkRect(), high, 4);
-                
-                // if (eRip is ElementBase eb && !eb.Animator.IsActive)
-                // {
-                //     
-                //     var a = new Arrow()
-                //     {
-                //     
-                //         Start     = eRip.Block.Outer.MR,
-                //         WayPointA = eRip.Block.Outer.MR + new SKPoint(50, 0),
-                //     
-                //         End       = eSeg.Block.Outer.ML,
-                //         WayPointB = eSeg.Block.Outer.ML + new SKPoint(-50, 0),
-                //     
-                //         Style     = StyleFactory.GetPaint(this, "arrow"),
-                //         LabelText = "Get Next Instruction",
-                //         ShowHead  = true
-                //     };
-                //     a.Draw(surface.Canvas);
-                //     
-                //     if (TryGetElementFromModel(Model.ALU.Decode, out var eDecode))
-                //     {
-                //         a = new Arrow()
-                //         {
-                //             Start = eSeg.Block.Outer.ML,
-                //      
-                //             End = eDecode.Block.Outer.MM,
-                //      
-                //             Style     = StyleFactory.GetPaint(this, "arrow"),
-                //             LabelText = "Get Next Instruction",
-                //             ShowHead  = true
-                //         };
-                //         a.Draw(surface.Canvas);    
-                //     }
-                // }
-
-                
-                
-            }
-            
-            
-            
         }
-        
+
         protected override void DrawBackGround(SKSurface surface)
         {
             var canvas = surface.Canvas;
             canvas.Clear(StyleFactory.GetColor(this, "bg"));
         }
-        
-        
-        
-        public override bool TryGetElementFromModel<T>(T findThis, out IElement found)
-        {
-            foreach (var element in ChildrenRecursive())
-            {
-                if (object.ReferenceEquals(element.Model, findThis))
-                {
-                    found = element;
-                    return true;
-                }
-            }
 
-            found = null;
-            return false;
-        }
-        
+       
+
+        private string lastKey;
+
         public override void KeyPress(object platformKeyObject, string key)
         {
+            lastKey = key;
             foreach (var register in Model.RegisterFile)
             {
                 register.IsChanged = false;
             }
-            if (Model.Story != null)
+            if (Model?.Story == null) return;
+
+            if (key == "n")
             {
-                if (Model.Story.CurrentIndex < Model.Story.Steps.Count-1)
+                if (Model.Story.CurrentIndex < Model.Story.Steps.Count - 1)
                 {
                     Model.Story.CurrentIndex++;
-                    var next = Model.Story.Steps[Model.Story.CurrentIndex];
-                    if (next != null)
+                }
+            }
+            if (key == "p")
+            {
+                if (Model.Story.CurrentIndex> 0)
+                {
+                    Model.Story.CurrentIndex--;
+                }
+            }
+            var next = Model.Story.Steps[Model.Story.CurrentIndex];
+            if (next != null)
+            {
+                foreach (var rd in next.Delta)
+                {
+                    if (rd.ValueString != null)
                     {
-                        foreach (var rd in next.Delta)
-                        {
-                            if (rd.ValueString != null)
-                            {
-                                Model.SetReg(rd.Register, rd.ValueParsed.Value);
-                            }
-                        }    
+                        Model.SetReg(rd.Register, rd.ValueParsed.Value);
                     }
-                    
-                    
-                        
                 }
             }
         }
-
-
-
-
-
     }
-
-
 }

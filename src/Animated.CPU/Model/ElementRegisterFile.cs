@@ -22,7 +22,7 @@ namespace Animated.CPU.Model
             foreach (var reg in stack.Layout(Model))
             {
                 var r = Add(new ElementRegister(this, reg.model, reg.block));
-                r.Block.Set(2, 2, 4, SKColor.Empty);
+                r.Block.Set(2, 2, 4);
                 r.Alpha.Value     = 0;
                 r.Alpha.BaseValue = 180;
                 
@@ -102,8 +102,11 @@ namespace Animated.CPU.Model
 
         public PropFloat Alpha { get; } = new PropFloat();
         
+        public bool IsHighlighted { get; set; }
+        
         public override void Draw(SKSurface surface)
         {
+
             var canvas = surface.Canvas;
             var draw   = new Drawing(canvas);
             
@@ -131,6 +134,25 @@ namespace Animated.CPU.Model
             draw.DrawText($"[{Model.Id}]", sId, Block, BlockAnchor.TL);
             draw.DrawText(Model.Name ?? "", sName, Block, BlockAnchor.TR);
             //draw.DrawText(Model.Value.ToString("X"), sVal, Block, BlockAnchor.BR);
+
+            if (IsHighlighted || Model.IsChanged)
+            {
+                var high = new SKPaint()
+                {
+                    Style = SKPaintStyle.Fill,
+                    Shader = SKShader.CreateLinearGradient(
+                        Block.Outer.TL + new SKPoint(-4, -4),
+                        Block.Outer.BR + new SKPoint(4, 40),
+                        new[]
+                        {
+                            SKColors.Orange,
+                            SKColors.Yellow,
+                            SKColors.Red
+                        },
+                        SKShaderTileMode.Repeat)
+                };
+                draw.DrawHighlight(Block.Outer.ToSkRect(), high, 4);
+            }
             
         }
     }

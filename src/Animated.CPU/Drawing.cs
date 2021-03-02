@@ -31,8 +31,10 @@ namespace Animated.CPU
         // https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/basics/text
         public SKRect DrawText(string txt, SKPaint t1, DBlock b, BlockAnchor anchor, SKPoint offset)
         {
+            
+            
             SKRect bounds = new SKRect();
-            if (string.IsNullOrWhiteSpace(txt)) return bounds;
+            if (b == null || string.IsNullOrWhiteSpace(txt)) return bounds;
 
             
             t1.MeasureText(txt, ref bounds);

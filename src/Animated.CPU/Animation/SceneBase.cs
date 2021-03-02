@@ -86,7 +86,6 @@ namespace Animated.CPU.Animation
         protected abstract void DrawOverlay(SKSurface surface);
         protected abstract void DrawBackGround(SKSurface surface);
         
-        public abstract bool TryGetElementFromModel<T>(T model, out IElement found);
         public abstract void KeyPress(object platformKeyObject, string key);
 
 

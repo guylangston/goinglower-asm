@@ -139,20 +139,19 @@ namespace Animated.CPU.Model
         {
             
         }
-
-        
+       
         
         public override void Init(SKSurface surface)
         {
-            var stack = new DStack(this.Block, DOrient.Horz);
+            var stack = new StackElement(Scene, this, Block, DOrient.Vert);
+            Add(stack);
 
-            foreach (var item in stack.Layout(Model.Segments))
+            foreach (var seg in Model.Segments)
             {
-                item.block.Set(0, 1, 2, null);
-                var e = Add(new SegmentElement(this, item.model, item.block)
+                stack.Add(new SegmentElement(stack, seg, new DBlock()
                 {
-                    
-                });
+                    H = 30
+                }));
             }
         }
 
@@ -188,7 +187,7 @@ namespace Animated.CPU.Model
         {
             Add(new ByteArrayElement(this, 
                 new ByteArrayModel(Model.Raw, Model.SourceAsm, Model.Comment), 
-                new DBlock(Block.Inner.X + 10, Block.Inner.Y + 30, Block.Inner.W - 20, Block.Inner.H-20)));
+                new DBlock(Block.Inner.X + 1, Block.Inner.Y + 5, Block.Inner.W - 20, Block.Inner.H-20)));
         }
 
         public override void Step(TimeSpan step)
@@ -205,11 +204,11 @@ namespace Animated.CPU.Model
             draw.DrawRect(Block, sBorder);
             
             //draw.DrawTextCenter(Model?.ToString(), sText, Block.Inner.MM);
-            draw.DrawText($"+{Model.Offset}", sText, Block, BlockAnchor.TL);
+            draw.DrawText($"+{Model.Offset}", sText, Block, BlockAnchor.BR);
 
             draw.DrawText(""+Model.Comment, sText, Block, BlockAnchor.MR);
             
-            draw.DrawText(""+Model.Label, sText, Block, BlockAnchor.BR);
+            draw.DrawText(""+Model.Label, sText, Block, BlockAnchor.TR);
         }
     }
 

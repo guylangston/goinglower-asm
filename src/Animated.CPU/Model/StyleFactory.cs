@@ -69,11 +69,23 @@ namespace Animated.CPU.Model
         };
 
 
-        private SKPaint borderGray = new SKPaint()
+        private SKPaint borderGray1 = new SKPaint()
         {
             Style = SKPaintStyle.Stroke,
             StrokeWidth = 1,
             Color = SKColor.Parse("#444")
+        };
+        private SKPaint borderGray2 = new SKPaint()
+        {
+            Style       = SKPaintStyle.Stroke,
+            StrokeWidth = 2,
+            Color       = SKColor.Parse("#444")
+        };
+        private SKPaint borderGray3 = new SKPaint()
+        {
+            Style       = SKPaintStyle.Stroke,
+            StrokeWidth = 3,
+            Color       = SKColor.Parse("#444")
         };
         
         private SKPaint borderReg = new SKPaint()
@@ -116,7 +128,6 @@ namespace Animated.CPU.Model
                 {
                     case "border": return borderReg;
                     case "hex": return hex2;
-                    
                 }
             }
             
@@ -127,7 +138,12 @@ namespace Animated.CPU.Model
                 case "text": return text;
                 case "debug": return debug;
                 case "arrow": return arrow;
-                case "border": return borderGray;
+                case "border": 
+                    if (e.Block?.Border.All == 1f) return borderGray1;
+                    if (e.Block?.Border.All == 2f) return borderGray2;
+                    if (e.Block?.Border.All == 3f) return borderGray3;
+                    
+                    return borderGray1;
             }
             
             //Console.WriteLine("Unknown Paint Style {e}#{id");
