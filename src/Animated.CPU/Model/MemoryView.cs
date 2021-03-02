@@ -132,10 +132,10 @@ namespace Animated.CPU.Model
             => Segments.FirstOrDefault(x => x.Address <= addr && addr < x.Address + (ulong)x.Raw.Length);
     }
     
-    public class MemoryViewElement : Element<Scene, MemoryView>
+    public class MemoryViewElement : Section<Scene, MemoryView>
     {
 
-        public MemoryViewElement(Scene scene, DBlock b, MemoryView memory) : base(scene, memory, b)
+        public MemoryViewElement(IElement scene, DBlock b, MemoryView memory) : base(scene, memory, b)
         {
             
         }
@@ -143,7 +143,7 @@ namespace Animated.CPU.Model
         
         public override void Init(DrawContext surface)
         {
-            var stack = new StackElement(Scene, this, Block, DOrient.Vert);
+            var stack = new StackElement(this, Block, DOrient.Vert);
             Add(stack);
 
             foreach (var seg in Model.Segments)
@@ -155,16 +155,7 @@ namespace Animated.CPU.Model
             }
         }
 
-        
-        protected override void Step(TimeSpan step)
-        {
-            
-        }
-        
-        protected override void Draw(DrawContext surface)
-        {
-            
-        }
+      
     }
 
     public class SegmentElement : Element<Scene, MemoryView.Segment>

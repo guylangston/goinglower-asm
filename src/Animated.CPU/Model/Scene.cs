@@ -7,6 +7,16 @@ using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
+    public class TestSection : Section<Scene, string>
+    {
+        public TestSection(IElement parent, string model, DBlock block) : base(parent, model, block)
+        {
+            Title = model;
+        }
+
+        
+    }
+        
     public class Scene : SceneBase<Cpu, StyleFactory>
     {
         public Scene() : base(new StyleFactory())
@@ -27,42 +37,43 @@ namespace Animated.CPU.Model
                 H = size.Height
             };
 
-            //
-            // for (int cc = 0; cc < 100; cc++)
-            //     Add(new BackGroundNoise(this, main));
 
-            main.Set(10, 1, 4);
-
-            var stack = new DStack(main, DOrient.Vert);
-            var items = stack.Layout(new IElement[]
+            if (true)
             {
-                new ElementRegisterFile(this, Model.RegisterFile, null),
-                new ALUElement(this, Model.ALU, null),
-                new MemoryViewElement(this, null, Model.Instructions),
-                new MemoryViewElement(this, null, Model.Stack)
-            });
-
-            foreach (var kid in items)
-            {
-                Add(kid.model);
+                for (int cc = 0; cc < 100; cc++)
+                    Add(new BackGroundNoise(this, main));
             }
 
-            test = new TextBlockElement(this, this, new DBlock(1000, 1000, 500, 500), StyleFactory.FixedFont);
-            test.WriteLine("Hello World");
-            test.Write("Sample");
-            test.Write("Yellow", StyleFactory.FixedFontYellow);
-            test.Write("AndBackAgain(no spaces)");
-            test.WriteLine("]", StyleFactory.FixedFontCyan);
-            test.WriteLine("Hello World");
-            test.WriteLine("iiiiiiiiii");
-            test.WriteLine("XXXXXXXXXX");
-            test.WriteLine("[        ]");
-            test.WriteLine("         ]");
-            test.Write("    ");
-            test.WriteLine("     ]");
-            test.WriteLine("[         ");
 
-            Add(test);
+            var stack = Add(new StackElement(this, Block, DOrient.Horz));
+
+            float w = Block.Inner.W / 4;
+            stack.Add(new ElementRegisterFile(stack, Model.RegisterFile, DBlock.JustWidth(w).Set(20, 1, 10)));
+            stack.Add(new ALUElement(stack, Model.ALU, DBlock.JustWidth(w).Set(20, 1, 10)));
+            stack.Add(new MemoryViewElement(stack, DBlock.JustWidth(w).Set(20, 1, 10), Model.Instructions)
+            {
+                Title = "Instructions"
+            });
+            stack.Add(new TestSection(stack,  "Test", DBlock.JustWidth(w).Set(10, 1, 10)));
+            //stack.Add(new MemoryViewElement(stack, DBlock.JustWidth(w).Set(10, 1, 10), Model.Stack));
+            
+            //
+            // test = new TextBlockElement(this, this, new DBlock(1000, 1000, 500, 500), StyleFactory.FixedFont);
+            // test.WriteLine("Hello World");
+            // test.Write("Sample");
+            // test.Write("Yellow", StyleFactory.FixedFontYellow);
+            // test.Write("AndBackAgain(no spaces)");
+            // test.WriteLine("]", StyleFactory.FixedFontCyan);
+            // test.WriteLine("Hello World");
+            // test.WriteLine("iiiiiiiiii");
+            // test.WriteLine("XXXXXXXXXX");
+            // test.WriteLine("[        ]");
+            // test.WriteLine("         ]");
+            // test.Write("    ");
+            // test.WriteLine("     ]");
+            // test.WriteLine("[         ");
+            //
+            // Add(test);
 
 
 
@@ -74,13 +85,14 @@ namespace Animated.CPU.Model
         {
             Model.Step();
         }
+        
+        public SKPoint? Mouse { get; set; }
 
         protected override void DrawOverlay(DrawContext surface)
         {
-            var canvas  = surface.Canvas;
-            var drawing = new Drawing(canvas);
-            drawing.DrawText($"{Steps} frames at {Elapsed.TotalSeconds:0.00} sec. {lastKey}", StyleFactory.GetPaint(this, "debug"), Block, BlockAnchor.BL);
-
+            surface.DrawText($"{Steps} frames at {Elapsed.TotalSeconds:0.00} sec. {lastKey} | {Mouse}", 
+                StyleFactory.GetPaint(this, "debug"),
+                new SKPoint(0,0));
         }
 
         protected override void DrawBackGround(DrawContext surface)
@@ -88,8 +100,6 @@ namespace Animated.CPU.Model
             var canvas = surface.Canvas;
             canvas.Clear(StyleFactory.GetColor(this, "bg"));
         }
-
-       
 
         private string lastKey;
 

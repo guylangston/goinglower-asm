@@ -8,11 +8,11 @@ namespace Animated.CPU.Model
 {
 
     
-    public class ElementRegisterFile : Element<Scene, List<Register>>
+    public class ElementRegisterFile : Section<Scene, List<Register>>
     {
-        public ElementRegisterFile(Scene scene, List<Register> model, DBlock block) : base(scene, model, block)
+        public ElementRegisterFile(IElement parent, List<Register> model, DBlock block) : base(parent, model, block)
         {
-            
+            Title = "Register File";
         }
 
         public override void Init(DrawContext surface)
@@ -43,10 +43,7 @@ namespace Animated.CPU.Model
             var x = 1;
         }
         
-        protected override void Draw(DrawContext surface)
-        {
-            
-        }
+       
     }
 
     public class PropFloat
@@ -60,6 +57,8 @@ namespace Animated.CPU.Model
         public int Value     { get; set; }
         public int BaseValue { get; set; }
     }
+    
+    
     
 
     public class ElementRegister : Element<Scene, Register>
@@ -106,6 +105,7 @@ namespace Animated.CPU.Model
         
         protected override void Draw(DrawContext surface)
         {
+            
 
             var canvas = surface.Canvas;
             var draw   = new Drawing(canvas);

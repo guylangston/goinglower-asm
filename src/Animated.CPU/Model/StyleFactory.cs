@@ -24,6 +24,15 @@ namespace Animated.CPU.Model
             FixedFontYellow = Clone(FixedFont, p => p.Color = SKColors.Yellow);
             FixedFontBlue   = Clone(FixedFont, p => p.Color = SKColors.LightBlue);
             FixedFontWhite   = Clone(FixedFont, p => p.Color = SKColors.White);
+
+            byte gray = 0x38;
+            BackGround = new SKPaint()
+            {
+                Style       = SKPaintStyle.StrokeAndFill,
+                StrokeWidth = 3,
+                Color       = SKColor.Parse("#333"),
+                Shader      = SKShader.CreateColor(new SKColor(gray, gray, gray, 220))
+            };
             
             Text = new SKPaint()
             {
@@ -32,7 +41,7 @@ namespace Animated.CPU.Model
             };
         }
 
-        
+        public SKPaint BackGround { get;  }
 
         public static SKPaint Clone(SKPaint cpy, Action<SKPaint> then)
         {
@@ -176,6 +185,8 @@ namespace Animated.CPU.Model
                 case "text": return Text;
                 case "debug": return debug;
                 case "arrow": return arrow;
+                
+                case "bg": return BackGround;
                 case "border": 
                     if (e.Block?.Border.All == 1f) return borderGray1;
                     if (e.Block?.Border.All == 2f) return borderGray2;

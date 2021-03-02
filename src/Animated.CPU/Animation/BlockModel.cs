@@ -172,10 +172,26 @@ namespace Animated.CPU.Animation
             W - (Padding.Left + Border.Left + Margin.Left) - (Padding.Right + Border.Right + Margin.Right),
             H - (Padding.Top + Border.Top + Margin.Top) - (Padding.Bottom + Border.Bottom + Margin.Bottom)
         );
+        
+        public Rect BorderRect => new Rect(
+            X + Margin.Left,
+            Y +  Margin.Right,
+            W - (Margin.Left) - ( Margin.Right),
+            H - (Margin.Top) - (Margin.Bottom)
+        );
 
         public DBlock Inset(float x, float y) => new DBlock(Inner.X + x, Inner.Y + y, Inner.W - x - x, Inner.H - y - y);
+        
+        public new DBlock Set(float margin, float border, float padding)
+        {
+            base.Set(margin, border, padding);
+            return this;
+        }
 
-
+        public static DBlock JustWidth(float f) => new DBlock()
+        {
+            W = f
+        };
     }
     
 

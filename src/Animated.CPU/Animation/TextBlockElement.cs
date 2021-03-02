@@ -7,18 +7,25 @@ namespace Animated.CPU.Animation
 {
     public class TextBlockElement : ElementBase
     {
-        private readonly List<List<Span>> lines;
+        private readonly List<Line> lines;
         
         
         public TextBlockElement(IScene scene, IElement? parent, DBlock b, SKPaint defaultStyle) : base(scene, parent, b)
         {
             DefaultStyle = defaultStyle;
-            lines        = new List<List<Span>>();
+            lines        = new List<Line>();
             Clear();
 
         }
 
         public SKPaint DefaultStyle { get; set; }
+
+        public class Line
+        {
+            public List<Span> Spans   { get; }      = new List<Span>();
+            public float      HeaderY { get; set; } = 1;
+            public float      FooterY { get; set; } = 1;
+        }
 
         public class Span
         {
@@ -47,17 +54,17 @@ namespace Animated.CPU.Animation
             span.Width = span.Style.MeasureText(span.Text, ref r);
             span.Region = r;
             
-            lines[^1].Add(span);
+            lines[^1].Spans.Add(span);
 
             return span;
         }
         
         public void WriteLine()
         {
-            lines.Add(new List<Span>());
+            lines.Add(new Line());
         }
         
-        public Span WriteLine(string txt, SKPaint style = null /* Use Default */)
+        public Span WriteLine<T>(T txt, SKPaint style = null /* Use Default */)
         {
             var s = Write(txt, style);
             WriteLine();
@@ -67,7 +74,7 @@ namespace Animated.CPU.Animation
         public void Clear()
         {
             lines.Clear();
-            lines.Add(new List<Span>());
+            lines.Add(new Line());
         }
 
         protected override void Step(TimeSpan step)
@@ -80,16 +87,34 @@ namespace Animated.CPU.Animation
             float y = Block.Inner.Y;
             foreach (var line in lines)
             {
-                float x = Block.Inner.X; 
+                float x = Block.Inner.X ; 
                 float h = 0;
-                foreach (var span  in line)
+
+                if (line.Spans.Any())
                 {
-                    span.LastDraw = new SKPoint(x, y);
-                    surface.Canvas.DrawText(span.Text.ToString(), x, y, span.Style);
-                    x += span.Width; // + span.Region.Width / span.Text.Length;
-                    if (span.Region.Height > h) h = span.Region.Height;
+                    y += line.HeaderY;
+                    foreach (var span  in line.Spans)
+                    {
+                        span.LastDraw = new SKPoint(x, y);
+                        surface.Canvas.DrawText(span.Text.ToString(), x, y, span.Style);
+                        x += span.Width; // + span.Region.Width / span.Text.Length;
+                        if (span.Region.Height > h) h = span.Region.Height;
+                    }
+                    y += h + line.FooterY;
                 }
-                y += h + 2;
+                else
+                {
+                    y += line.HeaderY;
+                    
+                    var b = new SKRect();
+                    DefaultStyle.MeasureText("X", ref b);
+                    
+                    y += b.Height + line.HeaderY;
+                }
+                
+                
+                
+                
             }
         }
     }

@@ -13,7 +13,7 @@ namespace Animated.CPU.GTK
     class MainWindow : Window
     {
         private SKDrawingArea skiaView;
-        private IScene scene;
+        private Scene scene;
         private uint timerId;
         private TimeSpan interval; 
 
@@ -33,10 +33,7 @@ namespace Animated.CPU.GTK
             var setup  = new Setup();
             var cpu    = new Cpu();
             setup.InitFromDisk(dir, cpu, sourceProvider);
-            scene = new Scene()
-            {
-                Model = cpu
-            };
+            
             
             
             builder.Autoconnect(this);
@@ -47,13 +44,22 @@ namespace Animated.CPU.GTK
             skiaView              =  new SKDrawingArea();
             skiaView.WidthRequest =  1960;
             skiaView.HeightRequest =  1080;
+            
+            scene = new Scene()
+            {
+                Model = cpu,
+                Block = new DBlock(0,0, skiaView.WidthRequest, skiaView.HeightRequest)
+                    .Set(50, 0, 0)
+            };
+            
             skiaView.PaintSurface += OnPaintSurface;
             skiaView.Shown        += OnShow;
+            
+            this.ButtonPressEvent += OnButtonPressEvent;
             
             
             skiaView.Show();
             Child = skiaView;
-            
             
             interval = TimeSpan.FromSeconds(1/60f);
             if (timerId == 0)
@@ -62,6 +68,12 @@ namespace Animated.CPU.GTK
             }
             
         }
+
+        private void OnButtonPressEvent(object o, ButtonPressEventArgs args)
+        {
+            scene.Mouse = new SKPoint((float)args.Event.X, (float)args.Event.Y);
+        }
+
         private void KeyPress(object o, KeyPressEventArgs args)
         {
             scene.KeyPress(args.Event, args.Event.Key.ToString());
@@ -88,26 +100,6 @@ namespace Animated.CPU.GTK
         private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
             scene?.DrawExec(new DrawContext(e.Surface.Canvas));
-           
-            
-            // the the canvas and properties
-            // var canvas = e.Surface.Canvas;
-            // Animated.CPU.Example.Draw(canvas);
-
-
-            
-            //
-            // // draw some text
-            // var paint = new SKPaint
-            // {
-            //     Color       = SKColors.Black,
-            //     IsAntialias = true,
-            //     Style       = SKPaintStyle.Fill,
-            //     TextAlign   = SKTextAlign.Center,
-            //     TextSize    = 24
-            // };
-            // var coord = new SKPoint(scaledSize.Width / 2, (scaledSize.Height + paint.TextSize) / 2);
-            // canvas.DrawText("SkiaSharp", coord, paint);
         }
     }
 }
