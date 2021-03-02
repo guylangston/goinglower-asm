@@ -21,7 +21,7 @@ namespace Sample
             public int C;
         }
 
-        public int Count = 1000;
+        public int Count = 10;
         
         public int M5()
         {
