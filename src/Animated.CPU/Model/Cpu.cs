@@ -64,7 +64,10 @@ namespace Animated.CPU.Model
         {
             IdAlt = ImmutableArray.Create<string>("EDI", "DI")
         };
-        public Register RSP { get; } = new Register("RSP", "Stack Pointer");
+        public Register RSP { get; } = new Register("RSP", "Stack Pointer")
+        {
+            IdAlt = ImmutableArray.Create<string>("ESP", "SP")
+        };
 
         public Register R0 => RAX;
         public Register R1 => RBX;
@@ -137,7 +140,8 @@ namespace Animated.CPU.Model
             Step    = new PhaseStep(this);
         }
 
-        public Cpu Cpu { get; }
+        public Cpu       Cpu       { get; }
+        public StoryStep StoryStep => Cpu.Story.Current;
 
         public PhaseFetch   Fetch   { get; }
         public PhaseDecode  Decode  { get; }
@@ -151,6 +155,33 @@ namespace Animated.CPU.Model
             yield return Execute;
             yield return Step;
         }
+        
+        public IEnumerable<Register> LoosyMathRegs(string asm)
+        {
+            
+            foreach (var register in Cpu.RegisterFile)
+            {
+                if (asm != null && asm.Contains(register.Id, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    yield return register;
+                }
+            }
+        }
+        
+        public IEnumerable<Register> UsedRegisters()
+        {
+            if (StoryStep != null)
+            {
+                foreach (var delta in StoryStep.Delta)
+                {
+                    var r = Cpu.RegisterFile.FirstOrDefault(x => x.IsChanged && x.Match(delta.Register));
+                    if (r != null) yield return r;
+                }    
+            }
+            
+
+        }
+
     }
 
     public class PhaseFetch
@@ -177,7 +208,7 @@ namespace Animated.CPU.Model
             this.alu = alu;
         }
 
-        public string Asm => alu.Cpu.Instructions.GetByAddress(alu.Cpu.RIP.Value)?.SourceAsm;
+        public string Asm => alu.StoryStep?.Asm;
 
         public string Easy
         {
@@ -208,7 +239,9 @@ namespace Animated.CPU.Model
             this.alu = alu;
         }
 
-        public string Step =>  StringHelper.Join(alu.Cpu.RegisterFile.Where(x=>x.IsChanged));
+        public IEnumerable<Register> Inputs => alu.LoosyMathRegs(alu.StoryStep?.Asm);
+
+        public IEnumerable<Register> Changes => alu.UsedRegisters();
 
         public override string ToString() => "Execute";
     }

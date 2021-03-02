@@ -74,7 +74,7 @@ namespace Animated.CPU.GTK
         
         private bool OnUpdateTimer()
         {
-            scene?.Step(interval);
+            scene?.StepExec(interval);
             this.QueueDraw();
 
             return true;
@@ -87,7 +87,7 @@ namespace Animated.CPU.GTK
 
         private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
-            scene?.Draw(e.Surface);
+            scene?.DrawExec(new DrawContext(e.Surface.Canvas));
            
             
             // the the canvas and properties

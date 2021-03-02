@@ -13,22 +13,23 @@ namespace Animated.CPU.Model
         {
         }
 
-        public override void Init(SKSurface surface)
+        public override void Init(DrawContext surface)
         {
             var stack = Add(new StackElement(Scene, this, Block, DOrient.Vert));
 
-            foreach (var phase in Model.Phases())
-            {
-                stack.Add(new ALUPhaseFetchElement(stack, phase));
-            }
+            stack.Add(new FetchPhaseElement(stack, Model.Fetch));
+            stack.Add(new DecodePhaseElement(stack, Model.Decode));
+            stack.Add(new ExecutePhaseElement(stack, Model.Execute));
+            stack.Add(new ALUPhaseFetchElement(stack, Model.Step));
+            
             
         }
 
-        public override void Step(TimeSpan step)
+        protected override void Step(TimeSpan step)
         {
         }
 
-        public override void Draw(SKSurface surface)
+        protected override void Draw(DrawContext surface)
         {
 
             if (Scene.Model.Story.Current == null) return;
@@ -41,52 +42,165 @@ namespace Animated.CPU.Model
             }
             .RelativeWayPoints(new SKPoint(0, +20), new SKPoint(-50, 0))
             .Draw(surface.Canvas);
+            
+            // foreach (var reg in LoosyMathRegs(Scene.Model, Model.Cpu.Story.Current.Asm))
+            // {
+            //     new Arrow()
+            //         {
+            //             Start = RecurseByModel(Model.Decode).Block.Inner.MM + new SKPoint(0, 20),
+            //             End   = Scene.RecurseElementFromModelSafe(reg).Block.Outer.MR,
+            //             Style = Scene.StyleFactory.GetPaint(this, "arrow")
+            //         }
+            //         .RelativeWayPoints(new SKPoint(0, +20), new SKPoint(+50, 0))
+            //         .Draw(surface.Canvas);
+            // }
 
-            foreach (var register in UsedRegisters().Where(x=>x.Id != "RIP"))
-            {
-                new Arrow()
-                    {
-                        Start = RecurseByModel(Model.Execute).Block.Inner.MM + new SKPoint(0, 20),
-                        End   = Scene.RecurseElementFromModelSafe(register).Block.Outer.MR,
-                        Style = Scene.StyleFactory.GetPaint(this, "arrow")
-                    }
-                    .RelativeWayPoints(new SKPoint(0, +20), new SKPoint(+50, 0))
-                    .Draw(surface.Canvas);    
-            }
+            // foreach (var register in UsedRegisters().Where(x=>x.Id != "RIP"))
+            // {
+            //     new Arrow()
+            //         {
+            //             Start = RecurseByModel(Model.Execute).Block.Inner.MM + new SKPoint(0, 20),
+            //             End   = Scene.RecurseElementFromModelSafe(register).Block.Outer.MR,
+            //             Style = Scene.StyleFactory.GetPaint(this, "arrow")
+            //         }
+            //         .RelativeWayPoints(new SKPoint(0, +20), new SKPoint(+50, 0))
+            //         .Draw(surface.Canvas);    
+            // }
             
             
-            foreach (var reg in LoosyMathRegs(Scene.Model, Model.Cpu.Story.Current.Asm))
-            {
-                new Arrow()
-                    {
-                        Start = RecurseByModel(Model.Decode).Block.Inner.MM + new SKPoint(0, 20),
-                        End   = Scene.RecurseElementFromModelSafe(reg).Block.Outer.MR,
-                        Style = Scene.StyleFactory.GetPaint(this, "arrow")
-                    }
-                    .RelativeWayPoints(new SKPoint(0, +20), new SKPoint(+50, 0))
-                    .Draw(surface.Canvas);
-            }
+          
         }
 
-        private IEnumerable<Register> UsedRegisters()
-        {
-            foreach (var delta in Scene.Model.Story.Current.Delta)
-            {
-                var r = Scene.Model.RegisterFile.FirstOrDefault(x => x.IsChanged && x.Match(delta.Register));
-                if (r != null) yield return r;
-            }
+      
+      
+    }
+    
+    public class FetchPhaseElement : Element<Scene, PhaseFetch>
+    {
+        private TextBlockElement text;
 
+        public FetchPhaseElement(IElement parent, PhaseFetch model) : base(parent, model, new DBlock()
+        {
+            H = 80
+        })
+        {
+            Block.Set(4, 1, 40);
         }
 
-        private IEnumerable<Register> LoosyMathRegs(Cpu cpu, string asm)
+        public override void Init(DrawContext surface)
         {
-            foreach (var register in cpu.RegisterFile)
+            text = Add(new TextBlockElement(Scene, this, Block, Scene.StyleFactory.FixedFont));
+        }
+
+        protected override void Step(TimeSpan step)
+        {
+            if (Model.Memory != null)
             {
-                if (asm.Contains(register.Id, StringComparison.InvariantCultureIgnoreCase))
+                text.Clear();
+                text.WriteLine("--- FETCH ---", Scene.StyleFactory.h1);
+                text.Write("RIP".PadRight(10));
+                text.Write(": ");
+                text.WriteLine(Model.RIP.ValueHex, Scene.StyleFactory.FixedFontCyan);
+                text.WriteLine(DisplayHelper.ToHex(Model.Memory), Scene.StyleFactory.FixedFontBlue);    
+            }
+            
+        }
+
+        protected override void Draw(DrawContext surface)
+        {
+            var drawing = new Drawing(surface.Canvas);
+            drawing.DrawRect(Block, Scene.StyleFactory.GetPaint(this, "border"));
+        }
+    }
+
+    public class DecodePhaseElement : Element<Scene, PhaseDecode>
+    {
+        private TextBlockElement text;
+
+        public DecodePhaseElement(IElement parent, PhaseDecode model) : base(parent, model, new DBlock()
+        {
+            H = 100
+        })
+        {
+            Block.Set(4, 1, 40);
+        }
+
+        public override void Init(DrawContext surface)
+        {
+            text = Add(new TextBlockElement(Scene, this, Block, Scene.StyleFactory.FixedFont));
+        }
+
+        protected override void Step(TimeSpan step)
+        {
+            text.Clear();
+            text.WriteLine("--- DECODE ---", Scene.StyleFactory.h1);
+            text.WriteLine(Model.Asm);
+            text.WriteLine(Model.Easy, Scene.StyleFactory.FixedFontBlue);
+        }
+
+        protected override void Draw(DrawContext surface)
+        {
+            var drawing = new Drawing(surface.Canvas);
+            drawing.DrawRect(Block, Scene.StyleFactory.GetPaint(this, "border"));
+        }
+    }
+
+    public class ExecutePhaseElement : Element<Scene, PhaseExecute>
+    {
+        private TextBlockElement text;
+
+        public ExecutePhaseElement(IElement parent, PhaseExecute model) : base(parent, model, new DBlock()
+        {
+            H = 300
+        })
+        {
+            Block.Set(4, 1, 40);
+        }
+
+        public override void Init(DrawContext surface)
+        {
+            text = Add(new TextBlockElement(Scene, this, Block, Scene.StyleFactory.FixedFont));
+        }
+
+        protected override void Step(TimeSpan step)
+        {
+            text.Clear();
+            text.WriteLine("--- EXECUTE ---", Scene.StyleFactory.h1);
+
+            if (Model.Inputs != null)
+            {
+                text.WriteLine("|");
+                text.WriteLine("Input:");
+            
+                foreach (var reg in Model.Inputs)
                 {
-                    yield return register;
-                }
+                    text.Write(reg.Id.PadRight(10));
+                    text.Write(": ");
+                    text.WriteLine(reg.ValueHex, Scene.StyleFactory.FixedFontBlue);
+                }    
             }
+            
+            
+
+
+            if (Model.Changes != null)
+            {
+                text.WriteLine("|");
+                text.WriteLine("Output:");
+                foreach (var reg in Model.Changes)
+                {
+                    text.Write(reg.Id.PadRight(10));
+                    text.Write(": ");
+                    text.WriteLine(reg.ValueHex, Scene.StyleFactory.FixedFontCyan);
+                }    
+            }
+            
+        }
+
+        protected override void Draw(DrawContext surface)
+        {
+            var drawing = new Drawing(surface.Canvas);
+            drawing.DrawRect(Block, Scene.StyleFactory.GetPaint(this, "border"));
         }
     }
 
@@ -99,12 +213,12 @@ namespace Animated.CPU.Model
             
         }
 
-        public override void Step(TimeSpan step)
+        protected override void Step(TimeSpan step)
         {
             
         }
 
-        public override void Draw(SKSurface surface)
+        protected override void Draw(DrawContext surface)
         {
             var drawing = new Drawing(surface.Canvas);
             drawing.DrawRect(Block, Scene.StyleFactory.GetPaint(this, "border"));

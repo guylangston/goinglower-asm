@@ -7,13 +7,13 @@ using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
-    public class Scene : SceneBase<Cpu>
+    public class Scene : SceneBase<Cpu, StyleFactory>
     {
         public Scene() : base(new StyleFactory())
         {
         }
 
-        protected override void InitScene(SKSurface surface)
+        protected override void InitScene(DrawContext surface)
         {
             Debug.WriteLine("Init");
             Console.WriteLine("Init2");
@@ -46,14 +46,36 @@ namespace Animated.CPU.Model
             {
                 Add(kid.model);
             }
+
+            test = new TextBlockElement(this, this, new DBlock(1000, 1000, 500, 500), StyleFactory.FixedFont);
+            test.WriteLine("Hello World");
+            test.Write("Sample");
+            test.Write("Yellow", StyleFactory.FixedFontYellow);
+            test.Write("AndBackAgain(no spaces)");
+            test.WriteLine("]", StyleFactory.FixedFontCyan);
+            test.WriteLine("Hello World");
+            test.WriteLine("iiiiiiiiii");
+            test.WriteLine("XXXXXXXXXX");
+            test.WriteLine("[        ]");
+            test.WriteLine("         ]");
+            test.Write("    ");
+            test.WriteLine("     ]");
+            test.WriteLine("[         ");
+
+            Add(test);
+
+
+
         }
+
+        private TextBlockElement test;
 
         public override void StepScene(TimeSpan s)
         {
             Model.Step();
         }
 
-        protected override void DrawOverlay(SKSurface surface)
+        protected override void DrawOverlay(DrawContext surface)
         {
             var canvas  = surface.Canvas;
             var drawing = new Drawing(canvas);
@@ -61,7 +83,7 @@ namespace Animated.CPU.Model
 
         }
 
-        protected override void DrawBackGround(SKSurface surface)
+        protected override void DrawBackGround(DrawContext surface)
         {
             var canvas = surface.Canvas;
             canvas.Clear(StyleFactory.GetColor(this, "bg"));

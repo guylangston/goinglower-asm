@@ -15,7 +15,7 @@ namespace Animated.CPU.Model
             
         }
 
-        public override void Init(SKSurface surface)
+        public override void Init(DrawContext surface)
         {
             var stack = new DStack(this.Block, DOrient.Horz);
             
@@ -38,12 +38,12 @@ namespace Animated.CPU.Model
 
         }
 
-        public override void Step(TimeSpan step)
+        protected override void Step(TimeSpan step)
         {
             var x = 1;
         }
         
-        public override void Draw(SKSurface surface)
+        protected override void Draw(DrawContext surface)
         {
             
         }
@@ -78,7 +78,7 @@ namespace Animated.CPU.Model
         {
         }
 
-        public override void Init(SKSurface surface)
+        public override void Init(DrawContext surface)
         {
             var bytes = new byte[8];
             this.Bytes = Add(new ByteArrayElement(this, new ByteArrayModel(bytes, "", ""))
@@ -89,7 +89,7 @@ namespace Animated.CPU.Model
         
         public ByteArrayElement Bytes { get; set; }
 
-        public override void Step(TimeSpan step)
+        protected override void Step(TimeSpan step)
         {
             Bytes.IsHidden = Animator.IsActive;
             
@@ -104,7 +104,7 @@ namespace Animated.CPU.Model
         
         public bool IsHighlighted { get; set; }
         
-        public override void Draw(SKSurface surface)
+        protected override void Draw(DrawContext surface)
         {
 
             var canvas = surface.Canvas;
@@ -128,8 +128,6 @@ namespace Animated.CPU.Model
             draw.DrawRect(Block, sBg);
             
             //draw.DrawText($"#{Alpha.Value}", new SKPaint() { Color = SKColors.Black, TextSize = 10}, Block.Inner.BL + new SKPoint(0, -15));
-            
-            
             
             draw.DrawText($"[{Model.Id}]", sId, Block, BlockAnchor.TL);
             draw.DrawText(Model.Name ?? "", sName, Block, BlockAnchor.TR);

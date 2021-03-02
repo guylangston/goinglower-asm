@@ -5,6 +5,13 @@ using SkiaSharp;
 
 namespace Animated.CPU.Animation
 {
+    public class DrawContext : Drawing // Use Base Class to add draw func
+    {
+        public DrawContext(SKCanvas canvas) : base(canvas)
+        {
+        }
+    }
+    
     public interface IElement
     {
         IScene     Scene    { get;  }
@@ -13,9 +20,9 @@ namespace Animated.CPU.Animation
         DBlock?    Block    { get; set; }
         IAnimator? Animator { get; set; }
         
-        void Init(SKSurface surface);
-        void Step(TimeSpan step);
-        void Draw(SKSurface surface);
+        void Init(DrawContext surface);
+        void StepExec(TimeSpan step);
+        void DrawExec(DrawContext surface);
         
         IReadOnlyList<IElement>? Children { get; }
         IEnumerable<IElement> ChildrenRecursive();

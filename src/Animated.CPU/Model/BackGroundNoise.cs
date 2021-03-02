@@ -35,11 +35,12 @@ namespace Animated.CPU.Model
         public SKPoint Speed    { get; set; }
 
 
-        public override void Init(SKSurface surface)
+        public override void Init(DrawContext surface)
         {
             
         }
-        public override void Step(TimeSpan step)
+        
+        protected override void Step(TimeSpan step)
         {
             Location += Speed;
             if (Location.X < 0)
@@ -65,7 +66,7 @@ namespace Animated.CPU.Model
             }
         }
         
-        public override void Draw(SKSurface surface)
+        protected override void Draw(DrawContext surface)
         {
             surface.Canvas.DrawCircle(Location.X, Location.Y, 3, Paint);
 

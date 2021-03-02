@@ -6,25 +6,26 @@ using SkiaSharp;
 namespace Animated.CPU.Animation
 {
     
-    public abstract class SceneBase<TModel> : ElementBase,  IScene
+    public abstract class SceneBase<TModel, TStyle> : ElementBase,  IScene where TStyle:IStyleFactory
     {
-        protected SceneBase(IStyleFactory styleFactory) 
+        protected SceneBase(TStyle styleFactory) 
         {
             StyleFactory = styleFactory;
             SetScene(this);
         }
         
-        protected SceneBase(IScene scene,  DBlock b, IStyleFactory styleFactory) 
+        protected SceneBase(IScene scene,  DBlock b, TStyle styleFactory) 
         {
             StyleFactory = styleFactory;
             SetScene(this);
             Block = b;
         }
 
-        public TimeSpan      Elapsed      { get; private set; }
-        public IStyleFactory StyleFactory { get; private set; }
-        
-        public int           Steps        { get; private set; }
+        public TimeSpan Elapsed      { get; private set; }
+        public TStyle   StyleFactory { get; }
+        public int      Steps        { get; private set; }
+
+        IStyleFactory IScene.StyleFactory => StyleFactory;
         
         public new TModel Model
         {
@@ -34,9 +35,9 @@ namespace Animated.CPU.Animation
         
         private bool init = false;
 
-        protected abstract void InitScene(SKSurface surface);
+        protected abstract void InitScene(DrawContext drawing);
         
-        public sealed override void Init(SKSurface surface)
+        public sealed override void Init(DrawContext surface)
         {
             // nothing,handled in Draw
         }
@@ -46,7 +47,7 @@ namespace Animated.CPU.Animation
             
         }
 
-        public sealed override void Step(TimeSpan step)
+        protected sealed override void Step(TimeSpan step)
         {
             Elapsed += step;
             Steps++;
@@ -57,11 +58,11 @@ namespace Animated.CPU.Animation
                 if (element == this) continue;
 
                 element.Animator?.Step(step);
-                element.Step(step);
+                element.StepExec(step);
             }
         }
         
-        public sealed override void Draw(SKSurface surface)
+        protected override void Draw(DrawContext surface)
         {
             if (!init)
             {
@@ -78,13 +79,13 @@ namespace Animated.CPU.Animation
                 if (element == this) continue;
                 if (element is ElementBase eb && eb.IsHidden) continue;
                 
-                element.Draw(surface);
+                element.DrawExec(surface);
             }
             DrawOverlay(surface);
         }
 
-        protected abstract void DrawOverlay(SKSurface surface);
-        protected abstract void DrawBackGround(SKSurface surface);
+        protected abstract void DrawOverlay(DrawContext drawing);
+        protected abstract void DrawBackGround(DrawContext drawing);
         
         public abstract void KeyPress(object platformKeyObject, string key);
 

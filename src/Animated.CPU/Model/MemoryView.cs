@@ -141,7 +141,7 @@ namespace Animated.CPU.Model
         }
        
         
-        public override void Init(SKSurface surface)
+        public override void Init(DrawContext surface)
         {
             var stack = new StackElement(Scene, this, Block, DOrient.Vert);
             Add(stack);
@@ -156,12 +156,12 @@ namespace Animated.CPU.Model
         }
 
         
-        public override void Step(TimeSpan step)
+        protected override void Step(TimeSpan step)
         {
             
         }
         
-        public override void Draw(SKSurface surface)
+        protected override void Draw(DrawContext surface)
         {
             
         }
@@ -183,18 +183,19 @@ namespace Animated.CPU.Model
         {
         }
 
-        public override void Init(SKSurface surface)
+        public override void Init(DrawContext surface)
         {
             Add(new ByteArrayElement(this, 
                 new ByteArrayModel(Model.Raw, Model.SourceAsm, Model.Comment), 
                 new DBlock(Block.Inner.X + 1, Block.Inner.Y + 5, Block.Inner.W - 20, Block.Inner.H-20)));
         }
 
-        public override void Step(TimeSpan step)
+        protected override void Step(TimeSpan step)
         {
             
         }
-        public override void Draw(SKSurface surface)
+
+        protected override void Draw(DrawContext surface)
         {
             var canvas = surface.Canvas;
             var draw   = new Drawing(canvas);

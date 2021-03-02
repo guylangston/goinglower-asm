@@ -81,12 +81,12 @@ namespace Animated.CPU.Animation
             return x;
         }
 
-        public override void Step(TimeSpan step)
+        protected override void Step(TimeSpan step)
         {   
             Layout();
         }
 
-        public override void Draw(SKSurface surface)
+        protected override void Draw(DrawContext surface)
         {
             
         }

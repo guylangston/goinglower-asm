@@ -18,6 +18,8 @@ namespace Animated.CPU
             this.canvas = canvas;
         }
 
+        public SKCanvas Canvas => canvas;
+
         public void DrawText(string txt, SKPaint t1, SKPoint c)
         {
             SKRect bounds = new SKRect();

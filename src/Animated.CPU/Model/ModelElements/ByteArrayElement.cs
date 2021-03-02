@@ -35,11 +35,12 @@ namespace Animated.CPU.Model
         }
 
 
-        public override void Step(TimeSpan step)
+        protected override void Step(TimeSpan step)
         {
             
         }
-        public override void Draw(SKSurface surface)
+        
+        protected override void Draw(DrawContext surface)
         {
             var x = Block.Inner.X;
             var y = Block.Inner.Y;
@@ -71,7 +72,7 @@ namespace Animated.CPU.Model
             if (!string.IsNullOrWhiteSpace(Model.Comment) || !string.IsNullOrWhiteSpace(Model.ParsedValue))
             {   
                 x += 5;
-                var    text     = $"-> '{Model.ParsedValue}' ; {Model.Comment} ";
+                var    text     = $"= {Model.ParsedValue}  {Model.Comment} ";
                 SKRect textSize = new SKRect();
                 hint.MeasureText(text, ref textSize);
                 surface.Canvas.DrawText(text, x, y - textSize.Top, hint);

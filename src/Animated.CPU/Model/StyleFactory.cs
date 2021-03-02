@@ -4,8 +4,43 @@ using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
-    internal class StyleFactory : IStyleFactory
+    public class StyleFactory : IStyleFactory
     {
+        public const string MonoSpace = "Jetbrains Mono";
+        
+        public StyleFactory()
+        {
+            FixedFont = new SKPaint()
+            {
+                TextSize = 15,
+                Color    = SKColor.Parse("#ccc"),
+                Typeface = SKTypeface.FromFamilyName(
+                    MonoSpace, 
+                    SKFontStyleWeight.Normal, 
+                    SKFontStyleWidth.Normal, 
+                    SKFontStyleSlant.Upright)
+            };
+            FixedFontCyan   = Clone(FixedFont, p => p.Color = SKColors.Cyan);
+            FixedFontYellow = Clone(FixedFont, p => p.Color = SKColors.Yellow);
+            FixedFontBlue   = Clone(FixedFont, p => p.Color = SKColors.LightBlue);
+            FixedFontWhite   = Clone(FixedFont, p => p.Color = SKColors.White);
+            
+            Text = new SKPaint()
+            {
+                TextSize = 15,
+                Color    = SKColor.Parse("#eee")
+            };
+        }
+
+        
+
+        public static SKPaint Clone(SKPaint cpy, Action<SKPaint> then)
+        {
+            var c = cpy.Clone();
+            then(c);
+            return c;
+        }
+        
         private SKPaint def = new SKPaint()
         {
             Color       = SKColors.Pink,
@@ -36,11 +71,14 @@ namespace Animated.CPU.Model
         internal SKPaint t2    =  new SKPaint { TextSize = 20, Color = SKColor.Parse("#00ff00")};
         internal SKPaint debug =  new SKPaint { TextSize = 10, Color = SKColor.Parse("#ffffff")};
 
-        public SKPaint text = new SKPaint()
-        {
-            TextSize = 15,
-            Color    = SKColor.Parse("#eee")
-        };
+        public SKPaint Text            { get; }
+        public SKPaint FixedFont       { get; }
+        public SKPaint FixedFontYellow { get; }
+        public SKPaint FixedFontCyan   { get; }
+        public SKPaint FixedFontWhite  { get; }
+        public SKPaint FixedFontBlue   { get; }
+        public SKPaint Border          { get; }
+
         
         public SKPaint hex = new SKPaint()
         {
@@ -135,7 +173,7 @@ namespace Animated.CPU.Model
             {
                 case "h1": return h1;
                 case "hex": return hex;
-                case "text": return text;
+                case "text": return Text;
                 case "debug": return debug;
                 case "arrow": return arrow;
                 case "border": 

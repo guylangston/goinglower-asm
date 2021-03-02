@@ -32,16 +32,28 @@ namespace Animated.CPU.Animation
             Block  = b;
         }
 
-        public IScene    Scene    { get; private set; }
-        public IElement? Parent   { get; private set; }
-        public object?   Model    { get; set; }
-        public DBlock    Block    { get; set; }
-        public IAnimator Animator { get; set; } = EmptyAnimator.Instance;
-        public bool      IsHidden { get; set; }
+        public IScene    Scene     { get; private set; }
+        public IElement? Parent    { get; private set; }
+        public object?   Model     { get; set; }
+        public DBlock    Block     { get; set; }
+        public IAnimator Animator  { get; set; } = EmptyAnimator.Instance;
+        public bool      IsHidden  { get; set; }
+        public bool      IsEnabled { get; set; } = true;      // Step And Draw are not called
 
-        public virtual void Init(SKSurface surface) {}
-        public abstract void Step(TimeSpan step);
-        public abstract void Draw(SKSurface surface);
+        public virtual void Init(DrawContext drawing) {}
+
+        public void StepExec(TimeSpan step)
+        {
+            if (IsEnabled) Step(step);
+        }
+
+        public void DrawExec(DrawContext surface)
+        {
+            if (IsEnabled && !IsHidden) Draw(surface);
+        }
+        
+        protected abstract void Step(TimeSpan step);
+        protected abstract void Draw(DrawContext surface);
 
         public IReadOnlyList<IElement> Children => (IReadOnlyList<IElement>)elements;
 
