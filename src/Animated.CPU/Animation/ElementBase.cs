@@ -51,9 +51,15 @@ namespace Animated.CPU.Animation
         {
             if (IsEnabled && !IsHidden) Draw(surface);
         }
+
+        public void DecorateExec(DrawContext surface)
+        {
+            if (IsEnabled && !IsHidden) Decorate(surface);
+        }
         
         protected abstract void Step(TimeSpan step);
         protected abstract void Draw(DrawContext surface);
+        protected virtual void Decorate(DrawContext surface) {  /* Nothing by default */ }
 
         public IReadOnlyList<IElement> Children => (IReadOnlyList<IElement>)elements;
 

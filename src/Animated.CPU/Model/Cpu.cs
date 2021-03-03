@@ -191,7 +191,7 @@ namespace Animated.CPU.Model
             this.alu = alu;
         }
 
-        public ulong RIP    => alu.StoryStep.RIP;
+        public ulong RIP    => alu.StoryStep?.RIP ?? 0;
         public byte[]?  Memory => alu.Cpu.Instructions?.GetByAddress(alu.StoryStep?.RIP ?? 0)?.Raw;
 
         public override string ToString() => "Fetch";

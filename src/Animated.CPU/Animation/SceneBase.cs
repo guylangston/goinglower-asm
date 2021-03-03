@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using SkiaSharp;
 
 namespace Animated.CPU.Animation
@@ -81,6 +82,15 @@ namespace Animated.CPU.Animation
                 
                 element.DrawExec(surface);
             }
+            
+            foreach (var element in ChildrenRecursive())
+            {
+                if (element == this) continue;
+                if (element is ElementBase eb && eb.IsHidden) continue;
+                
+                element.DecorateExec(surface);
+            }
+            
             DrawOverlay(surface);
         }
 

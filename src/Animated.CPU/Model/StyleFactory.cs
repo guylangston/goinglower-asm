@@ -42,13 +42,22 @@ namespace Animated.CPU.Model
                 Style       = SKPaintStyle.StrokeAndFill,
                 StrokeWidth = 3,
                 Color       = SKColor.Parse("#444"),
-                Shader      = SKShader.CreateColor(new SKColor(gray, gray, gray, 220))
+                Shader      = SKShader.CreateColor(new SKColor(gray, gray, gray, 220)),
+                
             };
             
             Text = new SKPaint()
             {
                 TextSize = 15,
                 Color    = SKColor.Parse("#eee")
+            };
+
+            Arrow = new SKPaint()
+            {
+                Style       = SKPaintStyle.Stroke,
+                StrokeWidth = 1.5f,
+                Color       = SKColors.Lime,
+                IsAntialias = true
             };
         }
 
@@ -62,9 +71,7 @@ namespace Animated.CPU.Model
         public SKPaint FixedFontBlue   { get; }
         public SKPaint FixedFontGray   { get; }
         public SKPaint Border          { get; }
-        
-        
-        
+        public SKPaint Arrow           { get; }
 
         public static SKPaint Clone(SKPaint cpy, Action<SKPaint> then)
         {

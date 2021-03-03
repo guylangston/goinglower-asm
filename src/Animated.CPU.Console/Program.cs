@@ -14,9 +14,9 @@ namespace Animated.CPU.Console
                 "/home/guy/repo/cpu.anim/src/Sample", 
                 $"{name}.cs", 
                 10,
-                $"Sample.{name}.Run()");
+                $"Sample.BasicOps.Maths(Int32, Int32)");
 
             p.Start(cfg);
         }
     }
-} 
+}  

@@ -186,14 +186,15 @@ namespace Animated.CPU.Model
         protected override void Draw(DrawContext surface)
         {
             txt.Clear();
-            if (Model.Offset == 0)
-            {
-                txt.Write($"[{DisplayHelper.ToHex(Model.Address)}]", Scene.Styles.FixedFontBlue);
-            }
-            else
-            {
-                txt.Write($"[+{Model.Offset}]", Scene.Styles.FixedFontBlue);
-            }
+            txt.Write($"[{DisplayHelper.ToHex(Model.Address)}]", Scene.Styles.FixedFontBlue);
+            // if (Model.Offset == 0)
+            // {
+            //     txt.Write($"[{DisplayHelper.ToHex(Model.Address)}]", Scene.Styles.FixedFontBlue);
+            // }
+            // else
+            // {
+            //     txt.Write($"[+{Model.Offset}]", Scene.Styles.FixedFontBlue);
+            // }
             txt.Write(" -> ");
             txt.WriteLine(Model.Raw?.ToHex().PadRight(8), Scene.Styles.FixedFontCyan);
             

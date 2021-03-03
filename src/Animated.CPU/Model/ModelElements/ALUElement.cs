@@ -68,9 +68,45 @@ namespace Animated.CPU.Model
                 text.Write(": ");
                 text.WriteLine(DisplayHelper.ToHex(Model.Memory), Scene.Styles.FixedFontBlue);    
             }
-            
         }
 
+        protected override void Draw(DrawContext surface)
+        {
+            base.Draw(surface);
+
+            var seg = Scene.Cpu.Instructions.GetByAddress(Model.RIP);
+            if (seg != null && Scene.TryRecurseElementFromModel(seg, out var eRip))
+            {
+                var a = Block.Outer.MR;
+                var b = eRip.Block.Inner.ML;
+                new Arrow()
+                {
+                    Start     = a,
+                    WayPointA = a + new SKPoint(20, 0),
+                    WayPointB = b + new SKPoint(-20, 0),
+                    End       = b,
+                    Style     = Scene.Styles.Arrow
+                }.Draw(surface.Canvas);
+            }
+        }
+
+        protected override void Decorate(DrawContext surface)
+        {
+            var seg = Scene.Cpu.Instructions.GetByAddress(Model.RIP);
+            if (seg != null && Scene.TryRecurseElementFromModel(seg, out var eRip))
+            {
+                var a = Block.Outer.MR;
+                var b = eRip.Block.Inner.ML;
+                new Arrow()
+                {
+                    Start     = a,
+                    WayPointA = a + new SKPoint(20, 0),
+                    WayPointB = b + new SKPoint(-20, 0),
+                    End       = b,
+                    Style     = Scene.Styles.Arrow
+                }.Draw(surface.Canvas);
+            }
+        }
     }
 
     public class DecodePhaseElement : Section<Scene, PhaseDecode>
@@ -102,10 +138,14 @@ namespace Animated.CPU.Model
                 text.WriteLine(decode.FriendlyName, Scene.Styles.FixedFontBlue);
                 text.WriteLine(decode.FriendlyMethod, Scene.Styles.FixedFontBlue);
             }
-            
         }
 
-      
+        protected override void Draw(DrawContext surface)
+        {
+            base.Draw(surface);
+            
+            
+        }
     }
 
     public class ExecutePhaseElement : Section<Scene, PhaseExecute>

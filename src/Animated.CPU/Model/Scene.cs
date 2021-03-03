@@ -13,6 +13,9 @@ namespace Animated.CPU.Model
         public Scene() : base(new StyleFactory())
         {
         }
+        
+        // Helpers
+        public Cpu Cpu => Model;
 
         protected override void InitScene(DrawContext surface)
         {

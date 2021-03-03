@@ -23,6 +23,7 @@ namespace Animated.CPU.Animation
         void Init(DrawContext surface);
         void StepExec(TimeSpan step);
         void DrawExec(DrawContext surface);
+        void DecorateExec(DrawContext surface);
         
         IReadOnlyList<IElement>? Children { get; }
         IEnumerable<IElement> ChildrenRecursive();
