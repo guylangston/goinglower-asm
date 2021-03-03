@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
 using Animated.CPU.Animation;
 using SkiaSharp;
@@ -170,33 +171,65 @@ namespace Animated.CPU.Model
         {
             text.Clear();
             
-            var i = Model.Inputs.ToArray();
-            if (i.Any())
+            var decode = Model. Asm;
+            if (decode != null && decode.Args.Any())
             {
-                text.WriteLine();
-                text.WriteLine("Input:");
-            
-                foreach (var reg in i)
+                foreach (var arg in decode.Args.Where(x=>(x.InOut & InOut.In) > 0))
                 {
-                    text.Write(reg.Id.PadRight(10));
+                    var val = Model.Alu.GetInput(decode, arg);
+                    
+                    text.Write($" IN: ");
+                    text.Write(arg.Text.PadRight(10), Scene.Styles.FixedFontCyan);
                     text.Write(": ");
-                    text.WriteLine(reg.ValueHex, Scene.Styles.FixedFontBlue);
-                }    
-            }
+                    text.WriteLine(val, Scene.Styles.FixedFontYellow);
+                }
+                
+                text.WriteLine();
+                text.Write(">>> ", Scene.Styles.FixedFontDarkGray);
+                text.Write(decode.OpCode, Scene.Styles.FixedFontYellow);
+                text.Write($" ({decode.FriendlyName})", Scene.Styles.FixedFontGray);
+                text.Write(" <<<", Scene.Styles.FixedFontDarkGray);
+                text.WriteLine();
+                
+                
+                // foreach (var arg in decode.Args.Where(x=>(x.InOut & InOut.Out) > 0))
+                // {
+                //     text.WriteLine($"OUT {arg.Text}");
+                // }
+                
+                text.WriteLine();
+                foreach (var arg in decode.Args.Where(x=>(x.InOut & InOut.Out) > 0))
+                {
+                    var val = Model.Alu.GetOutput(decode, arg);
+                    
+                    text.Write($"OUT: ");
+                    text.Write(arg.Text.PadRight(10), Scene.Styles.FixedFontCyan);
+                    text.Write(": ");
+                    text.WriteLine(val, Scene.Styles.FixedFontYellow);
+                }
+                
+                
+                text.WriteLine();
+                text.WriteLine($"Next: {Scene.Cpu.RIP.ValueHex}...");
+                
 
-            var c = Model.Changes.ToArray();
-            if (c.Any())
-            {
-                text.WriteLine();
-                text.WriteLine("Output:");
-                foreach (var reg in c)
-                {
-                    text.Write(reg.Id.PadRight(10));
-                    text.Write(": ");
-                    text.WriteLine(reg.ValueHex, Scene.Styles.FixedFontCyan);
-                }    
             }
             
+            // var i = Model.Inputs.ToArray();
+            // if (i.Any())
+            // {
+            //     text.WriteLine();
+            //     text.WriteLine("Input:");
+            //
+            //     foreach (var reg in i)
+            //     {
+            //         text.Write(reg.Id.PadRight(10));
+            //         text.Write(": ");
+            //         text.WriteLine(reg.ValueHex, Scene.Styles.FixedFontBlue);
+            //     }    
+            // }
+
+           
         }
 
         

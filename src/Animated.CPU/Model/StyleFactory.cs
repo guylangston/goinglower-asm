@@ -25,6 +25,7 @@ namespace Animated.CPU.Model
             FixedFontBlue   = Clone(FixedFont, p => p.Color = SKColors.LightBlue);
             FixedFontWhite  = Clone(FixedFont, p => p.Color = SKColors.White);
             FixedFontGray   = Clone(FixedFont, p => p.Color = SKColors.LightGray);
+            FixedFontDarkGray = Clone(FixedFont, p => p.Color = SKColors.Gray);
 
             Border = borderGray1;
 
@@ -70,6 +71,7 @@ namespace Animated.CPU.Model
         public SKPaint FixedFontWhite  { get; }
         public SKPaint FixedFontBlue   { get; }
         public SKPaint FixedFontGray   { get; }
+        public SKPaint FixedFontDarkGray   { get; }
         public SKPaint Border          { get; }
         public SKPaint Arrow           { get; }
 
