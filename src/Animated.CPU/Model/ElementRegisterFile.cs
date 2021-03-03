@@ -22,7 +22,7 @@ namespace Animated.CPU.Model
             foreach (var reg in stack.Layout(Model))
             {
                 var r = Add(new ElementRegister(this, reg.model, reg.block));
-                r.Block.Set(2, 2, 4);
+                r.Block.Set(4, 2, 4);
                 r.Alpha.Value     = 0;
                 r.Alpha.BaseValue = 180;
                 
@@ -63,16 +63,6 @@ namespace Animated.CPU.Model
 
     public class ElementRegister : Element<Scene, Register>
     {
-
-        public ElementRegister(Scene scene, Register model) : base(scene, model)
-        {
-        }
-        public ElementRegister(IElement parent, Register model) : base(parent, model)
-        {
-        }
-        public ElementRegister(Scene scene, Register model, DBlock block) : base(scene, model, block)
-        {
-        }
         public ElementRegister(IElement parent, Register model, DBlock block) : base(parent, model, block)
         {
         }
@@ -105,15 +95,13 @@ namespace Animated.CPU.Model
         
         protected override void Draw(DrawContext surface)
         {
-            
-
             var canvas = surface.Canvas;
             var draw   = new Drawing(canvas);
             
-            var sName = Scene.StyleFactory.GetPaint(this, "Name");
-            var sVal  = Scene.StyleFactory.GetPaint(this, "Value");
-            var sId   = Scene.StyleFactory.GetPaint(this, "Id");
-            var sBg   = Scene.StyleFactory.GetPaint(this, "bg");
+            var sName = Scene.Styles.GetPaint(this, "Name");
+            var sVal  = Scene.Styles.GetPaint(this, "Value");
+            var sId   = Scene.Styles.GetPaint(this, "Id");
+            var sBg   = Scene.Styles.GetPaint(this, "bg");
             var i     = (byte)60;
             sBg = new SKPaint()
             {
@@ -133,7 +121,7 @@ namespace Animated.CPU.Model
             draw.DrawText(Model.Name ?? "", sName, Block, BlockAnchor.TR);
             //draw.DrawText(Model.Value.ToString("X"), sVal, Block, BlockAnchor.BR);
 
-            if (IsHighlighted || Model.IsChanged)
+            if ((Model != Scene.Model.RIP) && (IsHighlighted || Model.IsChanged))
             {
                 var high = new SKPaint()
                 {

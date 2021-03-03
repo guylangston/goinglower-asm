@@ -83,6 +83,7 @@ namespace Animated.CPU.Animation
         public SKPoint BR => new SKPoint(X2, Y2);
 
         public SKRect ToSkRect() => new SKRect(X, Y, X2, Y2);
+        public SKRectI ToSkRectI() => new SKRectI((int)X, (int)Y, (int)X2, (int)Y2);
     }
         
     

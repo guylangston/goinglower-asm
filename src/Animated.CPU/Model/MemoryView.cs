@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
 using Animated.CPU.Animation;
-using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
@@ -38,6 +36,7 @@ namespace Animated.CPU.Model
         
         public SourceFileAnchor? FindAnchor(string currSource)
         {
+            if (currSource == null) return null;
             // "home/guy/RiderProjects/ConsoleApp1/ConsoleApp1/Program.cs @ 37:"
             
             if (StringHelper.TrySplitExclusive(currSource.Trim(':'), " @ ", out var res))
@@ -74,7 +73,7 @@ namespace Animated.CPU.Model
         public int        RegionStart { get; set; } = -1;
         public int        RegionEnd   { get; set; } = -1;
 
-        public override string ToString() => File.Lines[(int)Line].Trim();
+        public override string ToString() => $"L{Line}: {File.Lines[(int)Line].Trim()}";
     }
     
     public enum MemoryHint
@@ -118,10 +117,10 @@ namespace Animated.CPU.Model
             public string            SourceAsm { get; set; }
             public string            Comment   { get; set; }
             public ulong             Address   { get; set; }
-            public SourceFileAnchor? Anchor    { get; set; }
+            public SourceFileAnchor? SourceAnchor    { get; set; }
 
             public override string ToString() => 
-                $"[{Address:X}|{Offset}] {RawAsString(),16}, {Label} {SourceAsm} {Comment} // {Anchor}";
+                $"[{Address:X}|{Offset}] {RawAsString(),16}, {Label} {SourceAsm} {Comment} // {SourceAnchor}";
 
             public string RawAsString() => String.Join("", Raw.Select(x => x.ToString("X")));
             
@@ -145,13 +144,10 @@ namespace Animated.CPU.Model
         {
             var stack = new StackElement(this, Block, DOrient.Vert);
             Add(stack);
-
+            
             foreach (var seg in Model.Segments)
             {
-                stack.Add(new SegmentElement(stack, seg, new DBlock()
-                {
-                    H = 30
-                }));
+                stack.Add(new SegmentElement(stack, seg, new DBlock()));
             }
         }
 
@@ -160,47 +156,55 @@ namespace Animated.CPU.Model
 
     public class SegmentElement : Element<Scene, MemoryView.Segment>
     {
+        private ByteArrayElement mem;
+        private TextBlockElement txt;
 
-        public SegmentElement(Scene scene, MemoryView.Segment model) : base(scene, model)
-        {
-        }
-        public SegmentElement(IElement parent, MemoryView.Segment model) : base(parent, model)
-        {
-        }
-        public SegmentElement(Scene scene, MemoryView.Segment model, DBlock block) : base(scene, model, block)
-        {
-        }
         public SegmentElement(IElement parent, MemoryView.Segment model, DBlock block) : base(parent, model, block)
         {
+            block.Set(0,0,0);
         }
 
         public override void Init(DrawContext surface)
         {
-            Add(new ByteArrayElement(this, 
-                new ByteArrayModel(Model.Raw, Model.SourceAsm, Model.Comment), 
-                new DBlock(Block.Inner.X + 1, Block.Inner.Y + 5, Block.Inner.W - 20, Block.Inner.H-20)));
+            txt = Add(new TextBlockElement(this, Block, Scene.Styles.FixedFont));
+            // mem = Add(new ByteArrayElement(this, 
+            //     new ByteArrayModel(Model.Raw, Model.SourceAsm, Model.Comment), Block));
         }
 
         protected override void Step(TimeSpan step)
         {
+            txt.Block.H = Block.H = (Model.SourceAnchor != null ? txt.LineHeight*4 : txt.LineHeight*3) + 10;
             
+            txt.Background = this.IndexInParent % 2 == 0
+                ? Scene.Styles.BackGround
+                : Scene.Styles.BackGroundAlt;
+            
+
+            txt.IsEnabled = Block.Y <= Parent.Block.Inner.Y2;
         }
 
         protected override void Draw(DrawContext surface)
         {
-            var canvas = surface.Canvas;
-            var draw   = new Drawing(canvas);
+            txt.Clear();
+            if (Model.Offset == 0)
+            {
+                txt.Write($"[{DisplayHelper.ToHex(Model.Address)}]", Scene.Styles.FixedFontBlue);
+            }
+            else
+            {
+                txt.Write($"[+{Model.Offset}]", Scene.Styles.FixedFontBlue);
+            }
+            txt.Write(" -> ");
+            txt.WriteLine(Model.Raw?.ToHex().PadRight(8), Scene.Styles.FixedFontCyan);
             
-            var sBorder = Scene.StyleFactory.GetPaint(this, "border");
-            var sText   = Scene.StyleFactory.GetPaint(this, "text");
-            draw.DrawRect(Block, sBorder);
+            if (Model.SourceAnchor != null)
+            {
+                txt.WriteLine(Model.SourceAnchor, Scene.Styles.FixedFontYellow);
+            }
             
-            //draw.DrawTextCenter(Model?.ToString(), sText, Block.Inner.MM);
-            draw.DrawText($"+{Model.Offset}", sText, Block, BlockAnchor.BR);
+            txt.WriteLine(Model.SourceAsm, Scene.Styles.FixedFontGray);
 
-            draw.DrawText(""+Model.Comment, sText, Block, BlockAnchor.MR);
-            
-            draw.DrawText(""+Model.Label, sText, Block, BlockAnchor.TR);
+
         }
     }
 

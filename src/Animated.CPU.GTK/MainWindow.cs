@@ -26,15 +26,17 @@ namespace Animated.CPU.GTK
         private MainWindow(Builder builder)
             : base(builder.GetObject("MainWindow").Handle)
         {
-            var dir            = "/home/guy/RiderProjects/ConsoleApp1/ConsoleApp1/bin/Release/net5.0";
+            var dir = "/home/guy/repo/cpu.anim/src/Sample/bin/Release/net5.0/linux-x64/publish";
+            var src = System.IO.Path.Combine("/home/guy/repo/cpu.anim/src/Sample/", "BasicOps.cs");
+            
+
             var sourceProvider = new SourceProvider();
-            sourceProvider.Load("/home/guy/RiderProjects/ConsoleApp1/ConsoleApp1/Program.cs");
+            sourceProvider.Load(src);
+            
             var parser = new Parser(sourceProvider);
             var setup  = new Setup();
             var cpu    = new Cpu();
             setup.InitFromDisk(dir, cpu, sourceProvider);
-            
-            
             
             builder.Autoconnect(this);
             DeleteEvent        += OnWindowDeleteEvent;

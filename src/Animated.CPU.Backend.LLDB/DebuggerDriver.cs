@@ -17,18 +17,74 @@ namespace Animated.CPU.Backend.LLDB
         private Regex matchBP = new Regex("--address 0x[0-9A-F]{16}");
         private SourceProvider source;
         private Parser parser;
+        private ConfigArgs args;
 
         public class ConfigArgs
         {
-            public string TargetBinary     { get; set; } = "/home/guy/RiderProjects/ConsoleApp1/ConsoleApp1/bin/Release/net5.0/ConsoleApp1";
-            public string WorkingDirectory { get; set; } = "/home/guy/RiderProjects/ConsoleApp1/ConsoleApp1/bin/Release/net5.0/";
-            public string PathLLDB         { get; set; } = "/usr/bin/lldb";
-            public string SourceFile       { get; set; } = "/home/guy/RiderProjects/ConsoleApp1/ConsoleApp1/Program.cs";
+            // /home/guy/repo/cpu.anim/src/Sample/Sample.csproj
+            public void WithProjectDir(string proj, 
+                string source,
+                int breakOnLine,
+                string confirm
+                )
+            {
+                string relRuntime = "bin/Release/net5.0/linux-x64/publish";
+                if (!Directory.Exists(proj))
+                {
+                    throw new Exception($"Directory Not Found: (rel):{proj}");
+                }
+                ProjectDir       = proj;
+                WorkingDirectory = Path.Combine(proj, relRuntime);
+                if (!Directory.Exists(WorkingDirectory))
+                {
+                    throw new Exception($"Directory Not Found: (WorkingDirectory):{WorkingDirectory}");
+                }
 
+                var projName = Path.GetFileName(proj);
+                TargetBinary     = Path.Combine(WorkingDirectory, projName);
+                if (!File.Exists(TargetBinary))
+                {
+                    throw new Exception($"File Not Found: (TargetBinary):{TargetBinary}");
+                }
+                
+                SourceFile       = Path.Combine(proj, source);
+                if (!File.Exists(SourceFile))
+                {
+                    throw new Exception($"File Not Found: (SourceFile):{SourceFile}");
+                }
+
+                BreakPoint             = $"{source}:{breakOnLine}";
+                BreakPointConfirmation = confirm;
+
+
+            }
+            
+            // With Defaults
+            public string PathLLDB  { get; set; } = "/usr/bin/lldb";
+            public int    StepCount { get; set; } = 50; 
+
+            // No Default 
+            public string ProjectDir             { get; set; }
+            public string TargetBinary           { get; set; } // "/home/guy/RiderProjects/ConsoleApp1/ConsoleApp1/bin/Release/net5.0/ConsoleApp1";
+            public string WorkingDirectory       { get; set; } // "/home/guy/RiderProjects/ConsoleApp1/ConsoleApp1/bin/Release/net5.0/";
+            public string SourceFile             { get; set; } // "/home/guy/RiderProjects/ConsoleApp1/ConsoleApp1/Program.cs";
+            public string BreakPoint             { get; set; } // "Program.cs:30";
+            public string BreakPointConfirmation { get; set; } // "ProgramC.M3()";
+             
         }
         
         public void Start(ConfigArgs args)
         {
+            this.args = args ?? throw new ArgumentNullException(nameof(args));
+            if (string.IsNullOrWhiteSpace(args.BreakPoint)) throw new Exception("Requires Breakpoint eg 'Program.cs:30'");
+            if (string.IsNullOrWhiteSpace(args.BreakPointConfirmation)) throw new Exception("Requires Breakpoint Confirmation eg 'Program.Main()'");
+
+
+            Console.WriteLine("{0,20}: {1}", "ProjectDir", args.ProjectDir);
+            Console.WriteLine("{0,20}: {1}", "WorkingDirectory", args.WorkingDirectory);
+            Console.WriteLine("{0,20}: {1}", "TargetBinary", args.TargetBinary);
+            Console.WriteLine("{0,20}: {1}", "SourceFile", args.SourceFile);
+            
             source = new SourceProvider()
             {
                 TargetBinary = args.TargetBinary
@@ -58,10 +114,10 @@ namespace Animated.CPU.Backend.LLDB
             var cpu = new Cpu();
 
             ExecuteAndWaitForResults("version");
-            ExecuteAndWaitForResults("bpmd Program.cs:30");
+            ExecuteAndWaitForResults($"bpmd {args.BreakPoint}");
             ExecuteAndWaitForResults("run", 1d);
             
-            var bpAddr = ConfirmBreakPoint("ProgramC.M3()");
+            var bpAddr = ConfirmBreakPoint(args.BreakPointConfirmation);
             if (bpAddr == null) throw new Exception("BP not found");
             
             var source = DisassembleMethod(bpAddr).ToArray();
@@ -72,7 +128,7 @@ namespace Animated.CPU.Backend.LLDB
 
             CaptureRegisters(cpu, true);
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < args.StepCount; i++)
             {
                 CaptureRegisters(cpu);
                 Step(cpu);
@@ -137,6 +193,7 @@ namespace Animated.CPU.Backend.LLDB
 
         string ConfirmBreakPoint(string ident)
         {
+            if (ident == null) return "<Skipped>";
             IReadOnlyList<string> cmdTxt = LastResult;
 
             var l = cmdTxt.FirstOrDefault(x => x.Contains("Setting breakpoint: breakpoint set"));

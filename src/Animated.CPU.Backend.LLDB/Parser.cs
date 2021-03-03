@@ -48,6 +48,7 @@ namespace Animated.CPU.Backend.LLDB
                     var inst = ParseInstruction(ll, currSource);
                     if (inst != null)
                     {
+                        currSource  =  null;
                         inst.Offset =  offset;
                         offset      += (uint)inst.Raw.Length;
                         yield return inst;
@@ -70,15 +71,21 @@ namespace Animated.CPU.Backend.LLDB
                 Address   =  ParseHelper.ParseHexWord(arr),
                 Raw       =  ParseHelper.ParseHexByteArray(bytes),
                 SourceAsm = ll[38..],
-                Anchor    = source.FindAnchor(currSource)
+                SourceAnchor    = source.FindAnchor(currSource)
             };
         }
 
 
         public IEnumerable<RegisterDelta> ParseRegisters(IEnumerable<string> lines)
         {
-            foreach (var line in lines)
+            foreach (var ll in lines)
             {
+                var line   = ll;
+                int maxLen = "       rax = 0x00007fff7dd05b18".Length;
+                if (line.Length > maxLen)
+                {
+                    line = line.Substring(0, maxLen);
+                }
                 if (StringHelper.TrySplitExclusive(line, " = ", out var r))
                 {
                     yield return new RegisterDelta()

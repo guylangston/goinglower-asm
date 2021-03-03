@@ -46,12 +46,12 @@ namespace Animated.CPU.Model
         })
         {
             Title = "Fetch";
-            Block.Set(4, 1, 40);
+            Block.Set(4, 1, 10);
         }
 
         public override void Init(DrawContext surface)
         {
-            text = Add(new TextBlockElement(Scene, this, Block, Scene.StyleFactory.FixedFont));
+            text = Add(new TextBlockElement( this, Block, Scene.Styles.FixedFont));
         }
 
         protected override void Step(TimeSpan step)
@@ -62,11 +62,11 @@ namespace Animated.CPU.Model
                 
                 text.Write("RIP".PadRight(12));
                 text.Write(": ");
-                text.WriteLine(DisplayHelper.ToHex(Model.RIP), Scene.StyleFactory.FixedFontCyan);
+                text.WriteLine(DisplayHelper.ToHex(Model.RIP), Scene.Styles.FixedFontCyan);
                 
                 text.Write("Binary Code".PadRight(12));
                 text.Write(": ");
-                text.WriteLine(DisplayHelper.ToHex(Model.Memory), Scene.StyleFactory.FixedFontBlue);    
+                text.WriteLine(DisplayHelper.ToHex(Model.Memory), Scene.Styles.FixedFontBlue);    
             }
             
         }
@@ -82,13 +82,13 @@ namespace Animated.CPU.Model
             H = 200
         })
         {
-            Block.Set(4, 1, 40);
+            Block.Set(4, 1, 10);
             Title = "Decode";
         }
 
         public override void Init(DrawContext surface)
         {
-            text = Add(new TextBlockElement(Scene, this, Block, Scene.StyleFactory.FixedFont));
+            text = Add(new TextBlockElement( this, Block, Scene.Styles.FixedFont));
         }
 
         protected override void Step(TimeSpan step)
@@ -99,8 +99,8 @@ namespace Animated.CPU.Model
             {
                 text.WriteLine(decode);
                 text.WriteLine();
-                text.WriteLine(decode.FriendlyName, Scene.StyleFactory.FixedFontBlue);
-                text.WriteLine(decode.FriendlyMethod, Scene.StyleFactory.FixedFontBlue);
+                text.WriteLine(decode.FriendlyName, Scene.Styles.FixedFontBlue);
+                text.WriteLine(decode.FriendlyMethod, Scene.Styles.FixedFontBlue);
             }
             
         }
@@ -117,13 +117,13 @@ namespace Animated.CPU.Model
             H = 300
         })
         {
-            Block.Set(4, 1, 40);
+            Block.Set(4, 1, 10);
             Title = "Execute";
         }
 
         public override void Init(DrawContext surface)
         {
-            text = Add(new TextBlockElement(Scene, this, Block, Scene.StyleFactory.FixedFont));
+            text = Add(new TextBlockElement(this, Block, Scene.Styles.FixedFont));
         }
 
         protected override void Step(TimeSpan step)
@@ -140,7 +140,7 @@ namespace Animated.CPU.Model
                 {
                     text.Write(reg.Id.PadRight(10));
                     text.Write(": ");
-                    text.WriteLine(reg.ValueHex, Scene.StyleFactory.FixedFontBlue);
+                    text.WriteLine(reg.ValueHex, Scene.Styles.FixedFontBlue);
                 }    
             }
 
@@ -153,7 +153,7 @@ namespace Animated.CPU.Model
                 {
                     text.Write(reg.Id.PadRight(10));
                     text.Write(": ");
-                    text.WriteLine(reg.ValueHex, Scene.StyleFactory.FixedFontCyan);
+                    text.WriteLine(reg.ValueHex, Scene.Styles.FixedFontCyan);
                 }    
             }
             

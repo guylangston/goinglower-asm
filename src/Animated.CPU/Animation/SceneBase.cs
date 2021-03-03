@@ -10,22 +10,22 @@ namespace Animated.CPU.Animation
     {
         protected SceneBase(TStyle styleFactory) 
         {
-            StyleFactory = styleFactory;
+            Styles = styleFactory;
             SetScene(this);
         }
         
         protected SceneBase(IScene scene,  DBlock b, TStyle styleFactory) 
         {
-            StyleFactory = styleFactory;
+            Styles = styleFactory;
             SetScene(this);
             Block = b;
         }
 
         public TimeSpan Elapsed      { get; private set; }
-        public TStyle   StyleFactory { get; }
+        public TStyle   Styles { get; }
         public int      Steps        { get; private set; }
 
-        IStyleFactory IScene.StyleFactory => StyleFactory;
+        IStyleFactory IScene.StyleFactory => Styles;
         
         public new TModel Model
         {

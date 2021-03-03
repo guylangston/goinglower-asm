@@ -122,6 +122,9 @@ namespace Animated.CPU
 
         public void DrawRect(DBlock b, SKPaint p)
         {
+            if (b == null) throw new ArgumentNullException(nameof(b));
+            if (p == null) throw new ArgumentNullException(nameof(p));
+            
             canvas.DrawRect(b.X + b.Margin.Left,
                     b.Y + b.Margin.Top,
                     b.W - b.Margin.Left - b.Margin.Right - b.Border.Left - b.Border.Right,

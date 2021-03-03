@@ -128,6 +128,20 @@ namespace Animated.CPU.Animation
         {
             Scene = neverUse;
         }
+
+        public int IndexInParent
+        {
+            get
+            {
+                var list = Parent?.Children;
+                if (list == null) return -1;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (list[i] == this) return i;
+                }
+                return -1;
+            }
+        }
     }
 
    

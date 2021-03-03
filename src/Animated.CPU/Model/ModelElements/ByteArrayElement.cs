@@ -45,10 +45,10 @@ namespace Animated.CPU.Model
             var x = Block.Inner.X;
             var y = Block.Inner.Y;
 
-            var p = Scene.StyleFactory.GetPaint(this, "hex");
-            var hint = Scene.StyleFactory.GetPaint(this, "text");
+            var p = Scene.Styles.GetPaint(this, "hex");
+            var hint = Scene.Styles.GetPaint(this, "text");
             
-            var cell = Scene.StyleFactory.GetPaint(this, "border");
+            var cell = Scene.Styles.GetPaint(this, "border");
             
             for (int cc = 0; cc < Model.Bytes.Length; cc++)
             {

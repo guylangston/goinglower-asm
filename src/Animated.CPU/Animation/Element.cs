@@ -19,6 +19,7 @@ namespace Animated.CPU.Animation
         }
 
         public new TScene Scene => (TScene)base.Scene;
+        
     }
     
     public abstract class Element<TScene, TModel> : Element<TScene> where TScene:IScene

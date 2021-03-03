@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -7,16 +8,6 @@ using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
-    public class TestSection : Section<Scene, string>
-    {
-        public TestSection(IElement parent, string model, DBlock block) : base(parent, model, block)
-        {
-            Title = model;
-        }
-
-        
-    }
-        
     public class Scene : SceneBase<Cpu, StyleFactory>
     {
         public Scene() : base(new StyleFactory())
@@ -54,9 +45,11 @@ namespace Animated.CPU.Model
             {
                 Title = "Instructions"
             });
-            stack.Add(new TestSection(stack,  "Test", DBlock.JustWidth(w).Set(10, 1, 10)));
-            //stack.Add(new MemoryViewElement(stack, DBlock.JustWidth(w).Set(10, 1, 10), Model.Stack));
+            stack.Add(new CodeSection(stack,  "Code", DBlock.JustWidth(w).Set(10, 1, 10)));
+
             
+            //stack.Add(new MemoryViewElement(stack, DBlock.JustWidth(w).Set(10, 1, 10), Model.Stack));
+
             //
             // test = new TextBlockElement(this, this, new DBlock(1000, 1000, 500, 500), StyleFactory.FixedFont);
             // test.WriteLine("Hello World");
@@ -74,13 +67,8 @@ namespace Animated.CPU.Model
             // test.WriteLine("[         ");
             //
             // Add(test);
-
-
-
         }
-
-        private TextBlockElement test;
-
+        
         public override void StepScene(TimeSpan s)
         {
             Model.Step();
@@ -91,14 +79,14 @@ namespace Animated.CPU.Model
         protected override void DrawOverlay(DrawContext surface)
         {
             surface.DrawText($"{Steps} frames at {Elapsed.TotalSeconds:0.00} sec. {lastKey} | {Mouse}", 
-                StyleFactory.GetPaint(this, "debug"),
+                Styles.GetPaint(this, "debug"),
                 new SKPoint(0,0));
         }
 
         protected override void DrawBackGround(DrawContext surface)
         {
             var canvas = surface.Canvas;
-            canvas.Clear(StyleFactory.GetColor(this, "bg"));
+            canvas.Clear(Styles.GetColor(this, "bg"));
         }
 
         private string lastKey;

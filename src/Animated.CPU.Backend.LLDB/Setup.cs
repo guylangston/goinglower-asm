@@ -19,14 +19,18 @@ namespace Animated.CPU.Backend.LLDB
             {
                 if (regD.ValueParsed != null)
                 {
-                    cpu.SetReg(regD.Register, regD.ValueParsed.Value);    
+                    var r = cpu.SetReg(regD.Register, regD.ValueParsed.Value);
+                    if (r != null)
+                    {
+                        r.IsChanged = false;
+                    }
                 }
-                
             }
 
             cpu.Story = new Story()
             {
                 Steps = new List<StoryStep>(),
+                Source = source,
             };
             cpu.Stack = new MemoryView(new[]
             {

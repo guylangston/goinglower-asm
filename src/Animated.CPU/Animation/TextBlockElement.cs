@@ -9,16 +9,25 @@ namespace Animated.CPU.Animation
     {
         private readonly List<Line> lines;
         
-        
-        public TextBlockElement(IScene scene, IElement? parent, DBlock b, SKPaint defaultStyle) : base(scene, parent, b)
+        public TextBlockElement(IElement? parent, DBlock b, SKPaint defaultStyle) : base(parent.Scene, parent, b)
         {
             DefaultStyle = defaultStyle;
             lines        = new List<Line>();
             Clear();
-
+            
+            UpdateLineHeight();
         }
 
-        public SKPaint DefaultStyle { get; set; }
+        private void UpdateLineHeight()
+        {
+            var m = new SKRect();
+            DefaultStyle.MeasureText("X|", ref m);
+            this.LineHeight = m.Height;
+        }
+
+        public float    LineHeight   { get; set; }
+        public SKPaint  DefaultStyle { get; set; }
+        public SKPaint? Background   { get; set; }
 
         public class Line
         {
@@ -84,11 +93,21 @@ namespace Animated.CPU.Animation
 
         protected override void Draw(DrawContext surface)
         {
-            float y = Block.Inner.Y;
+            surface.Canvas.Save();
+            surface.Canvas.ClipRegion(new SKRegion(Block.Inner.ToSkRectI()));
+
+            if (Background != null)
+            {
+                surface.Canvas.DrawRect(Block.Outer.ToSkRect(), Background);
+            }
+
+            UpdateLineHeight();
+            
+            float y = Block.Inner.Y + LineHeight;
             foreach (var line in lines)
             {
                 float x = Block.Inner.X ; 
-                float h = 0;
+                float h = LineHeight;
 
                 if (line.Spans.Any())
                 {
@@ -111,11 +130,9 @@ namespace Animated.CPU.Animation
                     
                     y += b.Height + line.HeaderY;
                 }
-                
-                
-                
-                
             }
+            
+            surface.Canvas.Restore();
         }
     }
 }

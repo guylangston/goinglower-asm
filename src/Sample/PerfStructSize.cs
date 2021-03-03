@@ -55,7 +55,7 @@ namespace Sample
         }
     }
     
-    #if SINGLE_FILE
+    #if PerfStructSize
     // Hack to allow many single files and cmd exec
     class Program
     {

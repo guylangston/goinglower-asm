@@ -6,6 +6,7 @@ using Animated.CPU.Model;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.XPath;
 
 
@@ -110,13 +111,16 @@ namespace Animated.CPU
         public static string ToHex(ulong v) => v.ToString("X");
         public static string ToHex64(ulong v) => v.ToString("X").PadLeft(64/8*2, '0');
 
-        public static string ToHex(byte[] arr)
+        public static string ToHex(this byte[] arr)
         {
             var sb = new StringBuilder();
 
             foreach (var b in arr)
             {
+                if (sb.Length> 0) sb.Append(":");
+                
                 sb.Append(b.ToString("X").PadLeft(2, '0'));
+                
             }
             return sb.ToString();
         }
@@ -124,7 +128,12 @@ namespace Animated.CPU
 
     public static class ParseHelper
     {
-        public static ulong ParseHexWord(string txt) => ulong.Parse(txt, NumberStyles.HexNumber);
+        public static ulong ParseHexWord(string txt)
+        {
+            var clean = new string(txt.Where(x => char.IsLetterOrDigit(x)).ToArray());
+            return ulong.Parse(clean, NumberStyles.HexNumber);
+        }
+
         public static byte[] ParseHexByteArray(string txt) => Convert.FromHexString(txt);
     }
 }

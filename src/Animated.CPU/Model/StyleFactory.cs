@@ -23,7 +23,10 @@ namespace Animated.CPU.Model
             FixedFontCyan   = Clone(FixedFont, p => p.Color = SKColors.Cyan);
             FixedFontYellow = Clone(FixedFont, p => p.Color = SKColors.Yellow);
             FixedFontBlue   = Clone(FixedFont, p => p.Color = SKColors.LightBlue);
-            FixedFontWhite   = Clone(FixedFont, p => p.Color = SKColors.White);
+            FixedFontWhite  = Clone(FixedFont, p => p.Color = SKColors.White);
+            FixedFontGray   = Clone(FixedFont, p => p.Color = SKColors.LightGray);
+
+            Border = borderGray1;
 
             byte gray = 0x38;
             BackGround = new SKPaint()
@@ -31,6 +34,14 @@ namespace Animated.CPU.Model
                 Style       = SKPaintStyle.StrokeAndFill,
                 StrokeWidth = 3,
                 Color       = SKColor.Parse("#333"),
+                Shader      = SKShader.CreateColor(new SKColor(gray, gray, gray, 220))
+            };
+            gray = 0x48;
+            BackGroundAlt = new SKPaint()
+            {
+                Style       = SKPaintStyle.StrokeAndFill,
+                StrokeWidth = 3,
+                Color       = SKColor.Parse("#444"),
                 Shader      = SKShader.CreateColor(new SKColor(gray, gray, gray, 220))
             };
             
@@ -41,7 +52,19 @@ namespace Animated.CPU.Model
             };
         }
 
-        public SKPaint BackGround { get;  }
+        public SKPaint BackGround      { get; }
+        public SKPaint BackGroundAlt   { get; }
+        public SKPaint Text            { get; }
+        public SKPaint FixedFont       { get; }
+        public SKPaint FixedFontYellow { get; }
+        public SKPaint FixedFontCyan   { get; }
+        public SKPaint FixedFontWhite  { get; }
+        public SKPaint FixedFontBlue   { get; }
+        public SKPaint FixedFontGray   { get; }
+        public SKPaint Border          { get; }
+        
+        
+        
 
         public static SKPaint Clone(SKPaint cpy, Action<SKPaint> then)
         {
@@ -50,99 +73,9 @@ namespace Animated.CPU.Model
             return c;
         }
         
-        private SKPaint def = new SKPaint()
-        {
-            Color       = SKColors.Pink,
-            Style = SKPaintStyle.Stroke,
-            StrokeWidth = 1,
-            PathEffect  = SKPathEffect.CreateDash(new []{5f,5f}, 20)
-        };
         
-            
-        internal SKPaint p1 = new SKPaint()
-        {
-            Style       = SKPaintStyle.Stroke,
-            Color       = new SKColor(255,0,0),
-            StrokeWidth = 2
-                    
-        };
-            
-        internal SKColor bg = SKColor.Parse("#333");
-        internal SKPaint b1 = new SKPaint()
-        {
-            Style       = SKPaintStyle.Stroke,
-            Color       = new SKColor(200,200,200),
-            StrokeWidth = 2
-                    
-        };
-        internal SKPaint t1    =  new SKPaint { TextSize = 15, Color = SKColor.Parse("#00d0fa")};
-        internal SKPaint t1a   =  new SKPaint { TextSize = 15, Color = SKColor.Parse("#00fa00")};
-        internal SKPaint t2    =  new SKPaint { TextSize = 20, Color = SKColor.Parse("#00ff00")};
-        internal SKPaint debug =  new SKPaint { TextSize = 10, Color = SKColor.Parse("#ffffff")};
-
-        public SKPaint Text            { get; }
-        public SKPaint FixedFont       { get; }
-        public SKPaint FixedFontYellow { get; }
-        public SKPaint FixedFontCyan   { get; }
-        public SKPaint FixedFontWhite  { get; }
-        public SKPaint FixedFontBlue   { get; }
-        public SKPaint Border          { get; }
-
         
-        public SKPaint hex = new SKPaint()
-        {
-            TextSize = 15,
-            Color    = SKColors.Yellow
-        };
-        
-        public SKPaint hex2 = new SKPaint()
-        {
-            TextSize = 15,
-            Color    = SKColors.Cyan
-        };
-
-        
-        public SKPaint h1 = new SKPaint()
-        {
-            TextSize = 25,
-            Color    = SKColors.Yellow
-        };
-
-        private SKPaint arrow = new SKPaint()
-        {
-            Style       = SKPaintStyle.Stroke,
-            StrokeWidth = 3,
-            Color       = SKColors.Fuchsia
-        };
-
-
-        private SKPaint borderGray1 = new SKPaint()
-        {
-            Style = SKPaintStyle.Stroke,
-            StrokeWidth = 1,
-            Color = SKColor.Parse("#444")
-        };
-        private SKPaint borderGray2 = new SKPaint()
-        {
-            Style       = SKPaintStyle.Stroke,
-            StrokeWidth = 2,
-            Color       = SKColor.Parse("#444")
-        };
-        private SKPaint borderGray3 = new SKPaint()
-        {
-            Style       = SKPaintStyle.Stroke,
-            StrokeWidth = 3,
-            Color       = SKColor.Parse("#444")
-        };
-        
-        private SKPaint borderReg = new SKPaint()
-        {
-            Style       = SKPaintStyle.Stroke,
-            StrokeWidth = 1,
-            Color       = SKColors.DarkCyan
-        };
-        
-        public SKPaint GetPaint(IElement e, string id)
+         public SKPaint GetPaint(IElement e, string id)
         {
             if (e.Model is Register r)
             {
@@ -210,5 +143,117 @@ namespace Animated.CPU.Model
             //Console.WriteLine("Unknown Color Style {e}#{id");
             return def.Color;
         }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        private SKPaint def = new SKPaint()
+        {
+            Color       = SKColors.Pink,
+            Style = SKPaintStyle.Stroke,
+            StrokeWidth = 1,
+            PathEffect  = SKPathEffect.CreateDash(new []{5f,5f}, 20)
+        };
+        
+            
+        internal SKPaint p1 = new SKPaint()
+        {
+            Style       = SKPaintStyle.Stroke,
+            Color       = new SKColor(255,0,0),
+            StrokeWidth = 2
+                    
+        };
+            
+        internal SKColor bg = SKColor.Parse("#333");
+        internal SKPaint b1 = new SKPaint()
+        {
+            Style       = SKPaintStyle.Stroke,
+            Color       = new SKColor(200,200,200),
+            StrokeWidth = 2
+                    
+        };
+        internal SKPaint t1    =  new SKPaint { TextSize = 15, Color = SKColor.Parse("#00d0fa")};
+        internal SKPaint t1a   =  new SKPaint { TextSize = 15, Color = SKColor.Parse("#00fa00")};
+        internal SKPaint t2    =  new SKPaint { TextSize = 20, Color = SKColor.Parse("#00ff00")};
+        internal SKPaint debug =  new SKPaint { TextSize = 10, Color = SKColor.Parse("#ffffff")};
+
+       
+
+        
+        public SKPaint hex = new SKPaint()
+        {
+            TextSize = 15,
+            Color    = SKColors.Yellow
+        };
+        
+        public SKPaint hex2 = new SKPaint()
+        {
+            TextSize = 15,
+            Color    = SKColors.Cyan
+        };
+
+        
+        public SKPaint h1 = new SKPaint()
+        {
+            TextSize = 25,
+            Color    = SKColors.Yellow
+        };
+
+        private SKPaint arrow = new SKPaint()
+        {
+            Style       = SKPaintStyle.Stroke,
+            StrokeWidth = 3,
+            Color       = SKColors.Fuchsia
+        };
+
+
+        private SKPaint borderGray1 = new SKPaint()
+        {
+            Style = SKPaintStyle.Stroke,
+            StrokeWidth = 1,
+            Color = SKColor.Parse("#444")
+        };
+        private SKPaint borderGray2 = new SKPaint()
+        {
+            Style       = SKPaintStyle.Stroke,
+            StrokeWidth = 2,
+            Color       = SKColor.Parse("#444")
+        };
+        private SKPaint borderGray3 = new SKPaint()
+        {
+            Style       = SKPaintStyle.Stroke,
+            StrokeWidth = 3,
+            Color       = SKColor.Parse("#444")
+        };
+        
+        private SKPaint borderReg = new SKPaint()
+        {
+            Style       = SKPaintStyle.Stroke,
+            StrokeWidth = 1,
+            Color       = SKColors.DarkCyan
+        };
+        
+       
     }
 }
