@@ -78,6 +78,23 @@ namespace Animated.CPU.Animation
             Layout();   // Layout each add, so that Init calls can set positions 
             return x;
         }
+        
+        public T Add<T>(T e, float size) where T: IElement
+        {
+            if (e.Block == null) e.Block = new DBlock();
+            if (Orient == DOrient.Vert)
+            {
+                e.Block.H = size;
+            }
+            else
+            {
+                e.Block.W = size;
+            }
+            
+            var x=  base.Add(e);
+            Layout();   // Layout each add, so that Init calls can set positions 
+            return x;
+        }
 
         protected override void Step(TimeSpan step)
         {   
@@ -86,7 +103,7 @@ namespace Animated.CPU.Animation
 
         protected override void Draw(DrawContext surface)
         {
-            
+            Layout();
         }
     }
 }

@@ -40,6 +40,9 @@ namespace Animated.CPU.Animation
         public bool      IsHidden  { get; set; }
         public bool      IsEnabled { get; set; } = true;      // Step And Draw are not called
 
+
+        public T ParentAs<T>() => (T)Parent;
+
         private bool fistStep = true;
         public virtual void Init() {}
 

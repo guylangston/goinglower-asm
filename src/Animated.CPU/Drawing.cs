@@ -118,7 +118,7 @@ namespace Animated.CPU
         }
 
 
-        public void DrawRect(SKPaint p1, IRect rect) => canvas.DrawRect(rect.X, rect.Y, rect.W, rect.H, p1);
+        public void DrawRect(IRect rect, SKPaint p1) => canvas.DrawRect(rect.X, rect.Y, rect.W, rect.H, p1);
 
         public void DrawRect(DBlock b, SKPaint p)
         {

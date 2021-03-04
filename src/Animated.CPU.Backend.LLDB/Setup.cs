@@ -8,7 +8,7 @@ namespace Animated.CPU.Backend.LLDB
 {
     public class Setup
     {
-        public void InitFromDisk(string folder, Cpu cpu, SourceProvider source)
+        public void InitFromDisk(string folder, Cpu cpu, SourceProvider source, SourceFile mainSource)
         {
             var parser = new Parser(source);
             var fState = Path.Combine(folder, "S0000-method.clru");
@@ -32,6 +32,7 @@ namespace Animated.CPU.Backend.LLDB
             {
                 Steps = new List<StoryStep>(),
                 Source = source,
+                MainFile = mainSource
             };
             cpu.Stack = new MemoryView(new[]
             {

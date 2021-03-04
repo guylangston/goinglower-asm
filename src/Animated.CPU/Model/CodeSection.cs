@@ -1,48 +1,46 @@
 using System;
 using System.Linq;
 using Animated.CPU.Animation;
+using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
-    public class CodeSection : Section<Scene, string>
+    public class CodeSection : Section<Scene, SourceFile>
     {
         private TextBlockElement text;
 
-        public CodeSection(IElement parent, string model, DBlock block) : base(parent, model, block)
+        public CodeSection(IElement parent, SourceFile model, DBlock block) : base(parent, model, block)
         {
-            Title = model;
+            Title = model.ShortName;
         }
 
         public override void Init()
         {
             text = Add(new TextBlockElement(this, this.Block, Scene.Styles.FixedFont));
+            uint cc = 1;
+            foreach (var line in Model.Lines)
+            {
+                text.Write($"{cc.ToString().PadLeft(3)}: ", Scene.Styles.FixedFontDarkGray)
+                    .SetModel(cc);
+                text.WriteLine(line);
+                    
+                cc++;
+            }
         }
 
         protected override void Step(TimeSpan step)
         {
-            text.Clear();
             
-            if (Scene.Model.Story != null)
+
+        }
+
+        public TextBlockElement.Span? GetLine(uint line)
+        {
+            if (text.TryGetSpanFromModel(line, out var s))
             {
-                var primary = Scene.Model.Story.Source.Files.FirstOrDefault().Value;
-                if (primary != null)
-                {
-                    text.WriteLine($"---[{primary.ShortName}]---");
-                }
-
-                var cc = 1;
-                foreach (var line in primary.Lines)
-                {
-                    text.WriteLine($"L{cc.ToString().PadLeft(3)}: {line}");
-                    cc++;
-                }
+                return s;
             }
-
-            text.WriteLine();
-            text.WriteLine("--- Help ---");
-            text.WriteLine("Key n - Next");
-            text.WriteLine("Key p - Back/Previous");
-
+            return null;
         }
     }
 }

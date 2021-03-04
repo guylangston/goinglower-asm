@@ -31,12 +31,12 @@ namespace Animated.CPU.GTK
             
 
             var sourceProvider = new SourceProvider();
-            sourceProvider.Load(src);
+            var main = sourceProvider.Load(src);
             
             var parser = new Parser(sourceProvider);
             var setup  = new Setup();
             var cpu    = new Cpu();
-            setup.InitFromDisk(dir, cpu, sourceProvider);
+            setup.InitFromDisk(dir, cpu, sourceProvider, main);
             
             builder.Autoconnect(this);
             DeleteEvent        += OnWindowDeleteEvent;
@@ -52,7 +52,10 @@ namespace Animated.CPU.GTK
             
             scene = new Scene(region)
             {
-                Model = cpu
+                Model = cpu,
+                SendCommand = (cmd, obj) => {
+                    if (cmd == "QUIT") Application.Quit();
+                }
             };
             
             skiaView.PaintSurface += OnPaintSurface;

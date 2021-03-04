@@ -71,24 +71,25 @@ namespace Animated.CPU.Model
                 Style = SKPaintStyle.Fill,
                 Color = SKColor.Parse("#555")
             };
+
+            Selected = Arrow;
         }
 
-        public SKPaint BackGround      { get; }
-        public SKPaint BackGroundAlt   { get; }
-        public SKPaint Text            { get; }
-        public SKPaint FixedFont       { get; }
-        public SKPaint FixedFontYellow { get; }
-        public SKPaint FixedFontCyan   { get; }
-        public SKPaint FixedFontWhite  { get; }
-        public SKPaint FixedFontBlue   { get; }
-        public SKPaint FixedFontGray   { get; }
-        public SKPaint FixedFontDarkGray   { get; }
-        public SKPaint Border          { get; }
-        public SKPaint Arrow           { get; }
-        
-        
-        public SKPaint TextH1   { get; }
-        public SKPaint TextH1BG { get; }
+        public SKPaint BackGround        { get; }
+        public SKPaint BackGroundAlt     { get; }
+        public SKPaint Text              { get; }
+        public SKPaint FixedFont         { get; }
+        public SKPaint FixedFontYellow   { get; }
+        public SKPaint FixedFontCyan     { get; }
+        public SKPaint FixedFontWhite    { get; }
+        public SKPaint FixedFontBlue     { get; }
+        public SKPaint FixedFontGray     { get; }
+        public SKPaint FixedFontDarkGray { get; }
+        public SKPaint Border            { get; }
+        public SKPaint Arrow             { get; }
+        public SKPaint TextH1            { get; }
+        public SKPaint TextH1BG          { get; }
+        public SKPaint Selected          { get; }
 
         public static SKPaint Clone(SKPaint cpy, Action<SKPaint> then)
         {

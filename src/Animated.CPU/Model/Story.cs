@@ -9,8 +9,9 @@ namespace Animated.CPU.Model
         public int             CurrentIndex { get; set; }
         public List<StoryStep> Steps        { get; set; }
 
-        public StoryStep      Current => Steps[CurrentIndex];
-        public SourceProvider Source  { get; set; }
+        public StoryStep      Current  => Steps[CurrentIndex];
+        public SourceProvider Source   { get; set; }
+        public SourceFile     MainFile { get; set; }
     }
     
     public class RegisterDelta

@@ -39,13 +39,29 @@ namespace Animated.CPU.Animation
 
         public class Span
         {
-            public Type    ModelType { get; set; }
-            public object? Model     { get; set; }
-            public string  Text      { get; set; }
-            public SKPaint Style     { get; set; }
-            public SKRect  Region    { get; set; }
-            public float   Width     { get; set; }
-            public SKPoint LastDraw  { get; set; }
+            public Type    ModelType    { get; set; }
+            public object? Model        { get; set; }
+            public string  Text         { get; set; }
+            public SKPaint Style        { get; set; }
+            public SKRect  Region       { get; set; }
+            public float   Width        { get; set; }
+            public SKPoint LastDraw     { get; set; }
+            public object? Tag          { get; set; }
+
+            public SKRect LastDrawRect
+                => new SKRect(LastDraw.X, LastDraw.Y, LastDraw.X + Region.Width, LastDraw.Y - Region.Height);
+
+            public Span SetTag(object tag)
+            {
+                Tag = tag;
+                return this;
+            }
+            
+            public Span SetModel(object model)
+            {
+                Model = model;
+                return this;
+            }
         }
 
         string GetText(Type t, object val) => val?.ToString() ?? string.Empty;
@@ -90,6 +106,24 @@ namespace Animated.CPU.Animation
         protected override void Step(TimeSpan step)
         {
             
+        }
+
+        public bool TryGetSpanFromModel<T>(T model, out Span s)
+        {
+            foreach (var line in lines)
+            {
+                foreach (var span in line.Spans)
+                {
+                    if (span.Model is T mt &&  mt.Equals(model))
+                    {
+                        s = span;
+                        return true;
+                    }
+                    
+                }
+            }
+            s = default;
+            return false;
         }
 
         

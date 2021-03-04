@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
+using System.Net.NetworkInformation;
 using Animated.CPU.Model;
 
 namespace Animated.CPU.Backend.LLDB
@@ -34,8 +35,9 @@ namespace Animated.CPU.Backend.LLDB
 
             var minLengh = "00007fff7dd360ff 8b45e4               mov     eax".Length;
 
-            string currSource = null;
-            uint   offset     = 0;
+            string           currSource = null;
+            SourceFileAnchor last       = null;
+            uint             offset     = 0;
             while (i < lines.Count)
             {
                 var ll = lines[i];
@@ -48,6 +50,15 @@ namespace Animated.CPU.Backend.LLDB
                     var inst = ParseInstruction(ll, currSource);
                     if (inst != null)
                     {
+
+                        if (inst.SourceAnchor != null)
+                        {
+                            last = inst.SourceAnchor;
+                        }
+                        else
+                        {
+                            inst.SourceAnchorClosest = last;
+                        }
                         currSource  =  null;
                         inst.Offset =  offset;
                         offset      += (uint)inst.Raw.Length;

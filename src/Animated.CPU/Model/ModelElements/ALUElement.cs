@@ -19,14 +19,16 @@ namespace Animated.CPU.Model
         {
             var stack = Add(new StackElement(this, Block, DOrient.Vert));
 
-            stack.Add(new FetchPhaseElement(stack, Model.Fetch));
-            stack.Add(new DecodePhaseElement(stack, Model.Decode));
-            stack.Add(new ExecutePhaseElement(stack, Model.Execute));
+            this.Fetch = stack.Add(new FetchPhaseElement(stack, Model.Fetch));
+            this.Decode = stack.Add(new DecodePhaseElement(stack, Model.Decode));
+            this.Execute = stack.Add(new ExecutePhaseElement(stack, Model.Execute));
         }
 
-        protected override void Step(TimeSpan step)
-        {
-        }
+        public ExecutePhaseElement Execute { get; set; }
+        public DecodePhaseElement  Decode  { get; set; }
+        public FetchPhaseElement   Fetch   { get; set; }
+
+
     }
 
     public class FetchPhaseElement : Section<Scene, PhaseFetch>

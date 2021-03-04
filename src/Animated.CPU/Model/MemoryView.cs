@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Animated.CPU.Animation;
+using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
@@ -18,8 +19,7 @@ namespace Animated.CPU.Model
         
         public string                                  TargetBinary { get; set; }
         public IReadOnlyDictionary<string, SourceFile> Files        => files;
-        
-        
+
         public SourceFile Load(string txtFile)
         {
             if (Files.ContainsKey(txtFile)) return Files[txtFile];
@@ -109,21 +109,23 @@ namespace Animated.CPU.Model
 
         public class Segment
         {
-            public uint   Offset { get; set; }
-            public byte[] Raw    { get; set; }
-             
-            public string            Header    { get; set; }
-            public string            Label     { get; set; }
-            public string            SourceAsm { get; set; }
-            public string            Comment   { get; set; }
-            public ulong             Address   { get; set; }
-            public SourceFileAnchor? SourceAnchor    { get; set; }
+            public uint              Offset       { get; set; }
+            public byte[]            Raw          { get; set; }
+            public string            Header       { get; set; }
+            public string            Label        { get; set; }
+            public string            SourceAsm    { get; set; }
+            public string            Comment      { get; set; }
+            public ulong             Address      { get; set; }
+            public SourceFileAnchor? SourceAnchor { get; set; }
+            public SourceFileAnchor? SourceAnchorClosest { get; set; }
 
             public override string ToString() => 
                 $"[{Address:X}|{Offset}] {RawAsString(),16}, {Label} {SourceAsm} {Comment} // {SourceAnchor}";
 
             public string RawAsString() => String.Join("", Raw.Select(x => x.ToString("X")));
-            
+
+            public bool ContainsAddress(ulong addr) 
+                => Address <= addr && addr < (Address + (ulong)Raw.Length);
         }
 
 
@@ -149,26 +151,22 @@ namespace Animated.CPU.Model
             var stack = Add(new StackElement(this, Block, DOrient.Vert));
             
 
-            var curr = Model.GetByAddress(Scene.Cpu.RIP.Value);
+            var curr   = Model.GetByAddress(Scene.Cpu.RIP.Value);
+            var offset = 0;
             if (curr != null)
             {
-                var idx             = Model.Segments.IndexOf(curr);
-                var offset          = 0;
-                if (idx > 5) offset = idx - 5;
-                
-                foreach (var seg in Model.Segments.Skip(offset))
-                {
-                    stack.Add(new SegmentElement(stack, seg, new DBlock()));
-                }
+                var idx                    = Model.Segments.IndexOf(curr);
+                if (idx > LookBack) offset = idx - LookBack;
             }
-            else
+            
+            foreach (var seg in Model.Segments.Skip(offset).Take(Max))
             {
-                foreach (var seg in Model.Segments.Take(20))
-                {
-                    stack.Add(new SegmentElement(stack, seg, new DBlock()));
-                }    
+                stack.Add(new SegmentElement(stack, seg, null), 30);
             }
         }
+
+        public int Max { get; set; } = 16;
+        public int LookBack { get; set; } = 3;
     }
 
     public class SegmentElement : Element<Scene, MemoryView.Segment>
@@ -178,14 +176,23 @@ namespace Animated.CPU.Model
 
         public SegmentElement(IElement parent, MemoryView.Segment model, DBlock block) : base(parent, model, block)
         {
-            block.Set(0,0,0);
+            
         }
+
+        public bool IsSelected => Model.ContainsAddress(Scene.ElementALU.Fetch.Model.RIP);
 
         public override void Init()
         {
             txt = Add(new TextBlockElement(this, Block, Scene.Styles.FixedFont));
-            // mem = Add(new ByteArrayElement(this, 
-            //     new ByteArrayModel(Model.Raw, Model.SourceAsm, Model.Comment), Block));
+            
+            if (Model.SourceAnchor != null)
+            {
+                txt.WriteLine(Model.SourceAnchor, Scene.Styles.FixedFontYellow);
+            }
+            
+            txt.WriteLine(Model.SourceAsm, Scene.Styles.FixedFontCyan);
+            
+            txt.Write($"[{DisplayHelper.ToHex(Model.Address)}] => {Model.Raw?.ToHex()}".PadLeft(43), Scene.Styles.FixedFontDarkGray);
         }
 
         protected override void Step(TimeSpan step)
@@ -200,27 +207,40 @@ namespace Animated.CPU.Model
             txt.IsEnabled = Block.Y <= Parent.Block.Inner.Y2;
         }
 
+        protected override void Decorate(DrawContext surface)
+        {
+            if (IsSelected)
+            {
+                surface.DrawHighlight(Block.Outer.ToSkRect(), Scene.Styles.Selected, 1f);
+
+                var l = Model.SourceAnchor ?? Model.SourceAnchorClosest;
+                if (l != null)
+                {
+                    var line = Scene.ElementCode.GetLine(l.Line);
+                    if (line != null)
+                    {
+                        var stylesArrow = Scene.Styles.Arrow;
+                        new Arrow()
+                        {
+                            Start     = Block.Inner.MR,
+                            WayPointA = Block.Inner.MR + new SKPoint(20, 0),
+                            WayPointB = line.LastDraw + new SKPoint(-20, 2),
+                            End       = line.LastDraw + new SKPoint(Block.W, 2),
+                            Style     = stylesArrow,
+                        }.Draw(surface.Canvas);
+                        var r = line.LastDrawRect;
+                        r.Inflate(2, -2);
+                        surface.Canvas.DrawRect(r, stylesArrow);
+                    }
+                    
+                }
+                    
+                
+            }
+        }
+
         protected override void Draw(DrawContext surface)
         {
-            txt.Clear();
-            txt.Write($"[{DisplayHelper.ToHex(Model.Address)}]", Scene.Styles.FixedFontBlue);
-            // if (Model.Offset == 0)
-            // {
-            //     txt.Write($"[{DisplayHelper.ToHex(Model.Address)}]", Scene.Styles.FixedFontBlue);
-            // }
-            // else
-            // {
-            //     txt.Write($"[+{Model.Offset}]", Scene.Styles.FixedFontBlue);
-            // }
-            txt.Write(" -> ");
-            txt.WriteLine(Model.Raw?.ToHex().PadRight(8), Scene.Styles.FixedFontCyan);
-            
-            if (Model.SourceAnchor != null)
-            {
-                txt.WriteLine(Model.SourceAnchor, Scene.Styles.FixedFontYellow);
-            }
-            
-            txt.WriteLine(Model.SourceAsm, Scene.Styles.FixedFontGray);
 
 
         }

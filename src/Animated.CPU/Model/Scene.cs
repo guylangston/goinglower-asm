@@ -18,16 +18,20 @@ namespace Animated.CPU.Model
         }
         
         // Helpers
-        public Cpu Cpu => Model;
+        public Cpu                    Cpu                 => Model;
+        public MemoryViewElement      ElementInstructions { get; set; }
+        public CodeSection            ElementCode         { get; set; }
+        public ElementRegisterFile    ElementRegisterFile { get; set; }
+        public SKPoint?               Mouse               { get; set; }
+        public Action<string, object> SendCommand         { get; set; }
+        public ALUElement             ElementALU          { get; set; }
+
 
         protected override void InitScene()
         {
             Debug.WriteLine("Init");
             Console.WriteLine("Init2");
-
             
-
-
             if (true)
             {
                 for (int cc = 0; cc < 100; cc++)
@@ -36,26 +40,27 @@ namespace Animated.CPU.Model
 
             float w     = Block.Inner.W / 4;
             var   stack = Add(new StackElement(this, Block, DOrient.Horz));
-            stack.Add(new ElementRegisterFile(stack, Model.RegisterFile, DBlock.JustWidth(w).Set(20, 1, 10)));
-            stack.Add(new ALUElement(stack, Model.ALU, DBlock.JustWidth(w).Set(20, 1, 10)));
-            stack.Add(new MemoryViewElement(stack, DBlock.JustWidth(w).Set(20, 1, 10), Model.Instructions)
+            this.ElementRegisterFile = stack.Add(new ElementRegisterFile(stack, Model.RegisterFile, DBlock.JustWidth(w).Set(20, 1, 10)));
+            this.ElementALU = stack.Add(new ALUElement(stack, Model.ALU, DBlock.JustWidth(w).Set(20, 1, 10)));
+            this.ElementInstructions = stack.Add(new MemoryViewElement(stack, DBlock.JustWidth(w).Set(20, 1, 10), Model.Instructions)
             {
                 Title = "Instructions"
             });
-            stack.Add(new CodeSection(stack,  "Code", DBlock.JustWidth(w).Set(10, 1, 10)));
+            this.ElementCode = stack.Add(new CodeSection(stack, Model.Story.MainFile, DBlock.JustWidth(w).Set(10, 1, 10)));
 
             var dBlock = new DBlock(300, 1050, 900, 400);
             dBlock.Set(0, 3, 10);
             var term   = Add(new TerminalElement(this, new Terminal(), dBlock));
-            
         }
+
         
+
         public override void StepScene(TimeSpan s)
         {
             Model.Step();
         }
         
-        public SKPoint? Mouse { get; set; }
+        
 
         protected override void DrawOverlay(DrawContext surface)
         {
@@ -94,6 +99,10 @@ namespace Animated.CPU.Model
                 {
                     Model.Story.CurrentIndex--;
                 }
+            }
+            if (key == "q")
+            {
+                SendCommand.Invoke("QUIT", null);
             }
             var next = Model.Story.Steps[Model.Story.CurrentIndex];
             if (next != null)
