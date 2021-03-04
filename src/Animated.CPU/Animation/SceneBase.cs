@@ -35,14 +35,9 @@ namespace Animated.CPU.Animation
             set => base.Model = value;
         }
         
-        private bool init = false;
-
-        protected abstract void InitScene(DrawContext drawing);
+        protected abstract void InitScene();
         
-        public sealed override void Init(DrawContext surface)
-        {
-            // nothing,handled in Draw
-        }
+       
 
         public virtual void StepScene(TimeSpan s)
         {
@@ -64,17 +59,19 @@ namespace Animated.CPU.Animation
             }
         }
         
+        public sealed override void Init()
+        {
+            InitScene();
+            foreach (var element in ChildrenRecursive())
+            {
+                if (element == this) continue;
+                
+                element.Init();
+            }
+        }
+        
         protected override void Draw(DrawContext surface)
         {
-            if (!init)
-            {
-                InitScene(surface);
-                foreach (var element in ChildrenRecursive())
-                {
-                    element.Init(surface);
-                }
-                init = true;
-            }
             DrawBackGround(surface);
             foreach (var element in ChildrenRecursive())
             {

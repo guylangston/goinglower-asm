@@ -35,10 +35,7 @@ namespace Animated.CPU.Model
         public SKPoint Speed    { get; set; }
 
 
-        public override void Init(DrawContext surface)
-        {
-            
-        }
+        
         
         protected override void Step(TimeSpan step)
         {

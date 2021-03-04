@@ -166,6 +166,57 @@ namespace Animated.CPU
 
             canvas.DrawPath(p, f);
         }
+
+
+        public SKRect DrawTextAndBGAtTopLeft(string txt, SKPoint topLeft, SKPaint font, SKPaint bg, SKPoint padding)
+        {
+            if (string.IsNullOrWhiteSpace(txt)) return new SKRect();
+            
+            var txtSize = new SKRect();
+            font.MeasureText(txt, ref txtSize);
+            
+            // BG
+            var xx   = padding.X;
+            var yy   = padding.Y;
+
+            var background = new SKRect(
+                topLeft.X-xx, 
+                topLeft.Y-yy, 
+                topLeft.X+xx + txtSize.Width,
+                topLeft.Y+yy + txtSize.Height);
+            canvas.DrawRect(background, bg);
+            
+            // Text
+            canvas.DrawText(txt, topLeft + new SKPoint(0, txtSize.Height), font);
+
+            return background;
+
+        }
+        
+        public SKRect DrawTextAndBGAtTopMiddle(string txt, SKPoint topMiddle, SKPaint font, SKPaint bg, SKPoint padding)
+        {
+            if (string.IsNullOrWhiteSpace(txt)) return new SKRect();
+            
+            var txtSize = new SKRect();
+            font.MeasureText(txt, ref txtSize);
+            
+            // BG
+            var xx = padding.X;
+            var yy = padding.Y;
+
+            var background = new SKRect(
+                topMiddle.X-xx - txtSize.Width/2, 
+                topMiddle.Y-yy, 
+                topMiddle.X+xx + txtSize.Width - txtSize.Width/2,
+                topMiddle.Y+yy + txtSize.Height);
+            canvas.DrawRect(background, bg);
+            
+            // Text
+            canvas.DrawText(txt, topMiddle + new SKPoint(-txtSize.Width/2, txtSize.Height), font);
+
+            return background;
+
+        }
     }
 }
 

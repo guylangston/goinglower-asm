@@ -140,18 +140,35 @@ namespace Animated.CPU.Model
         }
        
         
-        public override void Init(DrawContext surface)
+       
+
+        protected override void Step(TimeSpan step)
         {
-            var stack = new StackElement(this, Block, DOrient.Vert);
-            Add(stack);
+            ClearChildren();
             
-            foreach (var seg in Model.Segments)
+            var stack = Add(new StackElement(this, Block, DOrient.Vert));
+            
+
+            var curr = Model.GetByAddress(Scene.Cpu.RIP.Value);
+            if (curr != null)
             {
-                stack.Add(new SegmentElement(stack, seg, new DBlock()));
+                var idx             = Model.Segments.IndexOf(curr);
+                var offset          = 0;
+                if (idx > 5) offset = idx - 5;
+                
+                foreach (var seg in Model.Segments.Skip(offset))
+                {
+                    stack.Add(new SegmentElement(stack, seg, new DBlock()));
+                }
+            }
+            else
+            {
+                foreach (var seg in Model.Segments.Take(20))
+                {
+                    stack.Add(new SegmentElement(stack, seg, new DBlock()));
+                }    
             }
         }
-
-      
     }
 
     public class SegmentElement : Element<Scene, MemoryView.Segment>
@@ -164,7 +181,7 @@ namespace Animated.CPU.Model
             block.Set(0,0,0);
         }
 
-        public override void Init(DrawContext surface)
+        public override void Init()
         {
             txt = Add(new TextBlockElement(this, Block, Scene.Styles.FixedFont));
             // mem = Add(new ByteArrayElement(this, 

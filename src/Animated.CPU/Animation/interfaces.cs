@@ -20,7 +20,7 @@ namespace Animated.CPU.Animation
         DBlock?    Block    { get; set; }
         IAnimator? Animator { get; set; }
         
-        void Init(DrawContext surface);
+        void Init();
         void StepExec(TimeSpan step);
         void DrawExec(DrawContext surface);
         void DecorateExec(DrawContext surface);

@@ -12,32 +12,26 @@ namespace Animated.CPU.Model
 
     public class Scene : SceneBase<Cpu, StyleFactory>
     {
-        public Scene() : base(new StyleFactory())
+        public Scene(DBlock region) : base(new StyleFactory())
         {
+            Block = region;
         }
         
         // Helpers
         public Cpu Cpu => Model;
 
-        protected override void InitScene(DrawContext surface)
+        protected override void InitScene()
         {
             Debug.WriteLine("Init");
             Console.WriteLine("Init2");
 
-            var size = surface.Canvas.LocalClipBounds;
-            var main = new DBlock()
-            {
-                X = 0,
-                Y = 0,
-                W = size.Width,
-                H = size.Height
-            };
+            
 
 
             if (true)
             {
                 for (int cc = 0; cc < 100; cc++)
-                    Add(new BackGroundNoise(this, main));
+                    Add(new BackGroundNoise(this, Block));
             }
 
             float w     = Block.Inner.W / 4;

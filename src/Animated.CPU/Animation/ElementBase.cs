@@ -40,16 +40,26 @@ namespace Animated.CPU.Animation
         public bool      IsHidden  { get; set; }
         public bool      IsEnabled { get; set; } = true;      // Step And Draw are not called
 
-        public virtual void Init(DrawContext drawing) {}
+        private bool fistStep = true;
+        public virtual void Init() {}
 
         public void StepExec(TimeSpan step)
         {
-            if (IsEnabled) Step(step);
+            if (fistStep)
+            {
+                fistStep = false;
+                Init();
+            }
+            // Step() should run when Disable and/or Hidden as Step() has the logic to turn these flags on/off
+            Step(step); 
         }
 
         public void DrawExec(DrawContext surface)
         {
-            if (IsEnabled && !IsHidden) Draw(surface);
+            if (IsEnabled && !IsHidden)
+            {
+                Draw(surface);
+            }
         }
 
         public void DecorateExec(DrawContext surface)
@@ -111,7 +121,17 @@ namespace Animated.CPU.Animation
 
             throw new Exception($"Expected Model Not Found: {typeof(T)} / {findThis}");
         }
-        
+
+        public void ClearChildren()
+        {
+            if (elements is List<IElement> ee)
+            {
+                ee.Clear();    
+            }
+            
+        }
+            
+            
 
         public virtual T Add<T>(T e) where T:IElement
         {

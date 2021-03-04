@@ -48,10 +48,8 @@ namespace Animated.CPU.Model
             BuildFriendly(cpu, ri);
             return ri;
         }
-
         
-
-        public const string Assign = ":=";
+        public const string Assign = "<=:";
 
         private static void BuildFriendly(Cpu cpu, DecodedInstruction inst)
         {

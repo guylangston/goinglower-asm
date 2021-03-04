@@ -23,22 +23,14 @@ namespace Animated.CPU.Animation
 
             if (Title != null)
             {
-                var    h1 = Scene.StyleFactory.GetPaint(this, "h1");
-                SKRect bounds  = new SKRect();
-                h1.MeasureText(Title, ref bounds);
+                var    h1     = Scene.StyleFactory.GetPaint(this, "h1");
+                var    h1bg   = Scene.StyleFactory.GetPaint(this, "h1bg");
 
-                
-                var p = Block.Outer.TM + new SKPoint(-bounds.Width/2, 0);
-                
-                // BG
-                var   h1bg = Scene.StyleFactory.GetPaint(this, "h1bg");
-                float xx   = 10;
-                float yy   = 3;
-                surface.Canvas.DrawRect(new SKRect(p.X-xx, p.Y-yy, p.X+xx + bounds.Width, p.Y+yy + bounds.Height), h1bg);
 
-                
-                surface.Canvas.DrawText(Title, p + new SKPoint(0, bounds.Height), h1);
-                
+                surface.DrawTextAndBGAtTopMiddle(Title, 
+                    Block.Outer.TM + new SKPoint(0,  Block.Margin.Top + Block.Border.Top - 10),
+                    h1, h1bg, new SKPoint(10, 4));
+
             }
         }
 

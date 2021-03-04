@@ -18,7 +18,7 @@ namespace Animated.CPU.Model
             Title = "Terminal";
         }
 
-        public override void Init(DrawContext drawing)
+        public override void Init()
         {
             this.text = Add(new TextBlockElement(this, Block, Scene.Styles.FixedFontDarkGray));
         }

@@ -46,12 +46,13 @@ namespace Animated.CPU.GTK
             skiaView              =  new SKDrawingArea();
             skiaView.WidthRequest =  1960;
             skiaView.HeightRequest =  1080;
+
+            var region = new DBlock(0, 0, skiaView.WidthRequest, skiaView.HeightRequest)
+                .Set(50, 0, 0);
             
-            scene = new Scene()
+            scene = new Scene(region)
             {
-                Model = cpu,
-                Block = new DBlock(0,0, skiaView.WidthRequest, skiaView.HeightRequest)
-                    .Set(50, 0, 0)
+                Model = cpu
             };
             
             skiaView.PaintSurface += OnPaintSurface;

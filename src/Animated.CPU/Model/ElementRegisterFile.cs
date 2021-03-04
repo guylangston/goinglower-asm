@@ -15,7 +15,7 @@ namespace Animated.CPU.Model
             Title = "Register File";
         }
 
-        public override void Init(DrawContext surface)
+        public override void Init()
         {
             var stack = new DStack(this.Block, DOrient.Horz);
             
@@ -67,7 +67,7 @@ namespace Animated.CPU.Model
         {
         }
 
-        public override void Init(DrawContext surface)
+        public override void Init()
         {
             var bytes = new byte[8];
             this.Bytes = Add(new ByteArrayElement(this, new ByteArrayModel(bytes, "", ""))

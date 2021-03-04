@@ -13,7 +13,7 @@ namespace Animated.CPU.Model
             Title = model;
         }
 
-        public override void Init(DrawContext drawing)
+        public override void Init()
         {
             text = Add(new TextBlockElement(this, this.Block, Scene.Styles.FixedFont));
         }

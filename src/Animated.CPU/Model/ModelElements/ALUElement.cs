@@ -15,7 +15,7 @@ namespace Animated.CPU.Model
             Title = "ALU";
         }
 
-        public override void Init(DrawContext surface)
+        public override void Init()
         {
             var stack = Add(new StackElement(this, Block, DOrient.Vert));
 
@@ -43,7 +43,7 @@ namespace Animated.CPU.Model
             Block.Margin = new DBorder(30, 4, 4, 4);
         }
 
-        public override void Init(DrawContext surface)
+        public override void Init()
         {
             text = Add(new TextBlockElement(this, Block, Scene.Styles.FixedFont));
         }
@@ -100,7 +100,7 @@ namespace Animated.CPU.Model
             Title        = "Decode";
         }
 
-        public override void Init(DrawContext surface)
+        public override void Init()
         {
             text = Add(new TextBlockElement(this, Block, Scene.Styles.FixedFont));
         }
@@ -138,7 +138,7 @@ namespace Animated.CPU.Model
             Block.Margin = new DBorder(30, 4, 4, 4);
         }
 
-        public override void Init(DrawContext surface)
+        public override void Init()
         {
             text = Add(new TextBlockElement(this, Block, Scene.Styles.FixedFont));
         }
