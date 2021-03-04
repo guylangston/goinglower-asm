@@ -33,7 +33,7 @@ namespace Animated.CPU.GTK
             var sourceProvider = new SourceProvider();
             var main = sourceProvider.Load(src);
             
-            var parser = new Parser(sourceProvider);
+            //var parser = new Parser(sourceProvider);
             var setup  = new Setup();
             var cpu    = new Cpu();
             setup.InitFromDisk(dir, cpu, sourceProvider, main);

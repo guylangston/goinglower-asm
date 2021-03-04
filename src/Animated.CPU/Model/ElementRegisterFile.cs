@@ -121,23 +121,23 @@ namespace Animated.CPU.Model
             draw.DrawText(Model.Name ?? "", sName, Block, BlockAnchor.TR);
             //draw.DrawText(Model.Value.ToString("X"), sVal, Block, BlockAnchor.BR);
 
-            if ((Model != Scene.Model.RIP) && (IsHighlighted || Model.IsChanged))
+            if (IsHighlighted)
             {
-                var high = new SKPaint()
-                {
-                    Style = SKPaintStyle.Fill,
-                    Shader = SKShader.CreateLinearGradient(
-                        Block.Outer.TL + new SKPoint(-4, -4),
-                        Block.Outer.BR + new SKPoint(4, 40),
-                        new[]
-                        {
-                            SKColors.Orange,
-                            SKColors.Yellow,
-                            SKColors.Red
-                        },
-                        SKShaderTileMode.Repeat)
-                };
-                draw.DrawHighlight(Block.Outer.ToSkRect(), high, 4);
+                // var high = new SKPaint()
+                // {
+                //     Style = SKPaintStyle.Fill,
+                //     Shader = SKShader.CreateLinearGradient( 
+                //         Block.Outer.TL + new SKPoint(-4, -4),
+                //         Block.Outer.BR + new SKPoint(4, 40),
+                //         new[]
+                //         {
+                //             SKColors.Orange,
+                //             SKColors.Yellow,
+                //             SKColors.Red
+                //         },
+                //         SKShaderTileMode.Repeat)
+                // };
+                draw.DrawHighlight(Block.Outer.ToSkRect(), Scene.Styles.Selected, 4);
             }
             
         }

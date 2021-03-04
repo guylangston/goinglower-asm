@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace Sample
 {
@@ -14,8 +14,28 @@ namespace Sample
             var c3 = a * b;
             var c4 = a / b;
 
-            return c1 +  c2 + c3 + c4;
+            var p = Math.Pow(Math.PI, 2);
+
+            var s = 0;
+            foreach (var f in Fib(5))
+            {
+                s += f;
+            }
+            
+            return c1 +  c2 + c3 + c4 + (int)p + s;
         }
+
+        static IEnumerable<int> Fib(int x)
+        {
+            var r = 1;
+            for (int i = 1; i <= x; i++)
+            {
+                r += i;
+                yield return r;
+            }
+        }
+        
+        
         
         public static int Run()
         {

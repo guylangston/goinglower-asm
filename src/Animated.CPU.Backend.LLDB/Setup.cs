@@ -48,7 +48,8 @@ namespace Animated.CPU.Backend.LLDB
                 var step = parser.ParseStep(File.ReadAllLines(stepFile));
                 if (step == null) throw new Exception($"Unable to parse: {stepFile}");
                 cpu.Story.Steps.Add(step);
-            } 
+            }
+            var done = 1;
         }
         
         private IEnumerable<string> FindStepFiles(string folder)

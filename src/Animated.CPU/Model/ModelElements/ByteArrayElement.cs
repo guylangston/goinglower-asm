@@ -21,16 +21,7 @@ namespace Animated.CPU.Model
     public class ByteArrayElement : Element<Scene, ByteArrayModel>
     {
 
-        public ByteArrayElement(Scene scene, ByteArrayModel model) : base(scene, model)
-        {
-        }
         public ByteArrayElement(IElement parent, ByteArrayModel model) : base(parent, model)
-        {
-        }
-        public ByteArrayElement(Scene scene, ByteArrayModel model, DBlock block) : base(scene, model, block)
-        {
-        }
-        public ByteArrayElement(IElement parent, ByteArrayModel model, DBlock block) : base(parent, model, block)
         {
         }
 
