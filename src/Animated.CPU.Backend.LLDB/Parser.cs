@@ -91,7 +91,7 @@ namespace Animated.CPU.Backend.LLDB
                     yield return new RegisterDelta()
                     {
                         Register     = r.l.Trim(),
-                        ValueString  = r.r.Trim(),
+                        ValueRaw  = r.r.Trim(),
                         ValueParsed = LossyParseULong(r.r.Trim())
                     };
                 }
@@ -126,7 +126,8 @@ namespace Animated.CPU.Backend.LLDB
 
         public StoryStep ParseStep(string[] readAllLines)
         {
-            var clean = readAllLines[0].Remove(0, 8).TrimEnd(')');
+            var l0    = readAllLines[0];
+            var clean = l0.Remove(0, 8).TrimEnd(')');
             if (StringHelper.TrySplitExclusive(clean, ", ", out var res))
             {
                 return new StoryStep()
@@ -135,6 +136,21 @@ namespace Animated.CPU.Backend.LLDB
                     Asm   = res.r,
                     Delta = ParseRegisters(readAllLines.Skip(5)).ToImmutableArray()
                 };    
+            }
+            else
+            {
+                // cannot read first line, try RIP
+                if (readAllLines[2].StartsWith("RIP="))
+                {
+                    return new StoryStep()
+                    {
+                        RIP   = ParseHelper.ParseHexWord(readAllLines[2].Remove(0, 4)),
+                        Asm   = null,
+                        Delta = ParseRegisters(readAllLines.Skip(5)).ToImmutableArray()
+                    };    
+                }
+                
+                
             }
             return null;
         }

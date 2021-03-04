@@ -8,6 +8,8 @@ using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
+    
+
     public class Scene : SceneBase<Cpu, StyleFactory>
     {
         public Scene() : base(new StyleFactory())
@@ -38,10 +40,8 @@ namespace Animated.CPU.Model
                     Add(new BackGroundNoise(this, main));
             }
 
-
-            var stack = Add(new StackElement(this, Block, DOrient.Horz));
-
-            float w = Block.Inner.W / 4;
+            float w     = Block.Inner.W / 4;
+            var   stack = Add(new StackElement(this, Block, DOrient.Horz));
             stack.Add(new ElementRegisterFile(stack, Model.RegisterFile, DBlock.JustWidth(w).Set(20, 1, 10)));
             stack.Add(new ALUElement(stack, Model.ALU, DBlock.JustWidth(w).Set(20, 1, 10)));
             stack.Add(new MemoryViewElement(stack, DBlock.JustWidth(w).Set(20, 1, 10), Model.Instructions)
@@ -50,26 +50,10 @@ namespace Animated.CPU.Model
             });
             stack.Add(new CodeSection(stack,  "Code", DBlock.JustWidth(w).Set(10, 1, 10)));
 
+            var dBlock = new DBlock(300, 1050, 900, 400);
+            dBlock.Set(0, 3, 10);
+            var term   = Add(new TerminalElement(this, new Terminal(), dBlock));
             
-            //stack.Add(new MemoryViewElement(stack, DBlock.JustWidth(w).Set(10, 1, 10), Model.Stack));
-
-            //
-            // test = new TextBlockElement(this, this, new DBlock(1000, 1000, 500, 500), StyleFactory.FixedFont);
-            // test.WriteLine("Hello World");
-            // test.Write("Sample");
-            // test.Write("Yellow", StyleFactory.FixedFontYellow);
-            // test.Write("AndBackAgain(no spaces)");
-            // test.WriteLine("]", StyleFactory.FixedFontCyan);
-            // test.WriteLine("Hello World");
-            // test.WriteLine("iiiiiiiiii");
-            // test.WriteLine("XXXXXXXXXX");
-            // test.WriteLine("[        ]");
-            // test.WriteLine("         ]");
-            // test.Write("    ");
-            // test.WriteLine("     ]");
-            // test.WriteLine("[         ");
-            //
-            // Add(test);
         }
         
         public override void StepScene(TimeSpan s)
@@ -81,9 +65,9 @@ namespace Animated.CPU.Model
 
         protected override void DrawOverlay(DrawContext surface)
         {
-            surface.DrawText($"{Steps} frames at {Elapsed.TotalSeconds:0.00} sec. {lastKey} | {Mouse}", 
-                Styles.GetPaint(this, "debug"),
-                new SKPoint(0,0));
+            // surface.DrawText($"{FrameCount} frames at {Elapsed.TotalSeconds:0.00} sec. {lastKey} | {Mouse}", 
+            //     Styles.GetPaint(this, "debug"),
+            //     new SKPoint(0,0));
         }
 
         protected override void DrawBackGround(DrawContext surface)
@@ -122,7 +106,7 @@ namespace Animated.CPU.Model
             {
                 foreach (var rd in next.Delta)
                 {
-                    if (rd.ValueString != null)
+                    if (rd.ValueRaw != null)
                     {
                         Model.SetReg(rd.Register, rd.ValueParsed.Value);
                     }

@@ -24,10 +24,11 @@ namespace Animated.CPU.Animation
             DefaultStyle.MeasureText("X|", ref m);
             this.LineHeight = m.Height;
         }
-
-        public float    LineHeight   { get; set; }
-        public SKPaint  DefaultStyle { get; set; }
-        public SKPaint? Background   { get; set; }
+        
+        public float    LastDrawHeight { get; set; } = -1;
+        public float    LineHeight     { get; set; }
+        public SKPaint  DefaultStyle   { get; set; }
+        public SKPaint? Background     { get; set; }
 
         public class Line
         {
@@ -91,6 +92,8 @@ namespace Animated.CPU.Animation
             
         }
 
+        
+
         protected override void Draw(DrawContext surface)
         {
             surface.Canvas.Save();
@@ -103,7 +106,8 @@ namespace Animated.CPU.Animation
 
             UpdateLineHeight();
             
-            float y = Block.Inner.Y + LineHeight;
+            float y     = Block.Inner.Y + LineHeight;
+            float start = y;
             foreach (var line in lines)
             {
                 float x = Block.Inner.X ; 
@@ -131,6 +135,7 @@ namespace Animated.CPU.Animation
                     y += b.Height + line.HeaderY;
                 }
             }
+            LastDrawHeight = y - start;
             
             surface.Canvas.Restore();
         }

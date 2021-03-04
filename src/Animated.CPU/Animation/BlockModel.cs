@@ -45,7 +45,7 @@ namespace Animated.CPU.Animation
             Right  = all;
         }
 
-        public DBorder(float top, float right, float left, float bottom)
+        public DBorder(float top, float right, float bottom, float left)
         {
             Top    = top;
             Bottom = bottom;
@@ -168,14 +168,14 @@ namespace Animated.CPU.Animation
 
         public Rect Inner => new Rect(
             X + Padding.Left + Border.Left + Margin.Left,
-            Y + Padding.Right + Border.Right + Margin.Right,
+            Y + Padding.Top + Border.Top + Margin.Top,
             W - (Padding.Left + Border.Left + Margin.Left) - (Padding.Right + Border.Right + Margin.Right),
             H - (Padding.Top + Border.Top + Margin.Top) - (Padding.Bottom + Border.Bottom + Margin.Bottom)
         );
         
         public Rect BorderRect => new Rect(
             X + Margin.Left,
-            Y +  Margin.Right,
+            Y +  Margin.Top,
             W - (Margin.Left) - ( Margin.Right),
             H - (Margin.Top) - (Margin.Bottom)
         );
@@ -185,6 +185,18 @@ namespace Animated.CPU.Animation
         public new DBlock Set(float margin, float border, float padding)
         {
             base.Set(margin, border, padding);
+            return this;
+        }
+        
+        public DBlock Set(
+            float marginTop,float marginRight, float marginBottom, float marginLeft,   
+            float borderTop,float borderRight, float borderBottom, float borderLeft,
+            float paddingTop,float paddingRight, float paddingBottom, float paddingLeft
+            )
+        {
+            base.Margin = new DBorder(marginTop, marginRight, marginBottom, marginLeft);
+            base.Border = new DBorder(borderTop, borderRight, borderBottom, borderLeft);
+            base.Padding = new DBorder(paddingTop, paddingRight, paddingBottom, paddingLeft);
             return this;
         }
 

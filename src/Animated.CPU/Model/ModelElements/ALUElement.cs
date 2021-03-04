@@ -22,21 +22,13 @@ namespace Animated.CPU.Model
             stack.Add(new FetchPhaseElement(stack, Model.Fetch));
             stack.Add(new DecodePhaseElement(stack, Model.Decode));
             stack.Add(new ExecutePhaseElement(stack, Model.Execute));
-      
-            
-            
         }
 
         protected override void Step(TimeSpan step)
         {
         }
-
-       
-
-      
-      
     }
-    
+
     public class FetchPhaseElement : Section<Scene, PhaseFetch>
     {
         private TextBlockElement text;
@@ -48,11 +40,12 @@ namespace Animated.CPU.Model
         {
             Title = "Fetch";
             Block.Set(4, 1, 10);
+            Block.Margin = new DBorder(30, 4, 4, 4);
         }
 
         public override void Init(DrawContext surface)
         {
-            text = Add(new TextBlockElement( this, Block, Scene.Styles.FixedFont));
+            text = Add(new TextBlockElement(this, Block, Scene.Styles.FixedFont));
         }
 
         protected override void Step(TimeSpan step)
@@ -60,36 +53,19 @@ namespace Animated.CPU.Model
             if (Model.Memory != null)
             {
                 text.Clear();
-                
+
                 text.Write("RIP".PadRight(12));
                 text.Write(": ");
                 text.WriteLine(DisplayHelper.ToHex(Model.RIP), Scene.Styles.FixedFontCyan);
-                
+
                 text.Write("Binary Code".PadRight(12));
                 text.Write(": ");
-                text.WriteLine(DisplayHelper.ToHex(Model.Memory), Scene.Styles.FixedFontBlue);    
+                text.WriteLine(DisplayHelper.ToHex(Model.Memory), Scene.Styles.FixedFontBlue);
             }
+            //Block.H = Math.Max(60, text.LastDrawHeight);
         }
 
-        protected override void Draw(DrawContext surface)
-        {
-            base.Draw(surface);
-
-            var seg = Scene.Cpu.Instructions.GetByAddress(Model.RIP);
-            if (seg != null && Scene.TryRecurseElementFromModel(seg, out var eRip))
-            {
-                var a = Block.Outer.MR;
-                var b = eRip.Block.Inner.ML;
-                new Arrow()
-                {
-                    Start     = a,
-                    WayPointA = a + new SKPoint(20, 0),
-                    WayPointB = b + new SKPoint(-20, 0),
-                    End       = b,
-                    Style     = Scene.Styles.Arrow
-                }.Draw(surface.Canvas);
-            }
-        }
+      
 
         protected override void Decorate(DrawContext surface)
         {
@@ -120,12 +96,13 @@ namespace Animated.CPU.Model
         })
         {
             Block.Set(4, 1, 10);
-            Title = "Decode";
+            Block.Margin = new DBorder(30, 4, 4, 4);
+            Title        = "Decode";
         }
 
         public override void Init(DrawContext surface)
         {
-            text = Add(new TextBlockElement( this, Block, Scene.Styles.FixedFont));
+            text = Add(new TextBlockElement(this, Block, Scene.Styles.FixedFont));
         }
 
         protected override void Step(TimeSpan step)
@@ -144,8 +121,6 @@ namespace Animated.CPU.Model
         protected override void Draw(DrawContext surface)
         {
             base.Draw(surface);
-            
-            
         }
     }
 
@@ -158,8 +133,9 @@ namespace Animated.CPU.Model
             H = 300
         })
         {
-            Block.Set(4, 1, 10);
             Title = "Execute";
+            Block.Set(4, 1, 10);
+            Block.Margin = new DBorder(30, 4, 4, 4);
         }
 
         public override void Init(DrawContext surface)
@@ -169,125 +145,57 @@ namespace Animated.CPU.Model
 
         protected override void Step(TimeSpan step)
         {
+            text.Block = this.Block;
             text.Clear();
-            
-            var decode = Model. Asm;
-            if (decode != null && decode.Args.Any())
+
+            var decode = Model.Asm;
+            if (decode?.Args != null && decode.Args.Any())
             {
-                foreach (var arg in decode.Args.Where(x=>(x.InOut & InOut.In) > 0))
+                foreach (var arg in decode.Args.Distinct(DecodedArg.Compare))
                 {
                     var val = Model.Alu.GetInput(decode, arg);
-                    
-                    text.Write($" IN: ");
-                    text.Write(arg.Text.PadRight(10), Scene.Styles.FixedFontCyan);
-                    text.Write(": ");
-                    text.WriteLine(val, Scene.Styles.FixedFontYellow);
+                    text.Write($" IN A{arg.Index}: ");
+                    text.Write(arg.Value, Scene.Styles.FixedFontCyan);
+                    text.Write(" ");
+                    if (val != null)
+                    {
+                        text.Write(val.ValueRaw, Scene.Styles.FixedFontYellow);
+                        text.Write("=");
+                        text.WriteLine(val.ValueParsed, Scene.Styles.FixedFontCyan);
+                    }
+                    else
+                    {
+                        text.WriteLine("?", Scene.Styles.FixedFontDarkGray);
+                    }
                 }
-                
+
                 text.WriteLine();
-                text.Write(">>> ", Scene.Styles.FixedFontDarkGray);
-                text.Write(decode.OpCode, Scene.Styles.FixedFontYellow);
-                text.Write($" ({decode.FriendlyName})", Scene.Styles.FixedFontGray);
-                text.Write(" <<<", Scene.Styles.FixedFontDarkGray);
+                text.Write("---[ ", Scene.Styles.FixedFontDarkGray);
+                text.Write(decode.OpCode.ToUpperInvariant(), Scene.Styles.FixedFontYellow);
+                text.Write(" ]---", Scene.Styles.FixedFontDarkGray);
+                text.WriteLine();
+                text.WriteLine(Model.AsmText, Scene.Styles.FixedFontGray);
                 text.WriteLine();
                 
-                
-                // foreach (var arg in decode.Args.Where(x=>(x.InOut & InOut.Out) > 0))
-                // {
-                //     text.WriteLine($"OUT {arg.Text}");
-                // }
-                
-                text.WriteLine();
-                foreach (var arg in decode.Args.Where(x=>(x.InOut & InOut.Out) > 0))
+                foreach (var arg in decode.Args.Distinct(DecodedArg.Compare))
                 {
                     var val = Model.Alu.GetOutput(decode, arg);
-                    
-                    text.Write($"OUT: ");
-                    text.Write(arg.Text.PadRight(10), Scene.Styles.FixedFontCyan);
-                    text.Write(": ");
-                    text.WriteLine(val, Scene.Styles.FixedFontYellow);
+
+                    text.Write($"OUT A{arg.Index}: ");
+                    text.Write(arg.Value.PadRight(10), Scene.Styles.FixedFontCyan);
+                    text.Write(" ");
+                    if (val != null)
+                    {
+                        text.Write(val.ValueRaw, Scene.Styles.FixedFontYellow);
+                        text.Write("=");
+                        text.WriteLine(val.ValueParsed, Scene.Styles.FixedFontCyan);
+                    }
+                    else
+                    {
+                        text.WriteLine("?", Scene.Styles.FixedFontDarkGray);
+                    }
                 }
-                
-                
-                text.WriteLine();
-                text.WriteLine($"Next: {Scene.Cpu.RIP.ValueHex}...");
-                
-
             }
-            
-            // var i = Model.Inputs.ToArray();
-            // if (i.Any())
-            // {
-            //     text.WriteLine();
-            //     text.WriteLine("Input:");
-            //
-            //     foreach (var reg in i)
-            //     {
-            //         text.Write(reg.Id.PadRight(10));
-            //         text.Write(": ");
-            //         text.WriteLine(reg.ValueHex, Scene.Styles.FixedFontBlue);
-            //     }    
-            // }
-
-           
         }
-
-        
     }
-
-    // public class ALUPhaseFetchElement : Element<Scene, object>
-    // {
-    //     public ALUPhaseFetchElement(IElement parent, object model) : base(parent, model, new DBlock())
-    //     {
-    //         Block.H = 150;
-    //         Block.Set(5, 2, 5);
-    //         
-    //     }
-    //
-    //     protected override void Step(TimeSpan step)
-    //     {
-    //         
-    //     }
-    //
-    //     protected override void Draw(DrawContext surface)
-    //     {
-    //         var drawing = new Drawing(surface.Canvas);
-    //         drawing.DrawRect(Block, Scene.StyleFactory.GetPaint(this, "border"));
-    //         
-    //         drawing.DrawText(Model?.ToString(), Scene.StyleFactory.GetPaint(this, "h1"), Block, BlockAnchor.TM);
-    //
-    //         var mType    = Model.GetType();
-    //         var txtStyle = Scene.StyleFactory.GetPaint(this, "text");
-    //         var off      = new SKPoint(0,0);
-    //         foreach (var prop in mType.GetProperties())
-    //         {
-    //             var pp  = prop.GetValue(Model);
-    //             if (pp is {})
-    //             {
-    //                 if (pp is byte[] ba) pp = DisplayHelper.ToHex(ba);
-    //
-    //                 if (pp is IEnumerable en && pp is not string)
-    //                 {
-    //                     var ss   = drawing.DrawText(prop.Name, txtStyle, Block, BlockAnchor.MM, off);
-    //                     off += new SKPoint(0, ss.Height + 2);
-    //                     foreach (var  inner in en)
-    //                     {
-    //                         var txt = $"{inner}";
-    //                         var s   = drawing.DrawText(txt, txtStyle, Block, BlockAnchor.MM, off);
-    //                         off += new SKPoint(0, s.Height + 2);
-    //                     }
-    //                 }
-    //                 else
-    //                 {
-    //                     var txt = $"{prop.Name}: {pp}";
-    //                     var s   = drawing.DrawText(txt, txtStyle, Block, BlockAnchor.MM, off);
-    //                     off += new SKPoint(0, s.Height + 2);    
-    //                 }
-    //                 
-    //                 
-    //                     
-    //             }
-    //         }
-    //     }
-    //}
 }

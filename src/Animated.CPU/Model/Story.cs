@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Animated.CPU.Model
 {
@@ -11,11 +13,16 @@ namespace Animated.CPU.Model
         public SourceProvider Source  { get; set; }
     }
     
-    public struct RegisterDelta
+    public class RegisterDelta
     {
         public string Register    { get; set; }
-        public string ValueString { get; set; }
+        public string ValueRaw { get; set; }
         public ulong? ValueParsed { get; set; }
+
+        public override string ToString()
+        {
+            return $"{nameof(Register)}: {Register}, {nameof(ValueRaw)}: {ValueRaw}, {nameof(ValueParsed)}: {ValueParsed}";
+        }
     }
 
     public class StoryStep
@@ -23,5 +30,8 @@ namespace Animated.CPU.Model
         public ulong                        RIP   { get; set; }
         public string                       Asm   { get; set; }
         public IReadOnlyList<RegisterDelta> Delta { get; set; }
+
+        public RegisterDelta? Get(string reg) 
+            => Delta.FirstOrDefault(x => string.Equals(x.Register, reg, StringComparison.InvariantCultureIgnoreCase));
     }
 }

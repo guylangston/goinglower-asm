@@ -22,9 +22,10 @@ namespace Animated.CPU.Animation
             Block = b;
         }
 
-        public TimeSpan Elapsed      { get; private set; }
-        public TStyle   Styles { get; }
-        public int      Steps        { get; private set; }
+        public TimeSpan Elapsed    { get; private set; }
+        public TStyle   Styles     { get; }
+        public int      FrameCount { get; private set; }
+        public float    FPS        => (float)FrameCount / (float)Elapsed.TotalSeconds ;
 
         IStyleFactory IScene.StyleFactory => Styles;
         
@@ -51,7 +52,7 @@ namespace Animated.CPU.Animation
         protected sealed override void Step(TimeSpan step)
         {
             Elapsed += step;
-            Steps++;
+            FrameCount++;
             
             StepScene(step);
             foreach (var element in ChildrenRecursive())

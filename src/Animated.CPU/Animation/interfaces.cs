@@ -55,7 +55,7 @@ namespace Animated.CPU.Animation
     
     public interface IScene : IElement
     {
-        int      Steps   { get; }
+        int      FrameCount   { get; }
         TimeSpan Elapsed { get; }
         
         IStyleFactory StyleFactory { get; }

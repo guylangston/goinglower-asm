@@ -40,12 +40,10 @@ namespace Animated.CPU.Model
             this.Alu = alu;
         }
         
+        public string? AsmText => Alu.StoryStep?.Asm;
         public DecodedInstruction? Asm => DecodedInstruction.Parse(Alu.Cpu, Alu.StoryStep?.Asm);
 
-        public IEnumerable<Register> Inputs => Alu.LoosyMathRegs(Alu.StoryStep?.Asm);
-
-        public IEnumerable<Register> Changes => Alu.UsedRegisters();
-
+        
         public override string ToString() => "Execute";
     }
 }

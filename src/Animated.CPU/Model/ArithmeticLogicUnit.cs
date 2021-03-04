@@ -54,15 +54,54 @@ namespace Animated.CPU.Model
                 }    
             }
         }
-
-        public ulong? GetInput(DecodedInstruction inst, DecodedArg arg)
+        
+        public RegisterDelta? Get(StoryStep? step, DecodedInstruction inst, DecodedArg arg)
         {
-            throw new NotImplementedException();
+            if (arg.IsImmediate)
+            {
+                return new RegisterDelta()
+                {
+                    Register    = "Ox",
+                    ValueRaw    = arg.Value,
+                    ValueParsed = ParseHelper.ParseHexWord(arg.Value.Remove(0, 2))
+                };
+            }
+            
+            if (step == null) return null;
+            var r = Cpu.GetReg(arg.Value);
+            if (r != null)
+            {
+                foreach (var id in r.AllIds())
+                {
+                    var dt = step.Get(id);
+                    if (dt != null) return dt;
+                }
+            }
+            return null;
+        }
+        
+        public RegisterDelta? GetInput(DecodedInstruction inst, DecodedArg arg)
+        {
+
+            if (Cpu.Story.CurrentIndex > 0)
+            {
+                var ii  = Cpu.Story.Steps[Cpu.Story.CurrentIndex - 1];
+
+                return Get(ii, inst, arg);
+            }
+
+            return null;
         }
 
-        public ulong? GetOutput<T>(DecodedInstruction inst, DecodedArg arg)
+        public RegisterDelta? GetOutput(DecodedInstruction inst, DecodedArg arg)
         {
-            throw new NotImplementedException();
+            var d = Get(StoryStep, inst, arg);
+            if (d != null) return d;
+
+            var r = Cpu.GetReg(arg.Value);
+            if (r != null) return r.ToDelta();
+            return null;
         }
+
     }
 }

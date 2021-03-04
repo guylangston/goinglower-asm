@@ -3,26 +3,17 @@ using System.Linq;
 
 namespace Animated.CPU.Model
 {
-    public class DecodedArg 
-    {
-        public bool      IsImplied { get; set; }
-        public string    Text      { get; set; }
-        public Register? Register  { get; set; }
-        public InOut     InOut     { get; set; }
-
-        public override string ToString() => Text;
-    }
-    
     public class DecodedInstruction
     {
-        public string           OpCode { get; set; }
-        public List<DecodedArg> Args   { get; set; } = new List<DecodedArg>();
+        public string            Text  { get; set; }
+        public string            OpCode { get; set; }
+        public List<DecodedArg>? Args   { get; set; }
 
         public string FriendlyName   { get; set; }
         public string FriendlyMethod { get; set; }
         public string Url            { get; set; }
             
-        public DecodedArg? A1 => Args?[0];
+        public DecodedArg? A1 => Args != null && Args.Count > 0 ? Args[0] : null;
         public DecodedArg? A2 => Args != null && Args.Count > 1 ? Args[1] : null;
         
         public static DecodedInstruction? Parse(Cpu cpu, string line)
@@ -32,14 +23,21 @@ namespace Animated.CPU.Model
             {
                 var r = new DecodedInstruction()
                 {
+                    Text = line,
                     OpCode = p.l.Trim().ToLower(),
-                    Args = p.r.Split(",")
-                            .Select(x => new DecodedArg()
-                            {
-                                Text =x.Trim() 
-                            })
-                            .ToList()
+                    Args = new List<DecodedArg>()
                 };
+                
+                foreach (var (index, val) in p.r.Split(",").WithIndex())
+                {
+                    var a = new DecodedArg()
+                    {
+                        Index = index,
+                        Value = val.Trim()
+                    };
+                    a.ParseArg(cpu, r, line);
+                    r.Args.Add(a);
+                }
                 BuildFriendly(cpu, r);
                 return r;
             }
@@ -50,7 +48,9 @@ namespace Animated.CPU.Model
             BuildFriendly(cpu, ri);
             return ri;
         }
+
         
+
         public const string Assign = ":=";
 
         private static void BuildFriendly(Cpu cpu, DecodedInstruction inst)
@@ -67,13 +67,22 @@ namespace Animated.CPU.Model
                 inst.FriendlyMethod = $"{inst.A1} {Assign} {inst.A2}";
                 return;
             }
+            
+            if (inst.OpCode == "lea")
+            {
+                inst.A1.InOut       = InOut.Out;
+                inst.A2.InOut       = InOut.In;
+                inst.FriendlyName   = "Load Effective Address";
+                inst.FriendlyMethod = $"{inst.A1} {Assign} {inst.A2}";
+                return;
+            }
 
             if (inst.OpCode == "xor")
             {
                 inst.FriendlyName = "Exclusive Or";
                 inst.A1.InOut     = InOut.InOut;
                 inst.A2.InOut     = InOut.In;
-                if (inst.A1.Text == inst.A2.Text)
+                if (inst.A1.Value == inst.A2.Value)
                 {
                     inst.FriendlyMethod = $"{inst.A1} {Assign} 0";
                 }
@@ -88,6 +97,14 @@ namespace Animated.CPU.Model
                 return;
             }
             
+            if (inst.OpCode == "dev")
+            {
+                inst.A1.InOut       = InOut.InOut;
+                inst.FriendlyName   = "Decrement --";
+                inst.FriendlyMethod = $"{inst.A1}--";
+                return;
+            }
+            
             if (inst.OpCode == "cmp")
             {
                 inst.A1.InOut = InOut.In;
@@ -95,7 +112,7 @@ namespace Animated.CPU.Model
                 inst.Args.Add(new DecodedArg()
                 {
                     IsImplied = true,
-                    Text      = "RFLAGS",
+                    Value      = "RFLAGS",
                     InOut     = InOut.Out
                 });
                 inst.FriendlyName   = "Compare";
@@ -110,7 +127,7 @@ namespace Animated.CPU.Model
                 inst.Args.Add(new DecodedArg()
                 {
                     IsImplied = true,
-                    Text      = "RFLAGS",
+                    Value      = "RFLAGS",
                     InOut     = InOut.Out
                 });
                 inst.FriendlyName   = "AND (without changing A1)";
@@ -122,7 +139,7 @@ namespace Animated.CPU.Model
             {
                 inst.A1.InOut       = InOut.In;
                 inst.FriendlyName   = "Jump If Less Than";
-                inst.FriendlyMethod = $"if flags(<) rip {Assign} {inst.A1}";      // Find Previous Line (is Compare then get args)
+                inst.FriendlyMethod = $"if flags[LessThan] rip {Assign} {inst.A1}";      // Find Previous Line (is Compare then get args)
                 return;
             }
             
@@ -134,8 +151,8 @@ namespace Animated.CPU.Model
                 return;
             }
 
-            inst.FriendlyName   = "???";
-            inst.FriendlyMethod = "TODO";
+            inst.FriendlyName   = null;
+            inst.FriendlyMethod = null;
             if (inst.A1 != null) inst.A1.InOut = InOut.Out | InOut.InComplete;
             if (inst.A2 != null) inst.A2.InOut = InOut.In  | InOut.InComplete;
         }

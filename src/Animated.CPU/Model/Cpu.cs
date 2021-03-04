@@ -126,6 +126,20 @@ namespace Animated.CPU.Model
             }
             return null;
         }
+
+        public Register? GetReg(string name)
+        {
+            foreach (var reg in RegisterFile)
+            {
+                if (reg.Match(name))
+                {
+                    return reg;
+                }
+            }
+            return null;
+        }
+        
+       
     }
 
     [Flags]
@@ -135,7 +149,6 @@ namespace Animated.CPU.Model
         Out = 2,
         InOut = In + Out,
         InComplete = 4,
-        
     }
 
    
@@ -154,6 +167,16 @@ namespace Animated.CPU.Model
         public string                Name        { get; set; }
         public string                Description { get; set; }
 
+
+        public IEnumerable<string> AllIds()
+        {
+            yield return Id;
+            foreach (var ii in IdAlt)
+            {
+                yield return ii;
+            }
+        }
+        
         public string ValueHex => Value.ToString("X").PadLeft(64 / 8 * 2, '0');
 
         public override string ToString() => $"{Id}/{Name} = {Value:X}";
@@ -172,6 +195,16 @@ namespace Animated.CPU.Model
             
 
             return false;
+        }
+
+        public RegisterDelta ToDelta()
+        {
+            return new RegisterDelta()
+            {
+                Register    = Id,
+                ValueParsed = Value,
+                ValueRaw    = ValueHex
+            };
         }
     }
 

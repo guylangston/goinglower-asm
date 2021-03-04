@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -43,7 +44,9 @@ namespace Animated.CPU.Backend.LLDB
 
             foreach (var stepFile in FindStepFiles(folder))
             {
-                cpu.Story.Steps.Add(parser.ParseStep(File.ReadAllLines(stepFile)));
+                var step = parser.ParseStep(File.ReadAllLines(stepFile));
+                if (step == null) throw new Exception($"Unable to parse: {stepFile}");
+                cpu.Story.Steps.Add(step);
             } 
         }
         

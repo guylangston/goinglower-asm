@@ -60,6 +60,17 @@ namespace Animated.CPU.Model
                 Color       = SKColors.Lime,
                 IsAntialias = true
             };
+            
+            TextH1 = new SKPaint()
+            {
+                TextSize = 25,
+                Color    = SKColors.Yellow
+            };
+            TextH1BG = new SKPaint()
+            {
+                Style = SKPaintStyle.Fill,
+                Color = SKColor.Parse("#555")
+            };
         }
 
         public SKPaint BackGround      { get; }
@@ -74,6 +85,10 @@ namespace Animated.CPU.Model
         public SKPaint FixedFontDarkGray   { get; }
         public SKPaint Border          { get; }
         public SKPaint Arrow           { get; }
+        
+        
+        public SKPaint TextH1   { get; }
+        public SKPaint TextH1BG { get; }
 
         public static SKPaint Clone(SKPaint cpy, Action<SKPaint> then)
         {
@@ -122,7 +137,8 @@ namespace Animated.CPU.Model
             
             switch (id)
             {
-                case "h1": return h1;
+                case "h1": return TextH1;
+                case "h1bg": return TextH1BG;
                 case "hex": return hex;
                 case "text": return Text;
                 case "debug": return debug;
@@ -223,11 +239,7 @@ namespace Animated.CPU.Model
         };
 
         
-        public SKPaint h1 = new SKPaint()
-        {
-            TextSize = 25,
-            Color    = SKColors.Yellow
-        };
+        
 
         private SKPaint arrow = new SKPaint()
         {
