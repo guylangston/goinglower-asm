@@ -18,7 +18,7 @@ namespace Animated.CPU.Model
             Title = "Terminal";
         }
 
-        public override void Init()
+        protected override void Init()
         {
             this.text = Add(new TextBlockElement(this, Block, Scene.Styles.FixedFontDarkGray));
         }

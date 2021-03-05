@@ -173,5 +173,7 @@ namespace Animated.CPU.Animation
             
             surface.Canvas.Restore();
         }
+
+        public float CalcHeight() => lines.Count * LineHeight;
     }
 }

@@ -130,8 +130,16 @@ namespace Animated.CPU
     {
         public static ulong ParseHexWord(string txt)
         {
-            var clean = new string(txt.Where(x => char.IsLetterOrDigit(x)).ToArray());
-            return ulong.Parse(clean, NumberStyles.HexNumber);
+            var clean = new string(txt.TakeWhile(x => char.IsLetterOrDigit(x)).ToArray());
+            try
+            {
+                return ulong.Parse(clean, NumberStyles.HexNumber);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Inp: {clean}", e);
+            }
+            
         }
 
         public static byte[] ParseHexByteArray(string txt) => Convert.FromHexString(txt);

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text;
 using SkiaSharp;
 
 namespace Animated.CPU.Animation
@@ -42,17 +43,44 @@ namespace Animated.CPU.Animation
 
 
         public T ParentAs<T>() => (T)Parent;
+        public bool HasChildren => elements.Count > 0;
 
-        private bool fistStep = true;
-        public virtual void Init() {}
+        public List<IElement> PathToRoot()
+        {
+            var a = new List<IElement>();
+            IElement? x = this;
+            while (x != null)
+            {
+                a.Add(x);
+                x = x.Parent;
+            }
+            a.Reverse();
+            return a;
+        }
+
+
+        public string DebugId => StringHelper.Join(PathToRoot(), x => x.ToString(), ">");
+
+        private bool initComplete = false;
+        public void InitExec()
+        {
+            if (initComplete) return;
+            try
+            {
+                Init();
+                initComplete = true;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Init Failed: {DebugId}", e);
+            }
+            
+        }
 
         public void StepExec(TimeSpan step)
         {
-            if (fistStep)
-            {
-                fistStep = false;
-                Init();
-            }
+            if (!initComplete) InitExec();
+            
             // Step() should run when Disable and/or Hidden as Step() has the logic to turn these flags on/off
             Step(step); 
         }
@@ -61,15 +89,33 @@ namespace Animated.CPU.Animation
         {
             if (IsEnabled && !IsHidden)
             {
-                Draw(surface);
+                try
+                {
+                    Draw(surface);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Draw Failed: {DebugId}", e);
+                }
             }
         }
 
         public void DecorateExec(DrawContext surface)
         {
-            if (IsEnabled && !IsHidden) Decorate(surface);
+            if (IsEnabled && !IsHidden)
+            {
+                try
+                {
+                    Decorate(surface);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Draw Failed: {DebugId}", e);
+                }
+            }
         }
-        
+
+        protected virtual void Init() {}
         protected abstract void Step(TimeSpan step);
         protected abstract void Draw(DrawContext surface);
         protected virtual void Decorate(DrawContext surface) {  /* Nothing by default */ }

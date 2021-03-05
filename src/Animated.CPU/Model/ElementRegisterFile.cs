@@ -15,35 +15,24 @@ namespace Animated.CPU.Model
             Title = "Register File";
         }
 
-        public override void Init()
+        protected override void Init()
         {
-            var stack = new DStack(this.Block, DOrient.Horz);
+            var stack = Add(new StackElement(this, Block, DOrient.Vert));
             
-            foreach (var reg in stack.Layout(Model))
+            foreach (var reg in Model.WithIndex())
             {
-                var r = Add(new ElementRegister(this, reg.model, reg.block));
-                r.Block.Set(4, 2, 4);
+                var r = stack.Add(new ElementRegister(stack, reg.val,
+                    new DBlock(0,0,0,50).Set(4,3,4)));
                 r.Alpha.Value     = 0;
-                r.Alpha.BaseValue = 180;
-                
+                r.Alpha.BaseValue = 255;
                 
                 // Add Animation
                 r.Animator = new AnimatorPipeline(TimeSpan.FromSeconds(10));
-                r.Animator.Add(new AnimationDelay(TimeSpan.FromSeconds(reg.index/8f)));
+                r.Animator.Add(new AnimationDelay(TimeSpan.FromSeconds(reg.index/32f)));
                 r.Animator.Add(new AnimationProp(r.Alpha, 0, r.Alpha.BaseValue, TimeSpan.FromSeconds(1/2f)));
                 r.Animator.Start();
             }
-
-            
-
         }
-
-        protected override void Step(TimeSpan step)
-        {
-            var x = 1;
-        }
-        
-       
     }
 
     public class PropFloat
@@ -57,9 +46,6 @@ namespace Animated.CPU.Model
         public int Value     { get; set; }
         public int BaseValue { get; set; }
     }
-    
-    
-    
 
     public class ElementRegister : Element<Scene, Register>
     {
@@ -67,7 +53,7 @@ namespace Animated.CPU.Model
         {
         }
 
-        public override void Init()
+        protected override void Init()
         {
             var bytes = new byte[8];
             this.Bytes = Add(new ByteArrayElement(this, new ByteArrayModel(bytes, "", ""))
@@ -120,7 +106,7 @@ namespace Animated.CPU.Model
             draw.DrawText($"[{Model.Id}]", sId, Block, BlockAnchor.TL);
             draw.DrawText(Model.Name ?? "", sName, Block, BlockAnchor.TR);
             //draw.DrawText(Model.Value.ToString("X"), sVal, Block, BlockAnchor.BR);
-
+            
             if (IsHighlighted)
             {
                 // var high = new SKPaint()

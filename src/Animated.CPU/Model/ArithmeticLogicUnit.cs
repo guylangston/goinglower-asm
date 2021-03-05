@@ -17,6 +17,7 @@ namespace Animated.CPU.Model
 
         public Cpu       Cpu       { get; }
         public StoryStep StoryStep => Cpu.Story.Current;
+        public ulong     RIP       => Cpu.Story.Current.RIP;
 
         public PhaseFetch   Fetch   { get; }
         public PhaseDecode  Decode  { get; }

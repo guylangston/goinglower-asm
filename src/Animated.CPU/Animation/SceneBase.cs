@@ -59,15 +59,9 @@ namespace Animated.CPU.Animation
             }
         }
         
-        public sealed override void Init()
+        protected sealed override void Init()
         {
             InitScene();
-            foreach (var element in ChildrenRecursive())
-            {
-                if (element == this) continue;
-                
-                element.Init();
-            }
         }
         
         protected override void Draw(DrawContext surface)

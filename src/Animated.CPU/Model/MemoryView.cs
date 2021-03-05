@@ -113,7 +113,7 @@ namespace Animated.CPU.Model
 
         public bool IsSelected => Model.ContainsAddress(Scene.ElementALU.Fetch.Model.RIP);
 
-        public override void Init()
+        protected override void Init()
         {
             txt = Add(new TextBlockElement(this, Block, Scene.Styles.FixedFont));
             
@@ -126,7 +126,7 @@ namespace Animated.CPU.Model
             txt.WriteLine(Model.SourceAsm, Scene.Styles.FixedFontCyan);
             
             txt.Write("|   ", Scene.Styles.FixedFontDarkGray);
-            txt.Write($"[{DisplayHelper.ToHex(Model.Address)}] => {Model.Raw?.ToHex()}".PadLeft(40), Scene.Styles.FixedFontDarkGray);
+            txt.Write($"{Model.Raw?.ToHex()} @ [{DisplayHelper.ToHex(Model.Address)}]".PadLeft(40), Scene.Styles.FixedFontDarkGray);
         }
 
         protected override void Step(TimeSpan step)

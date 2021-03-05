@@ -15,7 +15,7 @@ namespace Animated.CPU.Model
             Title = "ALU";
         }
 
-        public override void Init()
+        protected override void Init()
         {
             var stack = Add(new StackElement(this, Block, DOrient.Vert));
 
@@ -23,6 +23,8 @@ namespace Animated.CPU.Model
             this.Decode = stack.Add(new DecodePhaseElement(stack, Model.Decode));
             this.Execute = stack.Add(new ExecutePhaseElement(stack, Model.Execute));
         }
+
+        
 
         public ExecutePhaseElement Execute { get; set; }
         public DecodePhaseElement  Decode  { get; set; }
@@ -45,7 +47,7 @@ namespace Animated.CPU.Model
             Block.Margin = new DBorder(30, 4, 4, 4);
         }
 
-        public override void Init()
+        protected override void Init()
         {
             text = Add(new TextBlockElement(this, Block, Scene.Styles.FixedFont));
         }
@@ -94,7 +96,7 @@ namespace Animated.CPU.Model
 
         public DecodePhaseElement(IElement parent, PhaseDecode model) : base(parent, model, new DBlock()
         {
-            H = 200
+            H = 120
         })
         {
             Block.Set(4, 1, 10);
@@ -102,7 +104,7 @@ namespace Animated.CPU.Model
             Title        = "Decode";
         }
 
-        public override void Init()
+        protected override void Init()
         {
             text = Add(new TextBlockElement(this, Block, Scene.Styles.FixedFont));
         }
@@ -114,15 +116,9 @@ namespace Animated.CPU.Model
             if (decode != null)
             {
                 text.WriteLine(decode);
-                text.WriteLine();
                 text.WriteLine(decode.FriendlyName, Scene.Styles.FixedFontBlue);
                 text.WriteLine(decode.FriendlyMethod, Scene.Styles.FixedFontBlue);
             }
-        }
-
-        protected override void Draw(DrawContext surface)
-        {
-            base.Draw(surface);
         }
     }
 
@@ -140,7 +136,7 @@ namespace Animated.CPU.Model
             Block.Margin = new DBorder(30, 4, 4, 4);
         }
 
-        public override void Init()
+        protected override void Init()
         {
             text = Add(new TextBlockElement(this, Block, Scene.Styles.FixedFont));
         }

@@ -14,7 +14,7 @@ namespace Animated.CPU.Model
             Title = model.ShortName;
         }
 
-        public override void Init()
+        protected override void Init()
         {
             text = Add(new TextBlockElement(this, this.Block, Scene.Styles.FixedFont));
             uint cc = 1;
