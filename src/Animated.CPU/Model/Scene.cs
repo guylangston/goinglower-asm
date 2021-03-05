@@ -47,8 +47,6 @@ namespace Animated.CPU.Model
             var dBlock = new DBlock(300, 1050, 900, 400);
             dBlock.Set(0, 3, 10);
             var term   = Add(new TerminalElement(this, new Terminal(), dBlock));
-            
-            
         }
 
         protected override void InitSceneComplete()

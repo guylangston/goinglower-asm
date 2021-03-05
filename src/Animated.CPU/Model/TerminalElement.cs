@@ -12,6 +12,7 @@ namespace Animated.CPU.Model
     public class TerminalElement : Section<Scene, Terminal>
     {
         private TextBlockElement text;
+        
 
         public TerminalElement(IElement parent, Terminal model, DBlock block) : base(parent, model, block)
         {
@@ -20,13 +21,13 @@ namespace Animated.CPU.Model
 
         protected override void Init()
         {
-            this.text = Add(new TextBlockElement(this, Block, Scene.Styles.FixedFontDarkGray));
+            this.text = this.Add(new TextBlockElement(this, null, Scene.Styles.FixedFontDarkGray));
         }
 
         protected override void Step(TimeSpan step)
         {
             text.Clear();
-            text.WriteLine($"Step: {Scene.Cpu?.Story?.CurrentIndex}, Active: {Scene.ElementALU.Active}");
+            text.WriteLine($"Step: {Scene.Cpu?.Story?.CurrentIndex}, Active: {Scene.ElementALU.StateMachine.Current}");
             text.WriteLine($"Frames: {Scene.FrameCount}, elapsed {Scene.Elapsed:c} = {Scene.FPS:0.0} fps");
             text.WriteLine($"Mouse: {Scene.Mouse}");
             

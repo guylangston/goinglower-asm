@@ -8,153 +8,7 @@ using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
-    public enum EState
-    {
-        Start,
-        Fetch,
-        Decode,
-        ExecuteInp,
-        ExecuteOut,
-        StepForward,
-        Finished
-    }
     
-    public class StateMachine<T>
-    {
-        private List<State>
-
-        private Scene Scene { get; }
-
-        public EState   Current        { get; private set; }
-        public IElement CurrentElement => map[Current];
-        
-        public class State
-        {
-            public string        Id      { get; set; }
-            public T             Target  { get; set; }
-            public Action<State> OnEnter { get; set; }
-            public Action<State> OnLeave { get; set; }
-        }
-        
-        
-        public void Start()
-        {
-            Current = EState.Start;
-        }
-
-        public void Next()
-        {
-            if (Current == EState.StepForward)
-            {
-                if (Scene.Cpu.Story.CurrentIndex < Scene.Cpu.Story.Steps.Count)
-                {
-                    Scene.Cpu.Story.CurrentIndex++;
-                    Current = EState.Fetch;
-                    return;    
-                }
-                else
-                {
-                    Current = EState.Finished;
-                    return;
-                }
-            }
-            
-            var c = (int)Current;
-            Current = (EState)(c + 1);
-
-        }
-
-        public void Prev()
-        {
-            if (Current == EState.Fetch)
-            {
-                if (Scene.Cpu.Story.CurrentIndex > 0)
-                {
-                    Scene.Cpu.Story.CurrentIndex--;
-                    Current = EState.ExecuteOut;
-                    return;    
-                }
-                else
-                {
-                    Current = EState.Start;
-                    return;
-                }
-            }
-            
-            var c = (int)Current;
-            Current = (EState)(c - 1);
-        }
-    }
-
-
-    
-
-    public class StateMachine
-    {
-        private Dictionary<EState, IElement> map = new Dictionary<EState, IElement>();
-
-        private Scene Scene { get; }
-
-        public EState   Current        { get; private set; }
-        public IElement CurrentElement => map[Current];
-        
-        public class State
-        {
-            public EState        Id      { get; set; }
-            public IElement      Target  { get; set; }
-            public Action<State> OnEnter { get; set; }
-            public Action<State> OnLeave { get; set; }
-        }
-        
-        
-        public void Start()
-        {
-            Current = EState.Start;
-        }
-
-        public void Next()
-        {
-            if (Current == EState.StepForward)
-            {
-                if (Scene.Cpu.Story.CurrentIndex < Scene.Cpu.Story.Steps.Count)
-                {
-                    Scene.Cpu.Story.CurrentIndex++;
-                    Current = EState.Fetch;
-                    return;    
-                }
-                else
-                {
-                    Current = EState.Finished;
-                    return;
-                }
-            }
-            
-            var c    = (int)Current;
-            Current = (EState)(c + 1);
-
-        }
-
-        public void Prev()
-        {
-            if (Current == EState.Fetch)
-            {
-                if (Scene.Cpu.Story.CurrentIndex > 0)
-                {
-                    Scene.Cpu.Story.CurrentIndex--;
-                    Current = EState.ExecuteOut;
-                    return;    
-                }
-                else
-                {
-                    Current = EState.Start;
-                    return;
-                }
-            }
-            
-            var c = (int)Current;
-            Current = (EState)(c - 1);
-        }
-    }
     
     
     public class ALUElement : Section<Scene, ArithmeticLogicUnit>
@@ -170,36 +24,37 @@ namespace Animated.CPU.Model
             this.Fetch   = stack.Add(new FetchPhaseElement(stack, Model.Fetch,this));
             this.Decode  = stack.Add(new DecodePhaseElement(stack, Model.Decode,this));
             this.Execute = stack.Add(new ExecutePhaseElement(stack, Model.Execute,this));
+
+            StateMachine = new StoryStateMachine(Scene, this);
         }
 
-        public FetchPhaseElement   Fetch   { get; set; }
-        public DecodePhaseElement  Decode  { get; set; }
-        public ExecutePhaseElement Execute { get; set; }
-
-        public Story Story => Scene.Model.Story;
+        public FetchPhaseElement   Fetch        { get; private set; }
+        public DecodePhaseElement  Decode       { get; private set; }
+        public ExecutePhaseElement Execute      { get; private set; }
+        public StoryStateMachine   StateMachine { get; private set; }
+        public IElement            Active       => StateMachine.Current.Target;
+        public Story               Story        => Scene.Model.Story;
         
-        public IElement Active { get; set; }
 
 
         public void Start()
         {
             if (!InitComplete) throw new Exception("Not Init");
-            Active             = Fetch;
-            Story.CurrentIndex = 0;
+            StateMachine.ExecStart();
         }
         
 
         public void Next()
         {
             if (!InitComplete) throw new Exception("Not Init");
-            Active.Next();
+            StateMachine.ExecNext();
         }
 
         public void Prev()
         {
             if (!InitComplete) throw new Exception("Not Init");
 
-            Active.Prev();
+            StateMachine.ExecPrev();
         }
     }
     
@@ -220,19 +75,6 @@ namespace Animated.CPU.Model
             Block.Margin = new DBorder(30, 4, 4, 4);
         }
         
-        public void Next()
-        {
-            master.Active = master.Decode;
-        }
-
-        public void Prev()
-        {
-            if (master.Story.CurrentIndex > 0)
-            {
-                master.Story.CurrentIndex--;
-                master.Active = master.Execute;
-            }
-        }
 
         
         protected override void Init()
