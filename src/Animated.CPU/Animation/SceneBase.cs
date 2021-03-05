@@ -74,7 +74,7 @@ namespace Animated.CPU.Animation
         protected override void Draw(DrawContext surface)
         {
             DrawBackGround(surface);
-            foreach (var element in ChildrenRecursive())
+            foreach (var element in ChildrenRecursive(VisitOnDraw))
             {
                 if (element == this) continue;
                 if (element is ElementBase eb && eb.IsHidden) continue;
@@ -82,7 +82,7 @@ namespace Animated.CPU.Animation
                 element.DrawExec(surface);
             }
             
-            foreach (var element in ChildrenRecursive())
+            foreach (var element in ChildrenRecursive(VisitOnDraw))
             {
                 if (element == this) continue;
                 if (element is ElementBase eb && eb.IsHidden) continue;
@@ -91,6 +91,12 @@ namespace Animated.CPU.Animation
             }
             
             DrawOverlay(surface);
+        }
+
+        private bool VisitOnDraw(IElement e)
+        {
+            if (e is ElementBase eb && !eb.IsEnabled) return false;
+            return true;
         }
 
         protected abstract void DrawOverlay(DrawContext drawing);

@@ -35,6 +35,7 @@ namespace Animated.CPU.Animation
         
         IReadOnlyList<IElement>? Children { get; }
         IEnumerable<IElement> ChildrenRecursive();
+        IEnumerable<IElement> ChildrenRecursive(Func<IElement, bool> visit);
         T Add<T>(T e) where T:IElement;
         void Remove(IElement el);
     }

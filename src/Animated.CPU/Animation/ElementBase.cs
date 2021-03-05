@@ -134,6 +134,21 @@ namespace Animated.CPU.Animation
                 }
             }
         }
+        
+        public IEnumerable<IElement> ChildrenRecursive(Func<IElement, bool> visit)
+        {
+            if (visit(this))
+            {
+                yield return this;
+                foreach (var e in elements.Where(visit))
+                {
+                    foreach (var ee in e.ChildrenRecursive(visit))
+                    {
+                        yield return ee;
+                    }
+                }    
+            }
+        }
 
         public T GetChild<T>(int index) where T:IElement
             => (T)Children[index];

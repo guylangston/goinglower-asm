@@ -154,7 +154,7 @@ namespace Animated.CPU.Backend.LLDB
         void Step(Cpu cpu)
         {
             curr = next;
-            var lines = ExecuteAndWaitForResults("next", echo:false);
+            var lines = ExecuteAndWaitForResults("si", echo:false);
             var t     = lines.FirstOrDefault(x => x.Trim().StartsWith("->"));
             if (t != null)
             {

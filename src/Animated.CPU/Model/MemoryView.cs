@@ -67,14 +67,10 @@ namespace Animated.CPU.Model
     
     public class MemoryViewElement : Section<Scene, MemoryView>
     {
-
         public MemoryViewElement(IElement scene, DBlock b, MemoryView memory) : base(scene, memory, b)
         {
             
         }
-       
-        
-       
 
         protected override void Step(TimeSpan step)
         {
@@ -88,7 +84,8 @@ namespace Animated.CPU.Model
             if (curr != null)
             {
                 var idx                    = Model.Segments.IndexOf(curr);
-                if (idx > LookBack) offset = idx - LookBack;
+                
+                if (idx > 15)  offset = idx - LookBack;
             }
             
             foreach (var seg in Model.Segments.Skip(offset).Take(Max))
