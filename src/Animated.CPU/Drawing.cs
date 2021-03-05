@@ -148,6 +148,8 @@ namespace Animated.CPU
 
         public static float Scale(float normalised, float a, float b) => a + (b - a) * normalised;
         
+        
+        
         public void DrawHighlight(SKRect r, SKPaint f, float s)
         {
             var p = new SKPath();

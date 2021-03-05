@@ -36,9 +36,8 @@ namespace Animated.CPU.Animation
         }
         
         protected abstract void InitScene();
+        protected abstract void InitSceneComplete();
         
-       
-
         public virtual void StepScene(TimeSpan s)
         {
             
@@ -62,6 +61,14 @@ namespace Animated.CPU.Animation
         protected sealed override void Init()
         {
             InitScene();
+            foreach (var element in ChildrenRecursive())
+            {
+                if (element == this) continue;
+                if (element is ElementBase eb && eb.IsHidden) continue;
+                
+                element.InitExec();
+            }
+            InitSceneComplete();
         }
         
         protected override void Draw(DrawContext surface)

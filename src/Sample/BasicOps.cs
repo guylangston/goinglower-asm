@@ -5,6 +5,14 @@ namespace Sample
 {
     public class BasicOps
     {
+        public static int BreakHere()
+        {
+            var    a = 10;
+            var    b = 20;
+            var    c = Maths(a, b);
+            return c;
+        }
+        
         public static int Maths(int a, int b)
         {
             a++;
@@ -35,14 +43,18 @@ namespace Sample
             }
         }
         
-        
-        
         public static int Run()
         {
-            var a = 10;
-            var b = 20;
-            var c = Maths(a, b);
-            Console.WriteLine($"Maths({a}, {b}) = {c}");
+            // warm up before we set BP
+            for (int i = 0; i < 100000; i++)
+            {
+                var a = 10;
+                var b = 20;
+                var c = Maths(a, b);    
+            }
+            BreakHere();
+            
+            //Console.WriteLine($"Maths({a}, {b}) = {c}");
             return 0;
         }
     }

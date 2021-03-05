@@ -105,7 +105,7 @@ namespace Animated.CPU.GTK
 
         private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
-            scene?.DrawExec(new DrawContext(e.Surface.Canvas));
+            scene?.DrawExec(new DrawContext(scene, e.Surface.Canvas));
         }
     }
 }

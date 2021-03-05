@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using Animated.CPU.Animation;
 using SkiaSharp;
 
@@ -10,6 +11,7 @@ namespace Animated.CPU.Model
         
         public StyleFactory()
         {
+            this.Props = GetType().GetProperties();
             FixedFont = new SKPaint()
             {
                 TextSize = 15,
@@ -72,8 +74,10 @@ namespace Animated.CPU.Model
                 Color = SKColor.Parse("#555")
             };
 
-            Selected = Arrow;
+            Highlighted = Selected = Arrow;
         }
+
+        public PropertyInfo[] Props { get;  }
 
         public SKPaint BackGround        { get; }
         public SKPaint BackGroundAlt     { get; }
@@ -90,6 +94,7 @@ namespace Animated.CPU.Model
         public SKPaint TextH1            { get; }
         public SKPaint TextH1BG          { get; }
         public SKPaint Selected          { get; }
+        public SKPaint Highlighted       { get; }
 
         public static SKPaint Clone(SKPaint cpy, Action<SKPaint> then)
         {
@@ -100,8 +105,21 @@ namespace Animated.CPU.Model
         
         
         
-         public SKPaint GetPaint(IElement e, string id)
+        public SKPaint GetPaint(IElement e, string id)
         {
+            foreach (var prop in Props)
+            {
+                if (prop.PropertyType == typeof(SKPaint))
+                {
+                    if (string.Equals(id, prop.Name, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return (SKPaint)prop.GetValue(this);
+                    }    
+                }
+                
+            }
+            
+            
             if (e.Model is Register r)
             {
                 if (id == "Id") return t1;

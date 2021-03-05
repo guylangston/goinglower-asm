@@ -8,6 +8,155 @@ using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
+    public enum EState
+    {
+        Start,
+        Fetch,
+        Decode,
+        ExecuteInp,
+        ExecuteOut,
+        StepForward,
+        Finished
+    }
+    
+    public class StateMachine<T>
+    {
+        private List<State>
+
+        private Scene Scene { get; }
+
+        public EState   Current        { get; private set; }
+        public IElement CurrentElement => map[Current];
+        
+        public class State
+        {
+            public string        Id      { get; set; }
+            public T             Target  { get; set; }
+            public Action<State> OnEnter { get; set; }
+            public Action<State> OnLeave { get; set; }
+        }
+        
+        
+        public void Start()
+        {
+            Current = EState.Start;
+        }
+
+        public void Next()
+        {
+            if (Current == EState.StepForward)
+            {
+                if (Scene.Cpu.Story.CurrentIndex < Scene.Cpu.Story.Steps.Count)
+                {
+                    Scene.Cpu.Story.CurrentIndex++;
+                    Current = EState.Fetch;
+                    return;    
+                }
+                else
+                {
+                    Current = EState.Finished;
+                    return;
+                }
+            }
+            
+            var c = (int)Current;
+            Current = (EState)(c + 1);
+
+        }
+
+        public void Prev()
+        {
+            if (Current == EState.Fetch)
+            {
+                if (Scene.Cpu.Story.CurrentIndex > 0)
+                {
+                    Scene.Cpu.Story.CurrentIndex--;
+                    Current = EState.ExecuteOut;
+                    return;    
+                }
+                else
+                {
+                    Current = EState.Start;
+                    return;
+                }
+            }
+            
+            var c = (int)Current;
+            Current = (EState)(c - 1);
+        }
+    }
+
+
+    
+
+    public class StateMachine
+    {
+        private Dictionary<EState, IElement> map = new Dictionary<EState, IElement>();
+
+        private Scene Scene { get; }
+
+        public EState   Current        { get; private set; }
+        public IElement CurrentElement => map[Current];
+        
+        public class State
+        {
+            public EState        Id      { get; set; }
+            public IElement      Target  { get; set; }
+            public Action<State> OnEnter { get; set; }
+            public Action<State> OnLeave { get; set; }
+        }
+        
+        
+        public void Start()
+        {
+            Current = EState.Start;
+        }
+
+        public void Next()
+        {
+            if (Current == EState.StepForward)
+            {
+                if (Scene.Cpu.Story.CurrentIndex < Scene.Cpu.Story.Steps.Count)
+                {
+                    Scene.Cpu.Story.CurrentIndex++;
+                    Current = EState.Fetch;
+                    return;    
+                }
+                else
+                {
+                    Current = EState.Finished;
+                    return;
+                }
+            }
+            
+            var c    = (int)Current;
+            Current = (EState)(c + 1);
+
+        }
+
+        public void Prev()
+        {
+            if (Current == EState.Fetch)
+            {
+                if (Scene.Cpu.Story.CurrentIndex > 0)
+                {
+                    Scene.Cpu.Story.CurrentIndex--;
+                    Current = EState.ExecuteOut;
+                    return;    
+                }
+                else
+                {
+                    Current = EState.Start;
+                    return;
+                }
+            }
+            
+            var c = (int)Current;
+            Current = (EState)(c - 1);
+        }
+    }
+    
+    
     public class ALUElement : Section<Scene, ArithmeticLogicUnit>
     {
         public ALUElement(IElement scene, ArithmeticLogicUnit alu, DBlock b) : base(scene, alu, b)
@@ -18,35 +167,74 @@ namespace Animated.CPU.Model
         protected override void Init()
         {
             var stack = Add(new StackElement(this, Block, DOrient.Vert));
-
-            this.Fetch = stack.Add(new FetchPhaseElement(stack, Model.Fetch));
-            this.Decode = stack.Add(new DecodePhaseElement(stack, Model.Decode));
-            this.Execute = stack.Add(new ExecutePhaseElement(stack, Model.Execute));
+            this.Fetch   = stack.Add(new FetchPhaseElement(stack, Model.Fetch,this));
+            this.Decode  = stack.Add(new DecodePhaseElement(stack, Model.Decode,this));
+            this.Execute = stack.Add(new ExecutePhaseElement(stack, Model.Execute,this));
         }
 
+        public FetchPhaseElement   Fetch   { get; set; }
+        public DecodePhaseElement  Decode  { get; set; }
+        public ExecutePhaseElement Execute { get; set; }
+
+        public Story Story => Scene.Model.Story;
+        
+        public IElement Active { get; set; }
+
+
+        public void Start()
+        {
+            if (!InitComplete) throw new Exception("Not Init");
+            Active             = Fetch;
+            Story.CurrentIndex = 0;
+        }
         
 
-        public ExecutePhaseElement Execute { get; set; }
-        public DecodePhaseElement  Decode  { get; set; }
-        public FetchPhaseElement   Fetch   { get; set; }
+        public void Next()
+        {
+            if (!InitComplete) throw new Exception("Not Init");
+            Active.Next();
+        }
 
+        public void Prev()
+        {
+            if (!InitComplete) throw new Exception("Not Init");
 
+            Active.Prev();
+        }
     }
+    
 
     public class FetchPhaseElement : Section<Scene, PhaseFetch>
     {
         private TextBlockElement text;
+        ALUElement master;
 
-        public FetchPhaseElement(IElement parent, PhaseFetch model) : base(parent, model, new DBlock()
+        public FetchPhaseElement(IElement parent, PhaseFetch model, ALUElement master) : base(parent, model, new DBlock()
         {
             H = 100
         })
         {
-            Title = "Fetch";
+            this.master = master;
+            Title       = "Fetch";
             Block.Set(4, 1, 10);
             Block.Margin = new DBorder(30, 4, 4, 4);
         }
+        
+        public void Next()
+        {
+            master.Active = master.Decode;
+        }
 
+        public void Prev()
+        {
+            if (master.Story.CurrentIndex > 0)
+            {
+                master.Story.CurrentIndex--;
+                master.Active = master.Execute;
+            }
+        }
+
+        
         protected override void Init()
         {
             text = Add(new TextBlockElement(this, Block, Scene.Styles.FixedFont));
@@ -73,36 +261,46 @@ namespace Animated.CPU.Model
 
         protected override void Decorate(DrawContext surface)
         {
-            var seg = Scene.Cpu.Instructions.GetByAddress(Model.RIP);
-            if (seg != null && Scene.TryRecurseElementFromModel(seg, out var eRip))
+            if (master.Active == this)
             {
-                var a = Block.Outer.MR;
-                var b = eRip.Block.Inner.ML;
-                new Arrow()
+                surface.DrawHighlight(this);
+                
+                var seg = Scene.Cpu.Instructions.GetByAddress(Model.RIP);
+                if (seg != null && Scene.TryRecurseElementFromModel(seg, out var eRip))
                 {
-                    Start     = a,
-                    WayPointA = a + new SKPoint(20, 0),
-                    WayPointB = b + new SKPoint(-20, 0),
-                    End       = b,
-                    Style     = Scene.Styles.Arrow
-                }.Draw(surface.Canvas);
+                    var a = Block.Outer.MR;
+                    var b = eRip.Block.Inner.ML;
+                    new Arrow()
+                    {
+                        Start     = a,
+                        WayPointA = a + new SKPoint(20, 0),
+                        WayPointB = b + new SKPoint(-20, 0),
+                        End       = b,
+                        Style     = Scene.Styles.Arrow
+                    }.Draw(surface.Canvas);
+                }    
             }
         }
+
+        
     }
 
-    public class DecodePhaseElement : Section<Scene, PhaseDecode>
+    public class DecodePhaseElement : Section<Scene, PhaseDecode>, IHasMaster<ALUElement>
     {
         private TextBlockElement text;
+        ALUElement master;
 
-        public DecodePhaseElement(IElement parent, PhaseDecode model) : base(parent, model, new DBlock()
+        public DecodePhaseElement(IElement parent, PhaseDecode model, ALUElement master) : base(parent, model, new DBlock()
         {
             H = 120
         })
         {
+            this.master = master;
             Block.Set(4, 1, 10);
             Block.Margin = new DBorder(30, 4, 4, 4);
             Title        = "Decode";
         }
+        
 
         protected override void Init()
         {
@@ -120,21 +318,47 @@ namespace Animated.CPU.Model
                 text.WriteLine(decode.FriendlyMethod, Scene.Styles.FixedFontBlue);
             }
         }
+        
+        protected override void Decorate(DrawContext surface)
+        {
+            if (master.Active == this)
+            {
+                surface.DrawHighlight(this);
+                
+                var seg = Scene.Cpu.Instructions.GetByAddress(master.Story.Current.RIP);
+                if (seg != null && Scene.TryRecurseElementFromModel(seg, out var eRip))
+                {
+                    var a = Block.Outer.MR;
+                    var b = eRip.Block.Inner.ML;
+                    new Arrow()
+                    {
+                        Start     = a,
+                        WayPointA = a + new SKPoint(20, 0),
+                        WayPointB = b + new SKPoint(-20, 0),
+                        End       = b,
+                        Style     = Scene.Styles.Arrow
+                    }.Draw(surface.Canvas);
+                }    
+            }
+        }
     }
 
-    public class ExecutePhaseElement : Section<Scene, PhaseExecute>
+    public class ExecutePhaseElement : Section<Scene, PhaseExecute>, IHasMaster<ALUElement>
     {
         private TextBlockElement text;
+        ALUElement master;
 
-        public ExecutePhaseElement(IElement parent, PhaseExecute model) : base(parent, model, new DBlock()
+        public ExecutePhaseElement(IElement parent, PhaseExecute model, ALUElement master) : base(parent, model, new DBlock()
         {
             H = 300
         })
         {
-            Title = "Execute";
+            this.master = master;
+            Title       = "Execute";
             Block.Set(4, 1, 10);
             Block.Margin = new DBorder(30, 4, 4, 4);
         }
+        
 
         protected override void Init()
         {
@@ -193,6 +417,29 @@ namespace Animated.CPU.Model
                         text.WriteLine("?", Scene.Styles.FixedFontDarkGray);
                     }
                 }
+            }
+        }
+        
+        protected override void Decorate(DrawContext surface)
+        {
+            if (master.Active == this)
+            {
+                surface.DrawHighlight(this);
+                
+                var seg = Scene.Cpu.Instructions.GetByAddress(master.Story.Current.RIP);
+                if (seg != null && Scene.TryRecurseElementFromModel(seg, out var eRip))
+                {
+                    var a = Block.Outer.MR;
+                    var b = eRip.Block.Inner.ML;
+                    new Arrow()
+                    {
+                        Start     = a,
+                        WayPointA = a + new SKPoint(20, 0),
+                        WayPointB = b + new SKPoint(-20, 0),
+                        End       = b,
+                        Style     = Scene.Styles.Arrow
+                    }.Draw(surface.Canvas);
+                }    
             }
         }
     }

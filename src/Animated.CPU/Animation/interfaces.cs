@@ -7,8 +7,16 @@ namespace Animated.CPU.Animation
 {
     public class DrawContext : Drawing // Use Base Class to add draw func
     {
-        public DrawContext(SKCanvas canvas) : base(canvas)
+        public Scene Scene { get; }
+
+        public DrawContext(Scene scene, SKCanvas canvas) : base(canvas)
         {
+            Scene = scene;
+        }
+
+        public void DrawHighlight(IElement e)
+        {
+            DrawHighlight(e.Block.BorderRect.ToSkRect(), e.Scene.StyleFactory.GetPaint(e, "Highlighted"), e.Block.Border.All);
         }
     }
     
@@ -29,6 +37,24 @@ namespace Animated.CPU.Animation
         IEnumerable<IElement> ChildrenRecursive();
         T Add<T>(T e) where T:IElement;
         void Remove(IElement el);
+    }
+
+
+    public interface IHasMaster<out TParent> : IElement where TParent: IElement
+    {
+        TParent Master
+        {
+            get
+            {
+                var p = Parent;
+                while (p != null)
+                {
+                    if (p is TParent master) return master;
+                    p = p.Parent;
+                }
+                throw new Exception($"Master Not Found: {typeof(TParent)} in {this}");
+            }
+        }
     }
 
     public interface IAnimation

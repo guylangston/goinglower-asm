@@ -26,9 +26,10 @@ namespace Animated.CPU.Model
         protected override void Step(TimeSpan step)
         {
             text.Clear();
-            text.WriteLine($"Step: {Scene.Cpu?.Story?.CurrentIndex}");
+            text.WriteLine($"Step: {Scene.Cpu?.Story?.CurrentIndex}, Active: {Scene.ElementALU.Active}");
             text.WriteLine($"Frames: {Scene.FrameCount}, elapsed {Scene.Elapsed:c} = {Scene.FPS:0.0} fps");
             text.WriteLine($"Mouse: {Scene.Mouse}");
+            
         }
     }
 }

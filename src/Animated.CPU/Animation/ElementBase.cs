@@ -33,13 +33,14 @@ namespace Animated.CPU.Animation
             Block  = b;
         }
 
-        public IScene    Scene     { get; private set; }
-        public IElement? Parent    { get; private set; }
-        public object?   Model     { get; set; }
-        public DBlock    Block     { get; set; }
-        public IAnimator Animator  { get; set; } = EmptyAnimator.Instance;
-        public bool      IsHidden  { get; set; }
-        public bool      IsEnabled { get; set; } = true;      // Step And Draw are not called
+        public IScene    Scene        { get; private set; }
+        public IElement? Parent       { get; private set; }
+        public object?   Model        { get; set; }
+        public DBlock    Block        { get; set; }
+        public IAnimator Animator     { get; set; } = EmptyAnimator.Instance;
+        public bool      IsHidden     { get; set; }
+        public bool      IsEnabled    { get; set; } = true;      // Step And Draw are not called
+        public bool      InitComplete { get; private set; }
 
 
         public T ParentAs<T>() => (T)Parent;
@@ -61,14 +62,14 @@ namespace Animated.CPU.Animation
 
         public string DebugId => StringHelper.Join(PathToRoot(), x => x.ToString(), ">");
 
-        private bool initComplete = false;
+        
         public void InitExec()
         {
-            if (initComplete) return;
+            if (InitComplete) return;
             try
             {
                 Init();
-                initComplete = true;
+                InitComplete = true;
             }
             catch (Exception e)
             {
@@ -79,7 +80,7 @@ namespace Animated.CPU.Animation
 
         public void StepExec(TimeSpan step)
         {
-            if (!initComplete) InitExec();
+            if (!InitComplete) InitExec();
             
             // Step() should run when Disable and/or Hidden as Step() has the logic to turn these flags on/off
             Step(step); 
@@ -217,6 +218,8 @@ namespace Animated.CPU.Animation
                 return -1;
             }
         }
+
+        public override string ToString() => $"[{IndexInParent}]{GetType().Name}";
     }
 
    

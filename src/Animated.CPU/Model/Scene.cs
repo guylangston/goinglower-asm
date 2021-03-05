@@ -1,15 +1,10 @@
 using System;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
 using Animated.CPU.Animation;
 using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
-    
-
     public class Scene : SceneBase<Cpu, StyleFactory>
     {
         public Scene(DBlock region) : base(new StyleFactory())
@@ -25,6 +20,7 @@ namespace Animated.CPU.Model
         public SKPoint?               Mouse               { get; set; }
         public Action<string, object> SendCommand         { get; set; }
         public ALUElement             ElementALU          { get; set; }
+        public string                 LastKeyPress        { get; set; }
 
 
         protected override void InitScene()
@@ -51,13 +47,17 @@ namespace Animated.CPU.Model
             var dBlock = new DBlock(300, 1050, 900, 400);
             dBlock.Set(0, 3, 10);
             var term   = Add(new TerminalElement(this, new Terminal(), dBlock));
+            
+            
         }
 
-        
+        protected override void InitSceneComplete()
+        {
+            ElementALU.Start();
+        }
 
         public override void StepScene(TimeSpan s)
         {
-            Model.Step();
         }
         
         
@@ -75,46 +75,34 @@ namespace Animated.CPU.Model
             canvas.Clear(Styles.GetColor(this, "bg"));
         }
 
-        private string lastKey;
+        
 
         public override void KeyPress(object platformKeyObject, string key)
         {
-            lastKey = key;
+            LastKeyPress = key;
             foreach (var register in Model.RegisterFile)
             {
                 register.IsChanged = false;
             }
             if (Model?.Story == null) return;
 
-            if (key == "n")
+            switch (key)
             {
-                if (Model.Story.CurrentIndex < Model.Story.Steps.Count - 1)
-                {
-                    Model.Story.CurrentIndex++;
-                }
-            }
-            if (key == "p")
-            {
-                if (Model.Story.CurrentIndex> 0)
-                {
-                    Model.Story.CurrentIndex--;
-                }
-            }
-            if (key == "q")
-            {
-                SendCommand.Invoke("QUIT", null);
-            }
-            var next = Model.Story.Steps[Model.Story.CurrentIndex];
-            if (next != null)
-            {
-                foreach (var rd in next.Delta)
-                {
-                    if (rd.ValueRaw != null)
-                    {
-                        Model.SetReg(rd.Register, rd.ValueParsed.Value);
-                    }
-                }
+                case "s":
+                    ElementALU.Start();
+                    break;
+                case "n":
+                    ElementALU.Next();
+                    break;
+                case "p":
+                    ElementALU.Prev();
+                    break;
+                case "q":
+                    SendCommand.Invoke("QUIT", null);
+                    break;
             }
         }
+
+       
     }
 }
