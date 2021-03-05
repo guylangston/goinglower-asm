@@ -29,12 +29,6 @@ namespace Animated.CPU.Animation
         float Right  { get; }
     }
 
-    public interface IBorderStyled : IBorder
-    {
-        public SKPaint Style { get; }
-
-    }
-
     public struct DBorder : IBorder
     {
         public DBorder(float all)
@@ -71,43 +65,7 @@ namespace Animated.CPU.Animation
 
         public float All => Math.Max(Top, Math.Max(Bottom, Math.Max(Left, Right)));
     }
-
-    public struct DBorderStyled : IBorderStyled
-    {
-        public DBorderStyled(float all, SKPaint style)
-        {
-            Top    = all;
-            Bottom = all;
-            Left   = all;
-            Right  = all;
-            Style  = style;
-        }
-
-        public DBorderStyled(float top, float right, float left, float bottom, SKPaint style)
-        {
-            Top    = top;
-            Bottom = bottom;
-            Left   = left;
-            Right  = right;
-            Style  = style;
-        }
-        
-        public DBorderStyled(DBorderStyled copy) 
-        {
-            this.Top    = copy.Top;
-            this.Bottom = copy.Bottom;
-            this.Left   = copy.Left;
-            this.Right  = copy.Right;
-            this.Style  = copy.Style;
-        }
-
-        public float    Top    { get; }
-        public float    Bottom { get; }
-        public float    Left   { get; }
-        public float    Right  { get; }
-        public SKPaint? Style  { get; }
-
-    }
+    
 
     
     public class DBlockProps
@@ -138,9 +96,7 @@ namespace Animated.CPU.Animation
         
     }
 
-
-
-
+    
     public class DBlock : DBlockProps
     {
         public DBlock()

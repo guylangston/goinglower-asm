@@ -14,18 +14,20 @@ namespace Animated.CPU.Animation
         }
         
         public string? Title { get; set; }
+        
+        public bool IsHighlighted { get; set; }
 
         protected override void Draw(DrawContext surface)
         {
             // Background
             surface.Canvas.DrawRect(Block.BorderRect.ToSkRect(), Scene.StyleFactory.GetPaint(this, "bg"));
-            surface.Canvas.DrawRect(Block.BorderRect.ToSkRect(), Scene.StyleFactory.GetPaint(this, "border"));
+            surface.Canvas.DrawRect(Block.BorderRect.ToSkRect(),
+                Scene.StyleFactory.GetPaint(this, IsHighlighted ? "Highlighted" : "border"));
 
             if (Title != null)
             {
                 var    h1     = Scene.StyleFactory.GetPaint(this, "h1");
                 var    h1bg   = Scene.StyleFactory.GetPaint(this, "h1bg");
-
 
                 surface.DrawTextAndBGAtTopMiddle(Title, 
                     Block.Outer.TM + new SKPoint(0,  Block.Margin.Top + Block.Border.Top - 10),

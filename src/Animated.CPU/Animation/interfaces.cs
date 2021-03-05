@@ -40,21 +40,22 @@ namespace Animated.CPU.Animation
     }
 
 
-    public interface IHasMaster<out TParent> : IElement where TParent: IElement
+    public interface IHasMaster  // Where 'real' parent is obscured
     {
-        TParent Master
-        {
-            get
-            {
-                var p = Parent;
-                while (p != null)
-                {
-                    if (p is TParent master) return master;
-                    p = p.Parent;
-                }
-                throw new Exception($"Master Not Found: {typeof(TParent)} in {this}");
-            }
-        }
+        IElement Master { get; }
+    }
+    
+    // Animatable property
+    public interface IAnimProp
+    {
+        public float Value     { get; set; }
+        public float BaseValue { get; set; }
+    }
+
+    public class PropFloat : IAnimProp
+    {
+        public float Value     { get; set; }
+        public float BaseValue { get; set; }
     }
 
     public interface IAnimation

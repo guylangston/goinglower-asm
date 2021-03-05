@@ -34,8 +34,11 @@ namespace Animated.CPU.Model
         public StoryStateMachine   StateMachine { get; private set; }
         public IElement            Active       => StateMachine.Current.Target;
         public Story               Story        => Scene.Model.Story;
-        
 
+        protected override void Step(TimeSpan step)
+        {
+            if (StateMachine.Current == StateMachine.StepForward) StateMachine.ExecNext(); 
+        }
 
         public void Start()
         {
@@ -84,6 +87,7 @@ namespace Animated.CPU.Model
 
         protected override void Step(TimeSpan step)
         {
+            IsHighlighted = (master.Active == this);
             if (Model.Memory != null)
             {
                 text.Clear();
@@ -105,8 +109,7 @@ namespace Animated.CPU.Model
         {
             if (master.Active == this)
             {
-                surface.DrawHighlight(this);
-                
+
                 var seg = Scene.Cpu.Instructions.GetByAddress(Model.RIP);
                 if (seg != null && Scene.TryRecurseElementFromModel(seg, out var eRip))
                 {
@@ -127,7 +130,7 @@ namespace Animated.CPU.Model
         
     }
 
-    public class DecodePhaseElement : Section<Scene, PhaseDecode>, IHasMaster<ALUElement>
+    public class DecodePhaseElement : Section<Scene, PhaseDecode>
     {
         private TextBlockElement text;
         ALUElement master;
@@ -151,6 +154,8 @@ namespace Animated.CPU.Model
 
         protected override void Step(TimeSpan step)
         {
+            IsHighlighted = (master.Active == this);
+            
             text.Clear();
             var decode = Model.Asm;
             if (decode != null)
@@ -165,8 +170,6 @@ namespace Animated.CPU.Model
         {
             if (master.Active == this)
             {
-                surface.DrawHighlight(this);
-                
                 var seg = Scene.Cpu.Instructions.GetByAddress(master.Story.Current.RIP);
                 if (seg != null && Scene.TryRecurseElementFromModel(seg, out var eRip))
                 {
@@ -185,7 +188,7 @@ namespace Animated.CPU.Model
         }
     }
 
-    public class ExecutePhaseElement : Section<Scene, PhaseExecute>, IHasMaster<ALUElement>
+    public class ExecutePhaseElement : Section<Scene, PhaseExecute>
     {
         private TextBlockElement text;
         ALUElement master;
@@ -206,9 +209,56 @@ namespace Animated.CPU.Model
         {
             text = Add(new TextBlockElement(this, Block, Scene.Styles.FixedFont));
         }
+        
+        public void StateChangeOnEnter(State<IElement> change)
+        {
+            
+            foreach (var reg in Model.Alu.Cpu.RegisterFile)
+            {
+                reg.IsChanged = false;
+            }
+
+            if (change == master.StateMachine.ExecuteInp)
+            {
+                
+                if (master.Story.CurrentIndex > 0)
+                {
+                    foreach (var dt in master.Story.Steps[master.Story.CurrentIndex-1].Delta)
+                    {
+                        if (dt.ValueParsed != null)
+                        {
+                            Model.Alu.Cpu.SetReg(dt.Register, dt.ValueParsed.Value);    
+                        }
+                        
+                    }    
+                }
+                
+            }
+            else if (change == master.StateMachine.ExecuteOut)
+            {
+                foreach (var dt in master.Story.Current.Delta)
+                {
+                    if (dt.ValueParsed != null)
+                    {
+                        Model.Alu.Cpu.SetReg(dt.Register, dt.ValueParsed.Value);    
+                    }
+                        
+                }
+                
+            }
+        }
+        
 
         protected override void Step(TimeSpan step)
         {
+            IsHighlighted = (master.Active == this);
+
+            if (!IsHighlighted)
+            {
+                return;
+            }
+
+
             text.Block = this.Block;
             text.Clear();
 
@@ -218,7 +268,7 @@ namespace Animated.CPU.Model
                 foreach (var arg in decode.Args.Distinct(DecodedArg.Compare))
                 {
                     var val = Model.Alu.GetInput(decode, arg);
-                    text.Write($" IN A{arg.Index}: ");
+                    var loc = text.Write($" IN A{arg.Index}: ");
                     text.Write(arg.Value, Scene.Styles.FixedFontCyan);
                     text.Write(" ");
                     if (val != null)
@@ -230,6 +280,26 @@ namespace Animated.CPU.Model
                     else
                     {
                         text.WriteLine("?", Scene.Styles.FixedFontDarkGray);
+                    }
+                    
+                    if (master.StateMachine.Current == master.StateMachine.ExecuteInp)
+                    {
+                        if (arg.Register != null && Scene.TryRecurseElementFromModel(arg.Register, out var eReg))
+                        {
+                            loc.CustomDraw = (c) => {
+                                var a = loc.LastDraw;
+                                var b = eReg.Block.Inner.MR;
+                                new Arrow()
+                                {
+                                    Start     = a,
+                                    WayPointA = a + new SKPoint(-20, 0),
+                                    WayPointB = b + new SKPoint(+20, 0),
+                                    End       = b,
+                                    Style     = Scene.Styles.Arrow
+                                }.Draw(c.Canvas);
+                            };
+
+                        }
                     }
                 }
 
@@ -245,7 +315,7 @@ namespace Animated.CPU.Model
                 {
                     var val = Model.Alu.GetOutput(decode, arg);
 
-                    text.Write($"OUT A{arg.Index}: ");
+                    var loc = text.Write($"OUT A{arg.Index}: ");
                     text.Write(arg.Value.PadRight(10), Scene.Styles.FixedFontCyan);
                     text.Write(" ");
                     if (val != null)
@@ -258,6 +328,26 @@ namespace Animated.CPU.Model
                     {
                         text.WriteLine("?", Scene.Styles.FixedFontDarkGray);
                     }
+                    
+                    if (master.StateMachine.Current == master.StateMachine.ExecuteOut)
+                    {
+                        if (arg.Register != null && Scene.TryRecurseElementFromModel(arg.Register, out var eReg))
+                        {
+                            loc.CustomDraw = (c) => {
+                                var a = loc.LastDraw;
+                                var b = eReg.Block.Inner.MR;
+                                new Arrow()
+                                {
+                                    Start     = a,
+                                    WayPointA = a + new SKPoint(-20, 0),
+                                    WayPointB = b + new SKPoint(+20, 0),
+                                    End       = b,
+                                    Style     = Scene.Styles.Arrow
+                                }.Draw(c.Canvas);
+                            };
+
+                        }
+                    }
                 }
             }
         }
@@ -266,7 +356,7 @@ namespace Animated.CPU.Model
         {
             if (master.Active == this)
             {
-                surface.DrawHighlight(this);
+                
                 
                 var seg = Scene.Cpu.Instructions.GetByAddress(master.Story.Current.RIP);
                 if (seg != null && Scene.TryRecurseElementFromModel(seg, out var eRip))
@@ -281,8 +371,12 @@ namespace Animated.CPU.Model
                         End       = b,
                         Style     = Scene.Styles.Arrow
                     }.Draw(surface.Canvas);
-                }    
+                }
+
+               
             }
+            
+            
         }
     }
 }

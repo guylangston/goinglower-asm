@@ -20,22 +20,22 @@ namespace Animated.CPU.Model
             Add(Start       = new State<IElement>(nameof(Start), alu));
             Add(Fetch       = new State<IElement>(nameof(Fetch), alu.Fetch));
             Add(Decode      = new State<IElement>(nameof(Decode), alu.Decode));
-            Add(ExecuteInp  = new State<IElement>(nameof(ExecuteInp), alu.Execute));
-            Add(ExecuteOut  = new State<IElement>(nameof(ExecuteOut), alu.Execute));
+            Add(ExecuteInp  = new State<IElement>(nameof(ExecuteInp), alu.Execute, alu.Execute.StateChangeOnEnter));
+            Add(ExecuteOut  = new State<IElement>(nameof(ExecuteOut), alu.Execute, alu.Execute.StateChangeOnEnter));
             Add(StepForward = new State<IElement>(nameof(StepForward), alu));
             Add(Finished    = new State<IElement>(nameof(Finished), alu));
+            
             
             CompleteInit(Start);
         }
 
-
-        public State<IElement> Finished    { get; }
-        public State<IElement> StepForward { get; }
-        public State<IElement> ExecuteOut  { get; }
-        public State<IElement> ExecuteInp  { get; }
-        public State<IElement> Decode      { get; }
-        public State<IElement> Fetch       { get; }
         public State<IElement> Start       { get; }
+        public State<IElement> Fetch       { get; }
+        public State<IElement> Decode      { get; }
+        public State<IElement> ExecuteInp  { get; }
+        public State<IElement> ExecuteOut  { get; }
+        public State<IElement> StepForward { get; }
+        public State<IElement> Finished    { get; }
 
         public override void ExecStart()
         {

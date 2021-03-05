@@ -18,17 +18,11 @@ namespace Animated.CPU.Animation
             UpdateLineHeight();
         }
 
-        private void UpdateLineHeight()
-        {
-            var m = new SKRect();
-            DefaultStyle.MeasureText("X|", ref m);
-            this.LineHeight = m.Height;
-        }
-        
         public float    LastDrawHeight { get; set; } = -1;
         public float    LineHeight     { get; set; }
         public SKPaint  DefaultStyle   { get; set; }
         public SKPaint? Background     { get; set; }
+        public bool     ClipEnabled    { get; set; } = true;
 
         public class Line
         {
@@ -39,17 +33,20 @@ namespace Animated.CPU.Animation
 
         public class Span
         {
-            public Type    ModelType    { get; set; }
-            public object? Model        { get; set; }
-            public string  Text         { get; set; }
-            public SKPaint Style        { get; set; }
-            public SKRect  Region       { get; set; }
-            public float   Width        { get; set; }
-            public SKPoint LastDraw     { get; set; }
-            public object? Tag          { get; set; }
+            public Type             ModelType  { get; set; }
+            public object?          Model      { get; set; }
+            public string           Text       { get; set; }
+            public SKPaint          Style      { get; set; }
+            public SKRect           Region     { get; set; }
+            public float            Width      { get; set; }
+            public SKPoint          LastDraw   { get; set; }
+            public object?          Tag        { get; set; }
+            public Action<Drawing>? CustomDraw { get; set; }
 
             public SKRect LastDrawRect
                 => new SKRect(LastDraw.X, LastDraw.Y, LastDraw.X + Region.Width, LastDraw.Y - Region.Height);
+
+            
 
             public Span SetTag(object tag)
             {
@@ -62,6 +59,13 @@ namespace Animated.CPU.Animation
                 Model = model;
                 return this;
             }
+        }
+        
+        void UpdateLineHeight()
+        {
+            var m = new SKRect();
+            DefaultStyle.MeasureText("X|", ref m);
+            this.LineHeight = m.Height;
         }
 
         string GetText(Type t, object val) => val?.ToString() ?? string.Empty;
@@ -126,12 +130,18 @@ namespace Animated.CPU.Animation
             return false;
         }
 
-        
+       
 
         protected override void Draw(DrawContext surface)
         {
-            surface.Canvas.Save();
-            surface.Canvas.ClipRegion(new SKRegion(Block.Inner.ToSkRectI()));
+            if (Block == null) throw new NullReferenceException("Block");
+
+            if (ClipEnabled)
+            {
+                surface.Canvas.Save();
+                surface.Canvas.ClipRegion(new SKRegion(Block.Inner.ToSkRectI()));    
+            }
+            
 
             if (Background != null)
             {
@@ -170,8 +180,26 @@ namespace Animated.CPU.Animation
                 }
             }
             LastDrawHeight = y - start;
+
+            if (ClipEnabled)
+            {
+                surface.Canvas.Restore();    
+            }
             
-            surface.Canvas.Restore();
+        }
+
+        protected override void Decorate(DrawContext surface)
+        {
+            foreach (var line in lines)
+            {
+                foreach (var lineSpan in line.Spans)
+                {
+                    if (lineSpan.CustomDraw != null)
+                    {
+                        lineSpan.CustomDraw(surface);
+                    }
+                }
+            }
         }
 
         public float CalcHeight() => lines.Count * LineHeight;

@@ -34,18 +34,10 @@ namespace Animated.CPU.Model
             }
         }
     }
-
-    public class PropFloat
-    {
-        public float Value { get; set; }
-        public float BaseValue { get; set; }
-    }
     
-    public class PropInt
-    {
-        public int Value     { get; set; }
-        public int BaseValue { get; set; }
-    }
+    
+    
+    
 
     public class ElementRegister : Element<Scene, Register>
     {
@@ -71,7 +63,14 @@ namespace Animated.CPU.Model
             var bytes = BitConverter.GetBytes(Model.Value);
             Array.Reverse(bytes);   // hack
             Bytes.Model.Bytes       = bytes;
-            Bytes.Model.ParsedValue = Model.Value.ToString("#,##0");
+
+            if (Model.Value < 10_000) // assume address otherwise
+            {
+                Bytes.Model.ParsedValue = Model.Value.ToString("#,##0");    
+            }
+
+            IsHighlighted = Model.IsChanged;
+
 
         }
 
@@ -83,6 +82,8 @@ namespace Animated.CPU.Model
         {
             var canvas = surface.Canvas;
             var draw   = new Drawing(canvas);
+
+            
             
             var sName = Scene.Styles.GetPaint(this, "Name");
             var sVal  = Scene.Styles.GetPaint(this, "Value");
@@ -107,6 +108,8 @@ namespace Animated.CPU.Model
             draw.DrawText(Model.Name ?? "", sName, Block, BlockAnchor.TR);
             //draw.DrawText(Model.Value.ToString("X"), sVal, Block, BlockAnchor.BR);
             
+            
+            
             if (IsHighlighted)
             {
                 // var high = new SKPaint()
@@ -123,7 +126,7 @@ namespace Animated.CPU.Model
                 //         },
                 //         SKShaderTileMode.Repeat)
                 // };
-                draw.DrawHighlight(Block.Outer.ToSkRect(), Scene.Styles.Selected, 4);
+                draw.Canvas.DrawRect(Block.BorderRect.ToSkRect(), Scene.Styles.Selected);
             }
             
         }
