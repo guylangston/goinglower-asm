@@ -12,6 +12,7 @@ namespace Animated.CPU.Model
         public StoryStep      Current  => Steps[CurrentIndex];
         public SourceProvider Source   { get; set; }
         public SourceFile     MainFile { get; set; }
+        public string[]       ReadMe   { get; set; }
     }
     
     public class RegisterDelta

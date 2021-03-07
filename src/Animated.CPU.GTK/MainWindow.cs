@@ -27,7 +27,7 @@ namespace Animated.CPU.GTK
             : base(builder.GetObject("MainWindow").Handle)
         {
             var dir = "/home/guy/repo/cpu.anim/src/Sample/Scripts/Introduction-ForLoop";
-            var src = System.IO.Path.Combine("/home/guy/repo/cpu.anim/src/Sample/", "Introduction.cs");
+            var src = "/home/guy/repo/cpu.anim/src/Sample/Scripts/Introduction-ForLoop/CodeReal.txt";
             
 
             var sourceProvider = new SourceProvider();

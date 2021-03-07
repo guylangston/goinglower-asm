@@ -32,7 +32,8 @@ namespace Animated.CPU.Backend.LLDB
             {
                 Steps = new List<StoryStep>(),
                 Source = source,
-                MainFile = mainSource
+                MainFile = mainSource,
+                ReadMe = File.ReadAllLines(Path.Combine(folder, "Readme.txt"))
             };
             cpu.Stack = new MemoryView(new[]
             {
