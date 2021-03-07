@@ -27,7 +27,7 @@ namespace Animated.CPU.GTK
             : base(builder.GetObject("MainWindow").Handle)
         {
             var dir = "/home/guy/repo/cpu.anim/src/Sample/bin/Release/net5.0/linux-x64/publish";
-            var src = System.IO.Path.Combine("/home/guy/repo/cpu.anim/src/Sample/", "PerfStructSize.cs");
+            var src = System.IO.Path.Combine("/home/guy/repo/cpu.anim/src/Sample/", "Introduction.cs");
             
 
             var sourceProvider = new SourceProvider();

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
-    <DefineConstants>PerfStructSize</DefineConstants>
+    <DefineConstants>Introduction</DefineConstants>
   </PropertyGroup>
 
 </Project>

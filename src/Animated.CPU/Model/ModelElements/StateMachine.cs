@@ -72,6 +72,23 @@ namespace Animated.CPU.Model
         public abstract void ExecNext();
         public abstract void ExecPrev();
         
+        public int GetSeq(T target)
+        {
+            if (!allowSequential) throw new Exception();
+            for (int i = 0; i < states.Count; i++)
+            {
+                if (states[i].Target.Equals(target)) return i;
+            }
+            return -1;
+
+        }
+
+        public int GetSeq(State<T> state)
+        {
+            if (!allowSequential) throw new Exception();
+            return states.IndexOf(state);
+        }
+        
         protected virtual State<T> NextInSeq()
         {
             if (!allowSequential) throw new Exception();

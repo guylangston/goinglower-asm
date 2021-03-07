@@ -11,7 +11,7 @@ namespace Animated.CPU.Model
 
         public DecodePhaseElement(IElement parent, PhaseDecode model, ALUElement master) : base(parent, model, new DBlock()
         {
-            H = 120
+            H = 200
         })
         {
             this.master = master;
@@ -25,6 +25,8 @@ namespace Animated.CPU.Model
         {
             text = Add(new TextBlockElement(this, Block, Scene.Styles.FixedFont));
         }
+        
+        TextBlockElement.Span urlOpCode;
 
         protected override void Step(TimeSpan step)
         {
@@ -35,10 +37,22 @@ namespace Animated.CPU.Model
             var decode = Model.Asm;
             if (decode != null)
             {
-                text.WriteLine(decode);
-                text.WriteLine(decode.FriendlyName, Scene.Styles.FixedFontBlue);
-                text.WriteLine(decode.FriendlyMethod, Scene.Styles.FixedFontBlue);
+                text.Write("   ASM: ", Scene.Styles.FixedFontDarkGray);
+                text.WriteLine(decode, Scene.Styles.FixedFontYellow);
+                text.Write("  Name: \"", Scene.Styles.FixedFontDarkGray);
+                text.Write(decode.FriendlyName, Scene.Styles.FixedFontWhite);
+                text.WriteLine("\"", Scene.Styles.FixedFontDarkGray);
+                text.Write("Pseudo: ", Scene.Styles.FixedFontDarkGray);
+                text.WriteLine(decode.FriendlyMethod, Scene.Styles.FixedFontWhite);
+                if (decode.Description != null)
+                {
+                    text.WriteLine(decode.Description, Scene.Styles.FixedFontGray);
+                }
+                
+                urlOpCode = text.WriteLine($"https://www.felixcloutier.com/x86/{decode.OpCode}");
             }
+            
+            
         }
         
         protected override void Decorate(DrawContext surface)

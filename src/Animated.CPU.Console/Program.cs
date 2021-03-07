@@ -9,12 +9,12 @@ namespace Animated.CPU.Console
         {
             var p    = new DebuggerDriver();
             var cfg  = new DebuggerDriver.ConfigArgs();
-            var name = "PerfStructSize";
+            var name = "Introduction";
             cfg.WithProjectDir(
                 "/home/guy/repo/cpu.anim/src/Sample", 
                 $"{name}.cs", 
-                19,
-                $"Sample.PerfStructSize.M3()");
+                null,
+                $"Sample.Introduction.ForLoop");
 
             p.Start(cfg);
         }

@@ -9,9 +9,10 @@ namespace Animated.CPU.Model
         public string            OpCode { get; set; }
         public List<DecodedArg>? Args   { get; set; }
 
-        public string FriendlyName   { get; set; }
-        public string FriendlyMethod { get; set; }
-        public string Url            { get; set; }
+        public string? FriendlyName   { get; set; }
+        public string? FriendlyMethod { get; set; }
+        public string? Url            { get; set; }
+        public string? Description    { get; set; }
             
         public DecodedArg? A1 => Args != null && Args.Count > 0 ? Args[0] : null;
         public DecodedArg? A2 => Args != null && Args.Count > 1 ? Args[1] : null;
@@ -61,7 +62,7 @@ namespace Animated.CPU.Model
             {
                 inst.A1.InOut       = InOut.Out;
                 inst.A2.InOut       = InOut.In;
-                inst.FriendlyName   = "Move";
+                inst.FriendlyName   = "Move / Set / Assign";
                 inst.FriendlyMethod = $"{inst.A1} {Assign} {inst.A2}";
                 return;
             }
@@ -77,13 +78,42 @@ namespace Animated.CPU.Model
 
             if (inst.OpCode == "xor")
             {
-                inst.FriendlyName = "Exclusive Or";
+                inst.FriendlyName = "Bitwise Exclusive Or";
                 inst.A1.InOut     = InOut.InOut;
                 inst.A2.InOut     = InOut.In;
                 if (inst.A1.Value == inst.A2.Value)
                 {
                     inst.FriendlyMethod = $"{inst.A1} {Assign} 0";
                 }
+                inst.Description = "BIT Operator\n" +
+                                   "0 XOR 0 = 0\n" +
+                                   "1 XOR 0 = 1\n" +
+                                   "0 XOR 1 = 1\n" +
+                                   "1 XOR 1 = 0";
+                return;
+            }
+            if (inst.OpCode == "and")
+            {
+                inst.FriendlyName = "Bitwise AND";
+                inst.A1.InOut     = InOut.InOut;
+                inst.A2.InOut     = InOut.In;
+                inst.Description = "BIT Operator\n" +
+                                   "0 AND 0 = 0\n" +
+                                   "1 AND 0 = 0\n" +
+                                   "0 AND 1 = 0\n" +
+                                   "1 AND 1 = 1";
+                return;
+            }
+            if (inst.OpCode == "or")
+            {
+                inst.FriendlyName = "Bitwise OR";
+                inst.A1.InOut     = InOut.InOut;
+                inst.A2.InOut     = InOut.In;
+                inst.Description = "BIT Operator\n" +
+                                   "0 OR 0 = 0\n" +
+                                   "1 OR 0 = 1\n" +
+                                   "0 OR 1 = 1\n" +
+                                   "1 OR 1 = 1";
                 return;
             }
 
@@ -110,7 +140,8 @@ namespace Animated.CPU.Model
                 inst.Args.Add(new DecodedArg()
                 {
                     IsImplied = true,
-                    Value      = "RFLAGS",
+                    Value     = "RFLAGS",
+                    Register  = cpu.RFLAGS,
                     InOut     = InOut.Out
                 });
                 inst.FriendlyName   = "Compare";
@@ -125,10 +156,11 @@ namespace Animated.CPU.Model
                 inst.Args.Add(new DecodedArg()
                 {
                     IsImplied = true,
-                    Value      = "RFLAGS",
+                    Value     = "RFLAGS",
+                    Register = cpu.RFLAGS,
                     InOut     = InOut.Out
                 });
-                inst.FriendlyName   = "AND (without changing A1)";
+                inst.FriendlyName   = "Test using Bitwise AND";
                 inst.FriendlyMethod = $"flags {Assign} {inst.A1} AND {inst.A2}";
                 return;
             }
@@ -155,7 +187,7 @@ namespace Animated.CPU.Model
             if (inst.A2 != null) inst.A2.InOut = InOut.In  | InOut.InComplete;
         }
 
-       
+        
 
         public override string ToString() => OpCode.PadRight(6) +
                                              (Args == null ? "" : string.Join(',', Args));

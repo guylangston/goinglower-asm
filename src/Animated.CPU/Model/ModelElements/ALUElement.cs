@@ -19,19 +19,23 @@ namespace Animated.CPU.Model
         protected override void Init()
         {
             var stack = Add(new StackElement(this, Block, DOrient.Vert));
-            this.Fetch   = stack.Add(new FetchPhaseElement(stack, Model.Fetch,this));
-            this.Decode  = stack.Add(new DecodePhaseElement(stack, Model.Decode,this));
-            this.Execute = stack.Add(new ExecutePhaseElement(stack, Model.Execute,this));
+            this.Fetch      = stack.Add(new FetchPhaseElement(stack, Model.Fetch,this));
+            this.Decode     = stack.Add(new DecodePhaseElement(stack, Model.Decode,this));
+            this.ExecuteINP = stack.Add(new ExecutePhaseElementINP(stack, Model.Execute,this));
+            this.ExecuteOUT = stack.Add(new ExecutePhaseElementOUT(stack, Model.Execute,this));
 
             StateMachine = new StoryStateMachine(Scene, this);
         }
 
-        public FetchPhaseElement   Fetch        { get; private set; }
-        public DecodePhaseElement  Decode       { get; private set; }
-        public ExecutePhaseElement Execute      { get; private set; }
-        public StoryStateMachine   StateMachine { get; private set; }
-        public IElement            Active       => StateMachine.Current.Target;
-        public Story               Story        => Scene.Model.Story;
+        public FetchPhaseElement      Fetch        { get; private set; }
+        public DecodePhaseElement     Decode       { get; private set; }
+        public ExecutePhaseElementINP ExecuteINP   { get; private set; }
+        public ExecutePhaseElementOUT ExecuteOUT   { get; private set; }
+        public StoryStateMachine      StateMachine { get; private set; }
+        public IElement               Active       => StateMachine.Current.Target;
+        public Story                  Story        => Scene.Model.Story;
+        
+        
 
         protected override void Step(TimeSpan step)
         {

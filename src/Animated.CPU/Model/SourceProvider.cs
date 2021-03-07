@@ -19,8 +19,10 @@ namespace Animated.CPU.Model
         public uint       Line        { get; set; }
         public int        RegionStart { get; set; } = -1;
         public int        RegionEnd   { get; set; } = -1;
+        public string?    LineText    => File?.Lines != null && Line > 0 &&  Line < File.Lines.Count 
+            ? File.Lines[(int)Line - 1] : null;
 
-        public override string ToString() => $"L{Line}: {File.Lines[(int)Line].Trim()}";
+        public override string ToString() => $"L{Line}: {LineText?.Trim()}";
     }
     
     public class SourceProvider

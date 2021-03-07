@@ -89,9 +89,13 @@ namespace Animated.CPU.Model
                 case "s":
                     ElementALU.Start();
                     break;
+                
+                case "d":
                 case "n":
                     ElementALU.Next();
                     break;
+                
+                case "a":
                 case "p":
                     ElementALU.Prev();
                     break;

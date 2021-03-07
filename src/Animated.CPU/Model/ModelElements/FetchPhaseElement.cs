@@ -34,13 +34,11 @@ namespace Animated.CPU.Model
             {
                 text.Clear();
 
-                text.Write("RIP".PadRight(12));
-                text.Write(": ");
-                text.WriteLine(DisplayHelper.ToHex(Model.RIP), Scene.Styles.FixedFontCyan);
+                text.Write("Intruction Ptr".PadRight(12) + ": ", Scene.Styles.FixedFontDarkGray);
+                text.WriteLine(DisplayHelper.ToHex(Model.RIP), Scene.Styles.FixedFontWhite);
 
-                text.Write("Binary Code".PadRight(12));
-                text.Write(": ");
-                text.WriteLine(DisplayHelper.ToHex(Model.Memory), Scene.Styles.FixedFontBlue);
+                text.Write("Machine Code".PadRight(12) + ": ", Scene.Styles.FixedFontDarkGray);
+                text.WriteLine(DisplayHelper.ToHex(Model.Memory), Scene.Styles.FixedFontYellow);
             }
             //Block.H = Math.Max(60, text.LastDrawHeight);
         }

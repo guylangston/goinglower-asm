@@ -5,18 +5,18 @@ using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
-    public class ExecutePhaseElement : Section<Scene, PhaseExecute>
+    public class ExecutePhaseElementOUT : Section<Scene, PhaseExecute>
     {
         private TextBlockElement text;
         ALUElement master;
 
-        public ExecutePhaseElement(IElement parent, PhaseExecute model, ALUElement master) : base(parent, model, new DBlock()
+        public ExecutePhaseElementOUT(IElement parent, PhaseExecute model, ALUElement master) : base(parent, model, new DBlock()
         {
-            H = 300
+            H = 150
         })
         {
             this.master = master;
-            Title       = "Execute";
+            Title       = "Execute: WRITE";
             Block.Set(4, 1, 10);
             Block.Margin = new DBorder(30, 4, 4, 4);
         }
@@ -29,7 +29,7 @@ namespace Animated.CPU.Model
 
         protected override void Step(TimeSpan step)
         {
-            IsEnabled     = !(master.StateMachine.Current == master.StateMachine.Fetch || master.StateMachine.Current == master.StateMachine.Decode);
+            IsEnabled     = master.StateMachine.GetSeq(this) <= master.StateMachine.GetSeq(master.StateMachine.Current); 
             IsHighlighted = (master.Active == this);
 
             if (!IsHighlighted)
@@ -44,44 +44,6 @@ namespace Animated.CPU.Model
             var decode = Model.Asm;
             if (decode?.Args != null && decode.Args.Any())
             {
-                foreach (var arg in decode.Args.Where(x=>(x.InOut & InOut.In) > 0).Distinct(DecodedArg.Compare))
-                {
-                    var val = Model.Alu.GetInput(decode, arg);
-                    var loc = text.Write($" IN A{arg.Index}: ");
-                    text.Write(arg.Value, Scene.Styles.FixedFontCyan);
-                    text.Write(" ");
-                    if (val != null)
-                    {
-                        text.Write(val.ValueRaw, Scene.Styles.FixedFontYellow);
-                        text.Write("=");
-                        text.WriteLine(val.ValueParsed, Scene.Styles.FixedFontCyan);
-                    }
-                    else
-                    {
-                        text.WriteLine("?", Scene.Styles.FixedFontDarkGray);
-                    }
-                    
-                    if (master.StateMachine.Current == master.StateMachine.ExecuteInp)
-                    {
-                        if (arg.Register != null && Scene.TryRecurseElementFromModel(arg.Register, out var eReg))
-                        {
-                            loc.CustomDraw = (c) => {
-                                var a = loc.LastDraw;
-                                var b = eReg.Block.Inner.MR;
-                                new Arrow()
-                                {
-                                    Start     = a,
-                                    WayPointA = a + new SKPoint(-20, 0),
-                                    WayPointB = b + new SKPoint(+20, 0),
-                                    End       = b,
-                                    Style     = Scene.Styles.Arrow
-                                }.Draw(c.Canvas);
-                            };
-
-                        }
-                    }
-                }
-
                 text.WriteLine();
                 text.Write("---[ ", Scene.Styles.FixedFontDarkGray);
                 text.Write(decode.OpCode.ToUpperInvariant(), Scene.Styles.FixedFontYellow);
@@ -108,7 +70,7 @@ namespace Animated.CPU.Model
                         text.WriteLine("?", Scene.Styles.FixedFontDarkGray);
                     }
                     
-                    if (master.StateMachine.Current == master.StateMachine.ExecuteOut)
+                    if (IsHighlighted)
                     {
                         if (arg.Register != null && Scene.TryRecurseElementFromModel(arg.Register, out var eReg))
                         {
@@ -127,6 +89,10 @@ namespace Animated.CPU.Model
 
                         }
                     }
+                    else
+                    {
+                        loc.CustomDraw = null;
+                    }
                 }
             }
         }
@@ -139,42 +105,20 @@ namespace Animated.CPU.Model
                 reg.IsChanged = false;
             }
 
-            if (change == master.StateMachine.ExecuteInp)
+            foreach (var dt in master.Story.Current.Delta)
             {
-                
-                if (master.Story.CurrentIndex > 0)
+                if (dt.ValueParsed != null)
                 {
-                    foreach (var dt in master.Story.Steps[master.Story.CurrentIndex-1].Delta)
-                    {
-                        if (dt.ValueParsed != null)
-                        {
-                            Model.Alu.Cpu.SetReg(dt.Register, dt.ValueParsed.Value);    
-                        }
-                        
-                    }    
+                    Model.Alu.Cpu.SetReg(dt.Register, dt.ValueParsed.Value);    
                 }
-                
-            }
-            else if (change == master.StateMachine.ExecuteOut)
-            {
-                foreach (var dt in master.Story.Current.Delta)
-                {
-                    if (dt.ValueParsed != null)
-                    {
-                        Model.Alu.Cpu.SetReg(dt.Register, dt.ValueParsed.Value);    
-                    }
                         
-                }
-                
             }
         }
 
         protected override void Decorate(DrawContext surface)
         {
-            if (master.Active == this)
+            if (IsHighlighted)
             {
-                
-                
                 var seg = Scene.Cpu.Instructions.GetByAddress(master.Story.Current.RIP);
                 if (seg != null && Scene.TryRecurseElementFromModel(seg, out var eRip))
                 {

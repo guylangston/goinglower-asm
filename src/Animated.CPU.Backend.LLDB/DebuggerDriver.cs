@@ -24,7 +24,7 @@ namespace Animated.CPU.Backend.LLDB
             // /home/guy/repo/cpu.anim/src/Sample/Sample.csproj
             public void WithProjectDir(string proj, 
                 string source,
-                int breakOnLine,
+                int? breakOnLine,
                 string confirm
                 )
             {
@@ -51,6 +51,20 @@ namespace Animated.CPU.Backend.LLDB
                 if (!File.Exists(SourceFile))
                 {
                     throw new Exception($"File Not Found: (SourceFile):{SourceFile}");
+                }
+
+                if (breakOnLine == null)
+                {
+                    var all = File.ReadAllLines(SourceFile);
+                    var bk  = all.WithIndex().FirstOrDefault(x => x.val != null && x.val.Contains("// Break-Here"));
+                    if (bk.index > 0)
+                    {
+                        breakOnLine = bk.index + 1;
+                    }
+                    else
+                    {
+                        throw new Exception("Cannot find marker `// Break-Here` ");
+                    }
                 }
 
                 BreakPoint             = $"{source}:{breakOnLine}";
