@@ -26,7 +26,7 @@ namespace Animated.CPU.GTK
         private MainWindow(Builder builder)
             : base(builder.GetObject("MainWindow").Handle)
         {
-            var dir = "/home/guy/repo/cpu.anim/src/Sample/bin/Release/net5.0/linux-x64/publish";
+            var dir = "/home/guy/repo/cpu.anim/src/Sample/Scripts/Introduction-ForLoop";
             var src = System.IO.Path.Combine("/home/guy/repo/cpu.anim/src/Sample/", "Introduction.cs");
             
 

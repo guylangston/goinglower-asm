@@ -1,0 +1,30 @@
+curr=(0x7fff7dd15cf2, jl     0x7fff7dd15cec)
+next=(0x7fff7dd15cec, add    eax, esi)
+RIP=00007FFF7DD15CF2
+(lldb) register read
+General Purpose Registers:
+       rax = 0x0000000000000003
+       rbx = 0x00007fffffffd9e0
+       rcx = 0x00007ffff6fe9c38  libcoreclr.so`___lldb_unnamed_symbol3277$$libcoreclr.so + 696
+       rdx = 0x00007fffffffd940
+       rdi = 0x0000000000000005
+       rsi = 0x0000000000000003
+       rbp = 0x00007fffffffd840
+       rsp = 0x00007fffffffd840
+        r8 = 0x00007ffff7fad077
+        r9 = 0x00007fff00000000
+       r10 = 0x00007ffff7c501f0  
+       r11 = 0x00007ffff6e85158  
+       r12 = 0x00007fffffffdb48
+       r13 = 0x0000000000000000
+       r14 = 0x0000000000000000
+       r15 = 0x00007fffffffdbd0
+       rip = 0x00007fff7dd15cec
+    rflags = 0x0000000000000293
+        cs = 0x0000000000000033
+        fs = 0x0000000000000000
+        gs = 0x0000000000000000
+        ss = 0x000000000000002b
+        ds = 0x0000000000000000
+        es = 0x0000000000000000
+

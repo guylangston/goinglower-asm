@@ -1,0 +1,31 @@
+(lldb) clru 0x00007FFF7DD15CE0
+Normal JIT generated code
+Sample.Introduction.ForLoop(Int32)
+ilAddr is 00007FFFF7FAC340 pImport is 0000000000EA0D90
+Begin 00007FFF7DD15CE0, size 16
+
+/home/guy/repo/cpu.anim/src/Sample/Introduction.cs @ 10:
+>>> 00007fff7dd15ce0 55                   push    rbp
+00007fff7dd15ce1 488bec               mov     rbp, rsp
+00007fff7dd15ce4 33c0                 xor     eax, eax
+
+/home/guy/repo/cpu.anim/src/Sample/Introduction.cs @ 11:
+00007fff7dd15ce6 33f6                 xor     esi, esi
+
+/home/guy/repo/cpu.anim/src/Sample/Introduction.cs @ 12:
+00007fff7dd15ce8 85ff                 test    edi, edi
+00007fff7dd15cea 7e08                 jle     0x7fff7dd15cf4
+
+/home/guy/repo/cpu.anim/src/Sample/Introduction.cs @ 15:
+00007fff7dd15cec 03c6                 add     eax, esi
+
+/home/guy/repo/cpu.anim/src/Sample/Introduction.cs @ 13:
+00007fff7dd15cee ffc6                 inc     esi
+
+/home/guy/repo/cpu.anim/src/Sample/Introduction.cs @ 12:
+00007fff7dd15cf0 3bf7                 cmp     esi, edi
+00007fff7dd15cf2 7cf8                 jl      0x7fff7dd15cec
+
+/home/guy/repo/cpu.anim/src/Sample/Introduction.cs @ 17:
+00007fff7dd15cf4 5d                   pop     rbp
+00007fff7dd15cf5 c3                   ret     

@@ -1,0 +1,12 @@
+﻿public static int ForLoop(int count)
+{
+    var sum = 0;  // Break-Here
+    for (var x = 0; 
+        x < count; 
+        x++)
+    {
+        sum = sum + x;
+    }
+    return sum;
+}
+
