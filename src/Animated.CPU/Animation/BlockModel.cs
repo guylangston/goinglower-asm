@@ -114,12 +114,22 @@ namespace Animated.CPU.Animation
         public DBlock(DBlockProps copy) : base(copy)
         {
         }
+
+        public bool IsDefaultValue => X == 0 && X == 0 && W == 0 && H == 0;
         
-        public float                       X      { get; set; }
-        public float                       Y      { get; set; }
-        public float                       W      { get; set; }
-        public float                       H      { get; set; }
+        public float X  { get; set; }
+        public float Y  { get; set; }
+        public float W  { get; set; }
+        public float H  { get; set; }
+        public float X2 => X + W;
+        public float Y2 => Y + H;
         
+        
+        public bool Contains(SKPoint p) => X <= p.X && p.X <= X2 && 
+                                           Y <= p.Y && p.Y <= Y2;
+        public bool Contains(float pX, float pY) => X <= pX && pX <= X2 && 
+                                           Y <= pY && pY <= Y2;
+
         public Rect Outer => new Rect(X, Y, W, H);
 
         public Rect Inner => new Rect(
@@ -160,6 +170,28 @@ namespace Animated.CPU.Animation
         {
             W = f
         };
+    }
+
+    public class DynamicDBlock : DBlock
+    {
+        public DynamicDBlock()
+        {
+        }
+
+        public DynamicDBlock(float desiredWidth, float desiredHeight) : base(0,0, desiredWidth, desiredHeight)
+        {
+            DesiredWidth  = desiredWidth;
+            DesiredHeight = desiredHeight;
+        }
+
+        public DynamicDBlock(float x, float y, float w, float h, float desiredWidth, float desiredHeight) : base(x, y, w, h)
+        {
+            DesiredWidth  = desiredWidth;
+            DesiredHeight = desiredHeight;
+        }
+
+        public float DesiredWidth { get; set; }
+        public float DesiredHeight { get; set; }
     }
     
 

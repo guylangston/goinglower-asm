@@ -23,12 +23,16 @@ namespace Animated.CPU.Animation
         public SKPaint  DefaultStyle   { get; set; }
         public SKPaint? Background     { get; set; }
         public bool     ClipEnabled    { get; set; } = true;
+        public bool     Grow           { get; set; } = false;
 
         public class Line
         {
             public List<Span> Spans   { get; }      = new List<Span>();
             public float      HeaderY { get; set; } = 1;
             public float      FooterY { get; set; } = 1;
+            public float      Y       { get; set; }
+            public float      X       { get; set; }
+            public float      H       { get; set; }
         }
 
         public class Span
@@ -42,6 +46,7 @@ namespace Animated.CPU.Animation
             public SKPoint          LastDraw   { get; set; }
             public object?          Tag        { get; set; }
             public Action<Drawing>? CustomDraw { get; set; }
+            public Line             Line       { get; set; }
 
             public SKRect LastDrawRect
                 => new SKRect(LastDraw.X, LastDraw.Y, LastDraw.X + Region.Width, LastDraw.Y - Region.Height);
@@ -109,7 +114,49 @@ namespace Animated.CPU.Animation
 
         protected override void Step(TimeSpan step)
         {
-            
+            UpdateLineHeight();
+            float y     = Block.Inner.Y + LineHeight;
+            float start = y;
+            foreach (var line in lines)
+            {
+                line.Y = y;
+                float x = line.X = Block.Inner.X ;
+                
+                float h =  LineHeight;
+
+                if (line.Spans.Any())
+                {
+                    y += line.HeaderY;
+                    foreach (var span  in line.Spans)
+                    {
+                        span.LastDraw = new SKPoint(x, y);
+                        span.Line     = line;
+                        
+                        //surface.Canvas.DrawText(span.Text.ToString(), x, y, span.Style);
+                        
+                        x += span.Width; // + span.Region.Width / span.Text.Length;
+                        if (span.Region.Height > h) h = span.Region.Height;
+                    }
+                    line.H =  h + line.FooterY; 
+                    y      += h + line.FooterY;
+                }
+                else
+                {
+                    y += line.HeaderY;
+                    
+                    var b = new SKRect();
+                    DefaultStyle.MeasureText("X", ref b);
+                    
+                    y      += b.Height + line.FooterY;
+                    line.H =   b.Height + line.HeaderY + line.FooterY;
+                }
+            }
+            LastDrawHeight = y - start;
+
+            if (Grow)
+            {
+                Block.H = LastDrawHeight;
+            }
         }
 
         public bool TryGetSpanFromModel<T>(T model, out Span s)
@@ -142,44 +189,21 @@ namespace Animated.CPU.Animation
                 surface.Canvas.ClipRegion(new SKRegion(Block.Inner.ToSkRectI()));    
             }
             
-
             if (Background != null)
             {
                 surface.Canvas.DrawRect(Block.Outer.ToSkRect(), Background);
             }
 
-            UpdateLineHeight();
-            
-            float y     = Block.Inner.Y + LineHeight;
-            float start = y;
             foreach (var line in lines)
             {
-                float x = Block.Inner.X ; 
-                float h = LineHeight;
-
                 if (line.Spans.Any())
                 {
-                    y += line.HeaderY;
                     foreach (var span  in line.Spans)
                     {
-                        span.LastDraw = new SKPoint(x, y);
-                        surface.Canvas.DrawText(span.Text.ToString(), x, y, span.Style);
-                        x += span.Width; // + span.Region.Width / span.Text.Length;
-                        if (span.Region.Height > h) h = span.Region.Height;
+                        surface.Canvas.DrawText(span.Text.ToString(), span.LastDraw.X, span.LastDraw.Y, span.Style);
                     }
-                    y += h + line.FooterY;
-                }
-                else
-                {
-                    y += line.HeaderY;
-                    
-                    var b = new SKRect();
-                    DefaultStyle.MeasureText("X", ref b);
-                    
-                    y += b.Height + line.HeaderY;
                 }
             }
-            LastDrawHeight = y - start;
 
             if (ClipEnabled)
             {

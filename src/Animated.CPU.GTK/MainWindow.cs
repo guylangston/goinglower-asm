@@ -78,6 +78,8 @@ namespace Animated.CPU.GTK
         private void OnButtonPressEvent(object o, ButtonPressEventArgs args)
         {
             scene.Mouse = new SKPoint((float)args.Event.X, (float)args.Event.Y);
+            scene.Debug = scene.Mouse.Value;
+
         }
 
         private void KeyPress(object o, KeyPressEventArgs args)

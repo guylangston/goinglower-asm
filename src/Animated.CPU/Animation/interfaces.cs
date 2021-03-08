@@ -88,6 +88,10 @@ namespace Animated.CPU.Animation
         
         IStyleFactory StyleFactory { get; }
         
+        // Debugging
+        SKPoint   Debug    { get; }
+        List<IElement> DebugHits { get; }
+        
 
         void KeyPress(object platformKeyObject, string key);
     }

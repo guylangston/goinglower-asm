@@ -26,7 +26,12 @@ namespace Animated.CPU.Animation
         public TStyle   Styles     { get; }
         public int      FrameCount { get; private set; }
         public float    FPS        => (float)FrameCount / (float)Elapsed.TotalSeconds ;
-
+        
+        // Debugging
+        public SKPoint        Debug     { get; set; }
+        public List<IElement> DebugHits { get; } = new List<IElement>();
+        
+        // Helpers
         IStyleFactory IScene.StyleFactory => Styles;
         
         public new TModel Model
@@ -73,6 +78,7 @@ namespace Animated.CPU.Animation
         
         protected override void Draw(DrawContext surface)
         {
+            Scene.DebugHits.Clear();
             DrawBackGround(surface);
             foreach (var element in ChildrenRecursive(VisitOnDraw))
             {

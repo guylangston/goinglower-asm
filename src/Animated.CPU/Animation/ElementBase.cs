@@ -14,16 +14,20 @@ namespace Animated.CPU.Animation
     public abstract class ElementBase : IElement
     {
         private IList<IElement> elements = ImmutableList<IElement>.Empty;
+        private static  int nextId = 0;
+        private int id;
 
         protected ElementBase()
         {
             Scene = null;
+            id    = nextId++;
         }
 
         protected ElementBase(IScene scene, IElement? parent)
         {
             Scene  = scene ?? throw new ArgumentNullException(nameof(scene));
             Parent = parent;
+            id     = nextId++;
         }
 
         protected ElementBase(IScene scene, IElement? parent, DBlock b)
@@ -31,6 +35,7 @@ namespace Animated.CPU.Animation
             Scene  = scene ?? throw new ArgumentNullException(nameof(scene));
             Parent = parent;
             Block  = b;
+            id     = nextId++;
         }
 
         public IScene    Scene        { get; private set; }
@@ -88,6 +93,13 @@ namespace Animated.CPU.Animation
 
         public void DrawExec(DrawContext surface)
         {
+            if (!Scene.Debug.IsEmpty)
+            {
+                if (Block != null && Block.Contains(Scene.Debug))
+                {
+                    Scene.DebugHits.Add(this);
+                }
+            }
             if (IsEnabled && !IsHidden)
             {
                 try
@@ -121,7 +133,13 @@ namespace Animated.CPU.Animation
         protected abstract void Draw(DrawContext surface);
         protected virtual void Decorate(DrawContext surface) {  /* Nothing by default */ }
 
-        public IReadOnlyList<IElement> Children => (IReadOnlyList<IElement>)elements;
+
+        public IEnumerable<T> ChildrenAre<T>() => this.Children.Where(x => x is T).Cast<T>();
+
+        public int                     ChildrenCount => elements?.Count ?? 0;
+        public IReadOnlyList<IElement> Children      => (IReadOnlyList<IElement>)elements;
+        
+        
 
         public IEnumerable<IElement> ChildrenRecursive()
         {
@@ -234,7 +252,7 @@ namespace Animated.CPU.Animation
             }
         }
 
-        public override string ToString() => $"[{IndexInParent}]{GetType().Name}";
+        public override string ToString() => $"#{id}:^{IndexInParent}:{GetType().Name}:{Model}";
     }
 
    

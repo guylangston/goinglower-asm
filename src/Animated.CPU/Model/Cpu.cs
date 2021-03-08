@@ -39,33 +39,39 @@ namespace Animated.CPU.Model
         }
 
         // https://en.wikibooks.org/wiki/X86_Assembly/X86_Architecture
-        public Register RAX { get; } = new Register("RAX", "Accumulator")
+        public Register RAX { get; } = new Register("A", "Accumulator")
         {
             Description = "Used in arithmetic operations",
-            IdAlt = ImmutableArray.Create<string>("EAX", "EX")
+            IdAlt = ImmutableArray.Create<string>("RAX", "EAX", "AX", "AH", "AL")
         };
 
-        public Register RBX { get; } = new Register("RBX", "Base")
+        public Register RBX { get; } = new Register("B", "Base")
         {
-            IdAlt = ImmutableArray.Create<string>("EBX", "BX")
+            IdAlt = ImmutableArray.Create<string>("RBX", "EBX", "BX")
         };
-        public Register RCX { get; } = new Register("RCX", "Count")
+        public Register RCX { get; } = new Register("C", "Count")
         {
-            IdAlt = ImmutableArray.Create<string>("ECX", "CX")
+            IdAlt = ImmutableArray.Create<string>("RCX", "ECX", "CX")
         };
-        public Register RDX { get; } = new Register("RDX", "Data");
-        public Register RBP { get; } = new Register("RBP", "Stack Base Pointer");
-        public Register RSI { get; } = new Register("RSI", "Source Index")
+        public Register RDX { get; } = new Register("D", "Data")
         {
-            IdAlt = ImmutableArray.Create<string>("ESI", "SI")
+            IdAlt = ImmutableArray.Create<string>("RDX", "EDX", "DX")
         };
-        public Register RDI { get; } = new Register("RDI", "Destination Index")
+        public Register RBP { get; } = new Register("BP", "Stack Base Pointer")
         {
-            IdAlt = ImmutableArray.Create<string>("EDI", "DI")
+            IdAlt = ImmutableArray.Create<string>("RBP", "RDX", "EDX", "DX")
         };
-        public Register RSP { get; } = new Register("RSP", "Stack Pointer")
+        public Register RSI { get; } = new Register("SI", "Source Index")
         {
-            IdAlt = ImmutableArray.Create<string>("ESP", "SP")
+            IdAlt = ImmutableArray.Create<string>("RSI", "ESI")
+        };
+        public Register RDI { get; } = new Register("DI", "Destination Index")
+        {
+            IdAlt = ImmutableArray.Create<string>("RDI", "EDI")
+        };
+        public Register RSP { get; } = new Register("SP", "Stack Pointer")
+        {
+            IdAlt = ImmutableArray.Create<string>("RSP", "ESP")
         };
 
         public Register R0 => RAX;
@@ -77,16 +83,16 @@ namespace Animated.CPU.Model
         public Register R6 => RDI;
         public Register R7 => RSP;
 
-        public Register R8  { get; } = new Register("R8", "Register 8");
-        public Register R9  { get; } = new Register("R9", "Register 9");
-        public Register R10 { get; } = new Register("R10", "Register 10");
-        public Register R11 { get; } = new Register("R11", "Register 11");
-        public Register R12 { get; } = new Register("R12", "Register 12");
-        public Register R13 { get; } = new Register("R13", "Register 13");
-        public Register R14 { get; } = new Register("R14", "Register 14");
-        public Register R15 { get; } = new Register("R15", "Register 15");
+        public Register R8  { get; } = new Register("R8", "Register 8")   { IsExtendedReg = true };
+        public Register R9  { get; } = new Register("R9", "Register 9")   { IsExtendedReg = true };
+        public Register R10 { get; } = new Register("R10", "Register 10") { IsExtendedReg = true };
+        public Register R11 { get; } = new Register("R11", "Register 11") { IsExtendedReg = true };
+        public Register R12 { get; } = new Register("R12", "Register 12") { IsExtendedReg = true };
+        public Register R13 { get; } = new Register("R13", "Register 13") { IsExtendedReg = true };
+        public Register R14 { get; } = new Register("R14", "Register 14") { IsExtendedReg = true };
+        public Register R15 { get; } = new Register("R15", "Register 15") { IsExtendedReg = true };
 
-        public Register    RIP    { get; } = new Register("RIP", "Instruction Pointer");
+        public Register    RIP    { get; } = new Register("RIP", "'IP' Instruction Pointer");
         public Register    RFLAGS { get; } = new Register("RFLAGS", "Flags");
         public Prop<ulong> CLK    { get; } = new PropULong(0);
 
@@ -162,10 +168,13 @@ namespace Animated.CPU.Model
             Name = name;
         }
 
-        public string                Id          { get; set; }
-        public IReadOnlyList<string> IdAlt       { get; set; }
-        public string                Name        { get; set; }
-        public string                Description { get; set; }
+        public string                Id            { get; set; }
+        public IReadOnlyList<string> IdAlt         { get; set; }
+        public string                Name          { get; set; }
+        public string                Description   { get; set; }
+        public bool                  IsExtendedReg { get; set; }
+        
+        public string ValueHex => Value.ToString("X").PadLeft(64 / 8 * 2, '0');
 
 
         public IEnumerable<string> AllIds()
@@ -177,7 +186,7 @@ namespace Animated.CPU.Model
             }
         }
         
-        public string ValueHex => Value.ToString("X").PadLeft(64 / 8 * 2, '0');
+        
 
         public override string ToString() => $"{Id}/{Name} = {Value:X}";
 

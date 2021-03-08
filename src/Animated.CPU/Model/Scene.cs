@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using Animated.CPU.Animation;
+using Animated.CPU.Model.ModelElements;
 using SkiaSharp;
 
 namespace Animated.CPU.Model
@@ -25,10 +26,7 @@ namespace Animated.CPU.Model
 
         protected override void InitScene()
         {
-            Debug.WriteLine("Init");
-            Console.WriteLine("Init2");
-            
-            if (true)
+            if (false)
             {
                 for (int cc = 0; cc < 100; cc++)
                     Add(new BackGroundNoise(this, Block));
