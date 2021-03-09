@@ -14,11 +14,12 @@ namespace Animated.CPU.Model
         }
         
         // Helpers
-        public Cpu                    Cpu                 => Model;
-        public MemoryViewElement      ElementInstructions { get; set; }
-        public CodeSection            ElementCode         { get; set; }
-        public ElementRegisterFile    ElementRegisterFile { get; set; }
-        public SKPoint?               Mouse               { get; set; }
+        public Cpu                 Cpu                 => Model;
+        public MemoryViewElement   ElementInstructions { get; set; }
+        public CodeSection         ElementCode         { get; set; }
+        public ElementRegisterFile ElementRegisterFile { get; set; }
+        public TerminalElement     Terminal            { get; set; }
+        
         public Action<string, object> SendCommand         { get; set; }
         public ALUElement             ElementALU          { get; set; }
         public string                 LastKeyPress        { get; set; }
@@ -45,7 +46,7 @@ namespace Animated.CPU.Model
 
             var dBlock = new DBlock(300, 1050, 900, 400);
             dBlock.Set(0, 3, 10);
-            var term   = Add(new TerminalElement(this, new Terminal(), dBlock));
+            Terminal   = Add(new TerminalElement(this, new Terminal(), dBlock));
         }
 
         
@@ -66,6 +67,11 @@ namespace Animated.CPU.Model
             // surface.DrawText($"{FrameCount} frames at {Elapsed.TotalSeconds:0.00} sec. {lastKey} | {Mouse}", 
             //     Styles.GetPaint(this, "debug"),
             //     new SKPoint(0,0));
+
+            if (DebugPointAt != SKPoint.Empty)
+            {
+                surface.Canvas.DrawCircle(DebugPointAt, 4, Styles.Highlighted);
+            }
         }
 
         protected override void DrawBackGround(DrawContext surface)
@@ -106,6 +112,32 @@ namespace Animated.CPU.Model
             }
         }
 
-       
+        public override void ButtonPress(uint eventButton, double eventX, double eventY, object interop)
+        {
+            DebugPointAt = new SKPoint((float)eventX, (float)eventY);
+            DebugButton  = eventButton;
+            
+            foreach (var element in Scene.ChildrenRecursive())
+            {
+                var hit = element.GetSelectionAtPoint(Scene.DebugPointAt);
+                if (hit != null && hit.Selection is TextBlockElement.Span span && span.Url != null)
+                {
+                    ShowUrl(span.Url);
+                }
+            }
+        }
+
+        private void ShowUrl(string spanUrl)
+        {
+            try
+            {
+                Process.Start("xdg-open", spanUrl);
+                // TODO: Show animation of browser loading
+            }
+            catch (Exception e)
+            {
+                Terminal.Error = e;
+            }
+        }
     }
 }

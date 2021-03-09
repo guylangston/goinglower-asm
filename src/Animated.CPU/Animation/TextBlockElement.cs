@@ -46,13 +46,17 @@ namespace Animated.CPU.Animation
             public SKPoint          LastDraw   { get; set; }
             public object?          Tag        { get; set; }
             public Action<Drawing>? CustomDraw { get; set; }
-            public Line             Line       { get; set; }
+            public Line?            Line       { get; set; }
+            public string           Url        { get; set; }
 
-            public SKRect LastDrawRect
-                => new SKRect(LastDraw.X, LastDraw.Y, LastDraw.X + Region.Width, LastDraw.Y - Region.Height);
-
+            public SKRect LastDrawRect 
+                => Line == null ? SKRect.Empty 
+                    : new SKRect(
+                        LastDraw.X, 
+                        LastDraw.Y - Line.H, 
+                        LastDraw.X + Region.Width, 
+                        LastDraw.Y );
             
-
             public Span SetTag(object tag)
             {
                 Tag = tag;
@@ -157,6 +161,26 @@ namespace Animated.CPU.Animation
             {
                 Block.H = LastDrawHeight;
             }
+        }
+
+        public override PointSelectionResult? GetSelectionAtPoint(SKPoint p)
+        {
+            var s = base.GetSelectionAtPoint(p);
+            if (s != null)
+            {
+                foreach (var line in lines)
+                {
+                    foreach (var span in line.Spans)
+                    {
+                        if (span.LastDrawRect.Contains(p))
+                        {
+                            s.Selection = span;
+                            return s;
+                        }
+                    }
+                }
+            }
+            return s;
         }
 
         public bool TryGetSpanFromModel<T>(T model, out Span s)

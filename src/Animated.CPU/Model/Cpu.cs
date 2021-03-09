@@ -96,10 +96,7 @@ namespace Animated.CPU.Model
         {
             IdAlt = ImmutableArray.Create<string>("RIP")
         };
-        public Register    RFLAGS { get; } = new Register("FLAGS", "Flags")
-        {
-            IdAlt = ImmutableArray.Create<string>("RFLAGS")
-        };
+        public FlagsRegister RFLAGS { get; } = new FlagsRegister();
         public Prop<ulong> CLK    { get; } = new PropULong(0);
 
         public List<Register> RegisterFile { get; }
@@ -241,6 +238,41 @@ namespace Animated.CPU.Model
                 ValueRaw    = ValueHex
             };
         }
+    }
+
+    public class FlagsRegister : Register
+    {
+        public FlagsRegister() : base("FLAGS", "State Flags")
+        {
+            IdAlt = ImmutableArray.Create<string>("RFLAGS");
+        }
+
+        //https://en.wikipedia.org/wiki/FLAGS_register
+        public bool CarryFlag     => (Value & 0x0001ul) > 0;
+        public bool ParityFlag    => (Value & 0x0004ul) > 0;
+        public bool AdjustFlag    => (Value & 0x0010ul) > 0;
+        public bool ZeroFlag      => (Value & 0x0040ul) > 0;
+        public bool SignFlag      => (Value & 0x0080ul) > 0;
+        public bool TrapFlag      => (Value & 0x0100ul) > 0;
+        public bool InterruptFlag => (Value & 0x0200ul) > 0;
+        public bool DirectionFlag => (Value & 0x0400ul) > 0;
+        public bool OverflowFlag  => (Value & 0x0800ul) > 0;
+
+        public IEnumerable<(string name, bool val)> GetFlags()
+        {
+            yield return ("Carry", CarryFlag);
+            yield return ("Parity", ParityFlag);
+            yield return ("Adjust", AdjustFlag);
+            yield return ("Zero", ZeroFlag);
+            yield return ("Sign", SignFlag);
+            yield return ("Trap", TrapFlag);
+            yield return ("Interrupt", InterruptFlag);
+            yield return ("Direction", DirectionFlag);
+            yield return ("Overflow", OverflowFlag);
+        }
+        
+
+
     }
 
     public interface IMemory

@@ -23,12 +23,13 @@ namespace Animated.CPU.Model
                     SKFontStyleWidth.Normal, 
                     SKFontStyleSlant.Upright)
             };
-            FixedFontCyan   = Clone(FixedFont, p => p.Color = SKColors.Cyan);
-            FixedFontYellow = Clone(FixedFont, p => p.Color = SKColors.Yellow);
-            FixedFontBlue   = Clone(FixedFont, p => p.Color = SKColors.LightBlue);
-            FixedFontWhite  = Clone(FixedFont, p => p.Color = SKColors.White);
-            FixedFontGray   = Clone(FixedFont, p => p.Color = SKColors.LightGray);
+            FixedFontCyan     = Clone(FixedFont, p => p.Color = SKColors.Cyan);
+            FixedFontYellow   = Clone(FixedFont, p => p.Color = SKColors.Yellow);
+            FixedFontBlue     = Clone(FixedFont, p => p.Color = SKColors.LightBlue);
+            FixedFontWhite    = Clone(FixedFont, p => p.Color = SKColors.White);
+            FixedFontGray     = Clone(FixedFont, p => p.Color = SKColors.LightGray);
             FixedFontDarkGray = Clone(FixedFont, p => p.Color = SKColors.Gray);
+            FixedFontURL      = Clone(FixedFont, p => p.Color = SKColors.LimeGreen);
             
             
             SmallFont = new SKPaint()
@@ -90,25 +91,25 @@ namespace Animated.CPU.Model
             Highlighted = Selected = Arrow;
         }
 
-        public PropertyInfo[] Props { get;  }
-
-        public SKPaint BackGround        { get; }
-        public SKPaint BackGroundAlt     { get; }
-        public SKPaint Text              { get; }
-        public SKPaint FixedFont         { get; }
-        public SKPaint FixedFontYellow   { get; }
-        public SKPaint FixedFontCyan     { get; }
-        public SKPaint FixedFontWhite    { get; }
-        public SKPaint FixedFontBlue     { get; }
-        public SKPaint FixedFontGray     { get; }
-        public SKPaint FixedFontDarkGray { get; }
-        public SKPaint Border            { get; }
-        public SKPaint Arrow             { get; }
-        public SKPaint TextH1            { get; }
-        public SKPaint TextH1BG          { get; }
-        public SKPaint Selected          { get; }
-        public SKPaint Highlighted       { get; }
-        public SKPaint SmallFont         { get;  }
+        public SKPaint        FixedFontURL      { get; }
+        public SKPaint        BackGround        { get; }
+        public SKPaint        BackGroundAlt     { get; }
+        public SKPaint        Text              { get; }
+        public SKPaint        FixedFont         { get; }
+        public SKPaint        FixedFontYellow   { get; }
+        public SKPaint        FixedFontCyan     { get; }
+        public SKPaint        FixedFontWhite    { get; }
+        public SKPaint        FixedFontBlue     { get; }
+        public SKPaint        FixedFontGray     { get; }
+        public SKPaint        FixedFontDarkGray { get; }
+        public SKPaint        Border            { get; }
+        public SKPaint        Arrow             { get; }
+        public SKPaint        TextH1            { get; }
+        public SKPaint        TextH1BG          { get; }
+        public SKPaint        Selected          { get; }
+        public SKPaint        Highlighted       { get; }
+        public SKPaint        SmallFont         { get;  }
+        public PropertyInfo[] Props             { get;  }
 
         public static SKPaint Clone(SKPaint cpy, Action<SKPaint> then)
         {
@@ -121,6 +122,7 @@ namespace Animated.CPU.Model
         
         public SKPaint GetPaint(IElement e, string id)
         {
+            id = id.ToLowerInvariant();
             foreach (var prop in Props)
             {
                 if (prop.PropertyType == typeof(SKPaint))
@@ -130,46 +132,11 @@ namespace Animated.CPU.Model
                         return (SKPaint)prop.GetValue(this);
                     }    
                 }
-                
-            }
-            
-            
-            if (e.Model is Register r)
-            {
-                if (id == "Id") return t1;
-                if (id == "Name") return t1a;
-                if (id == "Value") return t2;
-                
-                var grad_clr = new[]
-                {
-                    SKColor.Parse("#C0666666"),
-                    SKColor.Parse("#C0444444")
-                };
-
-                return new SKPaint()
-                {
-                    Style  = SKPaintStyle.StrokeAndFill,
-                    Color  = SKColors.SkyBlue,
-                    Shader = SKShader.CreateLinearGradient(e.Block.Outer.TL, e.Block.Outer.BR, grad_clr, SKShaderTileMode.Repeat)
-                    // Shader = SKShader.CreateRadialGradient(panel.Outer.MM, panel.Outer.W/2, new[]
-                    // {
-                    //     SKColor.Parse("#666"),
-                    //     SKColor.Parse("#444")
-                    // }, SKShaderTileMode.Repeat)
-                };
-            }
-
-            if (e.Parent is ElementRegister)
-            {
-                switch (id)
-                {
-                    case "border": return borderReg;
-                    case "hex": return hex2;
-                }
             }
             
             switch (id)
             {
+                case "url": return FixedFontURL;
                 case "h1": return TextH1;
                 case "h1bg": return TextH1BG;
                 case "hex": return hex;

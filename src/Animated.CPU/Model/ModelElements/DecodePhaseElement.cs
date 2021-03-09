@@ -49,7 +49,7 @@ namespace Animated.CPU.Model
                     text.WriteLine(decode.Description, Scene.Styles.FixedFontGray);
                 }
                 
-                urlOpCode = text.WriteLine($"https://www.felixcloutier.com/x86/{decode.OpCode}");
+                urlOpCode = text.WriteUrl($"https://www.felixcloutier.com/x86/{decode.OpCode}", "WIKI");
             }
             
             

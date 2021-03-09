@@ -11,6 +11,13 @@ namespace Animated.CPU.Animation
     {
     }
 
+    public class PointSelectionResult
+    {
+        public IElement Element   { get; set; }
+        public object?  Model     { get; set; }
+        public object?  Selection { get; set; }
+    }
+
     public abstract class ElementBase : IElement
     {
         private IList<IElement> elements = ImmutableList<IElement>.Empty;
@@ -64,6 +71,19 @@ namespace Animated.CPU.Animation
             return a;
         }
 
+        public virtual PointSelectionResult? GetSelectionAtPoint(SKPoint p)
+        {
+            if (Block != null && Block.Contains(p))
+            {
+                return new PointSelectionResult()
+                {
+                    Element = this,
+                    Model   = Model
+                };
+            }
+            return null;
+        } 
+
 
         public string DebugId => StringHelper.Join(PathToRoot(), x => x.ToString(), ">");
 
@@ -93,9 +113,9 @@ namespace Animated.CPU.Animation
 
         public void DrawExec(DrawContext surface)
         {
-            if (!Scene.Debug.IsEmpty)
+            if (!Scene.DebugPointAt.IsEmpty)
             {
-                if (Block != null && Block.Contains(Scene.Debug))
+                if (Block != null && Block.Contains(Scene.DebugPointAt))
                 {
                     Scene.DebugHits.Add(this);
                 }

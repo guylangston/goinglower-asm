@@ -28,8 +28,9 @@ namespace Animated.CPU.Animation
         public float    FPS        => (float)FrameCount / (float)Elapsed.TotalSeconds ;
         
         // Debugging
-        public SKPoint        Debug     { get; set; }
-        public List<IElement> DebugHits { get; } = new List<IElement>();
+        public SKPoint        DebugPointAt { get; set; }
+        public uint           DebugButton  { get; set; }
+        public List<IElement> DebugHits    { get; } = new List<IElement>();
         
         // Helpers
         IStyleFactory IScene.StyleFactory => Styles;
@@ -109,6 +110,7 @@ namespace Animated.CPU.Animation
         protected abstract void DrawBackGround(DrawContext drawing);
         
         public abstract void KeyPress(object platformKeyObject, string key);
+        public abstract void ButtonPress(uint eventButton, double eventX, double eventY, object interop);
 
 
 

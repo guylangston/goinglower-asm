@@ -39,6 +39,14 @@ namespace Animated.CPU.Model
                 
                 cc += 2;
             }
+        }
+        
+        public static TextBlockElement.Span WriteUrl(this TextBlockElement e, string url, string txt)
+        {
+            e.Write("↗");
+            var span = e.Write(txt, e.Scene.StyleFactory.GetPaint(e, "url"));
+            span.Url = url;
+            return span;
 
         }
     }

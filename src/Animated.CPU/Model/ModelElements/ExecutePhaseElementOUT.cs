@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using Animated.CPU.Animation;
 using SkiaSharp;
@@ -115,7 +116,11 @@ namespace Animated.CPU.Model
             {
                 if (dt.ValueParsed != null)
                 {
-                    Model.Alu.Cpu.SetReg(dt.Register, dt.ValueParsed.Value);    
+                    var reg = Model.Alu.Cpu.SetReg(dt.Register, dt.ValueParsed.Value);
+                    if (reg == Scene.Cpu.RIP)
+                    {
+                        reg.IsChanged = false;  // RIP always changes - so hide it
+                    }
                 }
                         
             }

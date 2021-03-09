@@ -38,6 +38,8 @@ namespace Animated.CPU.Animation
         IEnumerable<IElement> ChildrenRecursive(Func<IElement, bool> visit);
         T Add<T>(T e) where T:IElement;
         void Remove(IElement el);
+
+        PointSelectionResult? GetSelectionAtPoint(SKPoint p);
     }
 
 
@@ -89,7 +91,7 @@ namespace Animated.CPU.Animation
         IStyleFactory StyleFactory { get; }
         
         // Debugging
-        SKPoint   Debug    { get; }
+        SKPoint   DebugPointAt    { get; }
         List<IElement> DebugHits { get; }
         
 

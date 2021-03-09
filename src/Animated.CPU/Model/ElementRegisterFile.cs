@@ -77,29 +77,49 @@ namespace Animated.CPU.Model
             text.Clear();
             text.Write($"{Model.Id}", Scene.Styles.FixedFontYellow);
             text.Write($" {Model.Name}");
+            text.WriteLine();
             
-            text.WriteLine();
-            text.Write($"HEX: ", Scene.Styles.FixedFontDarkGray);
-            text.WriteHexWords(Model.Value, Model.LastUsedAsSize);
-            if (Model.LastUsedAs != null)
+            if (Model is FlagsRegister flags)
             {
-                text.Write(" [", Scene.Styles.FixedFontDarkGray);
-                text.Write(Model.LastUsedAs, Scene.Styles.FixedFontCyan);
-                text.Write("]", Scene.Styles.FixedFontDarkGray);
+                text.WriteLine(Convert.ToString((long)flags.Value, 2).PadLeft(16, '0'));
+                var xx = 0;
+                foreach (var (name, val) in flags.GetFlags().Where(x=>x.val))
+                {
+                    if (xx > 0) text.Write(" ");
+                    text.Write(name);
+                    xx++;
+                }
+                text.WriteLine();
+                text.WriteUrl("https://en.wikipedia.org/wiki/FLAGS_register", "WIKI");
+                text.WriteLine();
             }
-            text.WriteLine();
+            else
+            {
+                
+                text.Write($"HEX: ", Scene.Styles.FixedFontDarkGray);
+                text.WriteHexWords(Model.Value, Model.LastUsedAsSize);
+                if (Model.LastUsedAs != null)
+                {
+                    text.Write(" [", Scene.Styles.FixedFontDarkGray);
+                    text.Write(Model.LastUsedAs, Scene.Styles.FixedFontYellow);
+                    text.Write("]", Scene.Styles.FixedFontDarkGray);
+                }
+                text.WriteLine();
 
-            if (IsHighlighted)
-            {
-                text.Write($"DEC: ", Scene.Styles.FixedFontDarkGray);
-                text.WriteLine($"{Model.Value:#,##0}", Scene.Styles.FixedFontCyan);
+                if (IsHighlighted)
+                {
+                    text.Write($"DEC: ", Scene.Styles.FixedFontDarkGray);
+                    text.WriteLine($"{Model.Value:#,##0}", Scene.Styles.FixedFontCyan);
+                }
+            
+                if (IsHighlighted)
+                {
+                    text.Write($"BIN: ", Scene.Styles.FixedFontDarkGray);
+                    text.WriteLine(Convert.ToString((long)Model.Value, 2), Scene.Styles.SmallFont);    
+                }
             }
             
-            if (IsHighlighted)
-            {
-                text.Write($"BIN: ", Scene.Styles.FixedFontDarkGray);
-                text.WriteLine(Convert.ToString((long)Model.Value, 2), Scene.Styles.SmallFont);    
-            }
+            
         }
 
 

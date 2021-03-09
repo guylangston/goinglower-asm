@@ -39,9 +39,6 @@ namespace Animated.CPU.GTK
             setup.InitFromDisk(dir, cpu, sourceProvider, main);
             
             builder.Autoconnect(this);
-            DeleteEvent        += OnWindowDeleteEvent;
-            
-            this.KeyPressEvent += KeyPress;
             
             skiaView              =  new SKDrawingArea();
             skiaView.WidthRequest =  1960;
@@ -58,12 +55,15 @@ namespace Animated.CPU.GTK
                 }
             };
             
-            skiaView.PaintSurface += OnPaintSurface;
-            skiaView.Shown        += OnShow;
-            
+            //  Window Events
+            this.DeleteEvent      += OnWindowDeleteEvent;
+            this.KeyPressEvent    += KeyPress;
             this.ButtonPressEvent += OnButtonPressEvent;
             
-            
+            // Paint Events
+            skiaView.PaintSurface += OnPaintSurface;
+            skiaView.Shown        += OnShow;
+
             skiaView.Show();
             Child = skiaView;
             
@@ -77,9 +77,7 @@ namespace Animated.CPU.GTK
 
         private void OnButtonPressEvent(object o, ButtonPressEventArgs args)
         {
-            scene.Mouse = new SKPoint((float)args.Event.X, (float)args.Event.Y);
-            scene.Debug = scene.Mouse.Value;
-
+            scene.ButtonPress(args.Event.Button, args.Event.X, args.Event.Y, args);
         }
 
         private void KeyPress(object o, KeyPressEventArgs args)
