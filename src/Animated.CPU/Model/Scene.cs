@@ -16,6 +16,8 @@ namespace Animated.CPU.Model
     
     public class Scene : SceneBase<Cpu, StyleFactory>
     {
+        private SKBitmap bitmap1;
+
         public Scene(DBlock region) : base(new StyleFactory())
         {
             Block = region;
@@ -66,9 +68,32 @@ namespace Animated.CPU.Model
             Terminal   = Add(new TerminalElement(this, new Terminal(), bTerm));
             
             
-            var bDialog = new DBlock(600, 400, 900, 400);
+            var bDialog = new DBlock(600, 400, 900, 900);
             bDialog.Set(0, 3, 10);
             this.Dialog = Add(new DialogElement(this, new Dialog(), bDialog));
+
+
+            var rel = bTerm.CreateRelative(BlockAnchor.TR, false, new SKPoint(20, 0), new SKPoint(60, 20));
+
+
+            foreach (var action in new string[] { "Help", "Quit", "Next", "Previous"})
+            {
+                var x = Add(new ButtonElement(this, new Action()
+                    {
+                        Name = action,
+                        Arg  = action
+                    }, rel
+                ));
+                rel.Set(0, 2, 20);
+
+                rel = rel.CreateRelative(BlockAnchor.TR, false, new SKPoint(20, 0), new SKPoint(60, 20));
+            }
+            
+
+
+            this.bitmap1 = SKBitmap.Decode("/home/guy/repo/cpu.anim/doc/IntelIntro-GeneralArch.png");
+
+
         }
 
         protected override void InitSceneComplete()
@@ -121,6 +146,9 @@ namespace Animated.CPU.Model
 
             switch (key)
             {
+                case "Escape":
+                    Dialog.IsHidden = true;
+                    return;
                 
                 case "t":
                     Dialog.Model = new Dialog()
@@ -128,6 +156,8 @@ namespace Animated.CPU.Model
                         Title = "Dialog Test"
                     };
                     Dialog.Model.Lines.Add("Hello World");
+
+                    Dialog.Image    = bitmap1;
                     Dialog.IsHidden = !Dialog.IsHidden;
                     break;
                 
@@ -158,12 +188,38 @@ namespace Animated.CPU.Model
             foreach (var element in Scene.ChildrenRecursive())
             {
                 var hit = element.GetSelectionAtPoint(Scene.DebugPointAt);
-                if (hit != null && hit.Selection is TextBlockElement.Span span && span.Url != null)
+                if (hit != null)
                 {
-                    ShowUrl(span.Url);
-                    return;
+                    if (hit.Selection is TextBlockElement.Span span && span.Url != null)
+                    {
+                        ShowUrl(span.Url);
+                        return;    
+                    }
+                    else if (hit.Element is ButtonElement be)
+                    {
+                        PerformAction(be.Model);
+                        return;
+                    }
+
                 }
             }
+        }
+
+        private void PerformAction(Action act)
+        {
+            if (act.Name == "Quit")
+            {
+                SendCommand.Invoke("QUIT", null);
+                return;
+            }
+            
+            Dialog.Model = new Dialog()
+            {
+                Title = "Action"
+            };
+            Dialog.Model.Lines.Add(act.Name);
+            Dialog.Image    = null;
+            Dialog.IsHidden = false;
         }
 
         private void ShowUrl(string spanUrl)

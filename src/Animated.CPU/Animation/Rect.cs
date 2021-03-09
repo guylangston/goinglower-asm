@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.Intrinsics.X86;
 using SkiaSharp;
 
@@ -84,6 +85,27 @@ namespace Animated.CPU.Animation
 
         public SKRect ToSkRect() => new SKRect(X, Y, X2, Y2);
         public SKRectI ToSkRectI() => new SKRectI((int)X, (int)Y, (int)X2, (int)Y2);
+
+        public SKPoint this[BlockAnchor anchor]
+            => anchor switch
+            {
+                BlockAnchor.TL => TL,
+                BlockAnchor.TM => TM,
+                BlockAnchor.TR => TR,
+                BlockAnchor.ML => ML,
+                BlockAnchor.MM => MM,
+                BlockAnchor.MR => MR,
+                BlockAnchor.BL => BL,
+                BlockAnchor.BM => BM,
+                BlockAnchor.BR => BR,
+                _ => throw new Exception(anchor.ToString())
+            };
+
+
+        public Rect Inset(float x, float y)
+        {
+            return new Rect(X + x, Y + y, W - x - x, H - y - y);
+        }
     }
         
     

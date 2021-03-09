@@ -181,6 +181,22 @@ namespace Animated.CPU.Animation
         {
             W = f
         };
+
+        public SKPoint this[BlockAnchor anchor, bool inner]
+        {
+            get
+            {
+                var b = inner ? Inner : Outer;
+                return b[anchor];
+            }
+        }
+
+
+        public DBlock CreateRelative(BlockAnchor anchor, bool inner, SKPoint rel, SKPoint size)
+        {
+            var b = this[anchor, inner];
+            return new DBlock(b.X + rel.X, b.Y + rel.Y, size.X, size.Y);
+        }
     }
 
     public class DynamicDBlock : DBlock

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Animated.CPU.Animation;
+using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
@@ -20,6 +21,9 @@ namespace Animated.CPU.Model
             Title    = Model.Title;
         }
 
+        
+        public SKBitmap? Image { get; set; }
+
         protected override void Init()
         {
             this.text = this.Add(new TextBlockElement(this, Block, Scene.Styles.FixedFontGray));
@@ -36,6 +40,18 @@ namespace Animated.CPU.Model
             {
                 text.WriteLine(line);
             }
+        }
+
+        protected override void Draw(DrawContext surface)
+        {
+            base.Draw(surface);
+
+            if (Image != null)
+            {
+                var dest = Block.Inner.Inset(20, 20).ToSkRect();
+                surface.Canvas.DrawBitmap(Image, dest);    
+            }
+            
         }
     }
 }

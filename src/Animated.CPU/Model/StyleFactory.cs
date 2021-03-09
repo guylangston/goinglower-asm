@@ -71,6 +71,19 @@ namespace Animated.CPU.Model
                 
             };
             
+            gray = 0x28;
+            ButtonBg = new SKPaint()
+            {
+                Style       = SKPaintStyle.StrokeAndFill,
+                StrokeWidth = 3,
+                Color       = SKColor.Parse("#333"),
+                Shader      = SKShader.CreateColor(new SKColor(gray, gray, gray))
+            };
+            ButtonText = Clone(FixedFont, p => {
+                p.TextSize = 12;
+                p.Color    = SKColors.Wheat;
+            });
+            
             Text = new SKPaint()
             {
                 TextSize = 15,
@@ -105,6 +118,10 @@ namespace Animated.CPU.Model
 
             Highlighted = Selected = Arrow;
         }
+
+        public SKPaint ButtonText { get; set; }
+
+        public SKPaint ButtonBg { get; set; }
 
         public SKPaint FixedFontArg { get; set; }
 

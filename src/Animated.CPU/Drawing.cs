@@ -71,7 +71,7 @@ namespace Animated.CPU
                 
                 case BlockAnchor.MM:
                     c = b.Inner.MM + offset;
-                    canvas.DrawText(txt, c.X  - bounds.Width/ 2, c.Y - bounds.Top + bounds.Bottom, t1);
+                    canvas.DrawText(txt, c.X  - bounds.Width/ 2, c.Y + bounds.Height  - t1.TextSize/2, t1);
                     break;
 
                 case BlockAnchor.BR:
