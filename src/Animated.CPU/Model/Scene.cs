@@ -22,11 +22,12 @@ namespace Animated.CPU.Model
         public Action<string, object> SendCommand         { get; set; }
         public ALUElement             ElementALU          { get; set; }
         public string                 LastKeyPress        { get; set; }
+        public bool                   UseEmbelishments            { get; set; } = true;
 
 
         protected override void InitScene()
         {
-            if (false)
+            if (UseEmbelishments)
             {
                 for (int cc = 0; cc < 100; cc++)
                     Add(new BackGroundNoise(this, Block));
@@ -46,6 +47,8 @@ namespace Animated.CPU.Model
             dBlock.Set(0, 3, 10);
             var term   = Add(new TerminalElement(this, new Terminal(), dBlock));
         }
+
+        
 
         protected override void InitSceneComplete()
         {

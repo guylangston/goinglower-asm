@@ -46,6 +46,11 @@ namespace Animated.CPU.Model
             {
                 foreach (var arg in decode.Args.Where(x=>(x.InOut & InOut.In) > 0).Distinct(DecodedArg.Compare))
                 {
+                    if (arg.Register != null)
+                    {
+                        arg.Register.LastUsedAs = arg.Value;    
+                    }
+                    
                     var val = Model.Alu.GetInput(decode, arg);
                     var loc = text.Write($" IN A{arg.Index}: ");
                     text.Write(arg.Value, Scene.Styles.FixedFontCyan);

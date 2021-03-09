@@ -1,3 +1,5 @@
+using System;
+
 namespace Animated.CPU.Animation
 {
     public abstract class Element<TScene> : ElementBase where TScene:IScene
@@ -16,7 +18,10 @@ namespace Animated.CPU.Animation
 
         protected Element(IElement parent, DBlock block) : base((TScene)parent.Scene, parent, block)
         {
+            
         }
+
+        public new IElement Parent => base.Parent ?? throw new Exception("Only Scene should not parent==null");
 
         public new TScene Scene => (TScene)base.Scene;
         

@@ -8,6 +8,7 @@ namespace Animated.CPU.Model
     public class StyleFactory : IStyleFactory
     {
         public const string MonoSpace = "Jetbrains Mono";
+        public const string Small = "Noto Sans";
         
         public StyleFactory()
         {
@@ -28,6 +29,18 @@ namespace Animated.CPU.Model
             FixedFontWhite  = Clone(FixedFont, p => p.Color = SKColors.White);
             FixedFontGray   = Clone(FixedFont, p => p.Color = SKColors.LightGray);
             FixedFontDarkGray = Clone(FixedFont, p => p.Color = SKColors.Gray);
+            
+            
+            SmallFont = new SKPaint()
+            {
+                TextSize = 12,
+                Color    = SKColor.Parse("#ccc"),
+                Typeface = SKTypeface.FromFamilyName(
+                    MonoSpace, 
+                    SKFontStyleWeight.Normal, 
+                    SKFontStyleWidth.Normal, 
+                    SKFontStyleSlant.Upright)
+            };
 
             Border = borderGray1;
 
@@ -95,6 +108,7 @@ namespace Animated.CPU.Model
         public SKPaint TextH1BG          { get; }
         public SKPaint Selected          { get; }
         public SKPaint Highlighted       { get; }
+        public SKPaint SmallFont         { get;  }
 
         public static SKPaint Clone(SKPaint cpy, Action<SKPaint> then)
         {

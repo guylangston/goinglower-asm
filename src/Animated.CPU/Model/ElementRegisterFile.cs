@@ -36,7 +36,6 @@ namespace Animated.CPU.Model
             }
         }
     }
-    
 
     public class ElementRegister : Element<Scene, Register>
     {
@@ -45,6 +44,10 @@ namespace Animated.CPU.Model
         public ElementRegister(IElement parent, Register model, DBlock block) : base(parent, model, block)
         {
         }
+        
+     
+        public PropFloat Alpha         { get; } = new PropFloat();
+        public bool      IsHighlighted { get; set; }
 
         protected override void Init()
         {
@@ -62,44 +65,50 @@ namespace Animated.CPU.Model
         
         //public ByteArrayElement Bytes { get; set; }
 
+        
+
         protected override void Step(TimeSpan step)
         {
-            //text.IsHidden = Animator.IsActive;
-            text.Clear();
-            text.Write($"{Model.Name} ");
-            text.Write($"{Model.Id}", Scene.Styles.FixedFontWhite);
-            text.WriteLine();
-            text.Write($"{Model.ValueHex}");
-            text.WriteLine();
-            if (Model.IsChanged)
-            {
-                text.WriteLine($"{Model.Value}", Scene.Styles.FixedFontCyan);
-            }
-            
-            // var bytes = BitConverter.GetBytes(Model.Value);
-            // Array.Reverse(bytes);   // hack
-            // Bytes.Model.Bytes       = bytes;
-            //
-            // if (Model.Value < 10_000) // assume address otherwise
-            // {
-            //     Bytes.Model.ParsedValue = Model.Value.ToString("#,##0");    
-            // }
-
             IsHighlighted = Model.IsChanged;
 
             Block = text.Block;
+            
+            
+            text.Clear();
+            text.Write($"{Model.Id}", Scene.Styles.FixedFontYellow);
+            text.Write($" {Model.Name}");
+            
+            text.WriteLine();
+            text.Write($"HEX: ", Scene.Styles.FixedFontDarkGray);
+            text.WriteHexWords(Model.Value, Model.LastUsedAsSize);
+            if (Model.LastUsedAs != null)
+            {
+                text.Write(" [", Scene.Styles.FixedFontDarkGray);
+                text.Write(Model.LastUsedAs, Scene.Styles.FixedFontCyan);
+                text.Write("]", Scene.Styles.FixedFontDarkGray);
+            }
+            text.WriteLine();
 
-
+            if (IsHighlighted)
+            {
+                text.Write($"DEC: ", Scene.Styles.FixedFontDarkGray);
+                text.WriteLine($"{Model.Value:#,##0}", Scene.Styles.FixedFontCyan);
+            }
+            
+            if (IsHighlighted)
+            {
+                text.Write($"BIN: ", Scene.Styles.FixedFontDarkGray);
+                text.WriteLine(Convert.ToString((long)Model.Value, 2), Scene.Styles.SmallFont);    
+            }
         }
 
-        public PropFloat Alpha { get; } = new PropFloat();
-        
-        public bool IsHighlighted { get; set; }
-        
+
         protected override void Draw(DrawContext surface)
         {
-            var canvas = surface.Canvas;
-            var draw   = new Drawing(canvas);
+            if (IsHighlighted)
+            {
+                surface.Canvas.DrawRect(Block.BorderRect.ToSkRect(), Scene.Styles.Selected);
+            }
 
             //
             //
@@ -127,25 +136,21 @@ namespace Animated.CPU.Model
             // //draw.DrawText(Model.Value.ToString("X"), sVal, Block, BlockAnchor.BR);
             //
             //
+            // var high = new SKPaint()
+            // {
+            //     Style = SKPaintStyle.Fill,
+            //     Shader = SKShader.CreateLinearGradient( 
+            //         Block.Outer.TL + new SKPoint(-4, -4),
+            //         Block.Outer.BR + new SKPoint(4, 40),
+            //         new[]
+            //         {
+            //             SKColors.Orange,
+            //             SKColors.Yellow,
+            //             SKColors.Red
+            //         },
+            //         SKShaderTileMode.Repeat)
+            // };
             
-            if (IsHighlighted)
-            {
-                // var high = new SKPaint()
-                // {
-                //     Style = SKPaintStyle.Fill,
-                //     Shader = SKShader.CreateLinearGradient( 
-                //         Block.Outer.TL + new SKPoint(-4, -4),
-                //         Block.Outer.BR + new SKPoint(4, 40),
-                //         new[]
-                //         {
-                //             SKColors.Orange,
-                //             SKColors.Yellow,
-                //             SKColors.Red
-                //         },
-                //         SKShaderTileMode.Repeat)
-                // };
-                draw.Canvas.DrawRect(Block.BorderRect.ToSkRect(), Scene.Styles.Selected);
-            }
             
         }
     }

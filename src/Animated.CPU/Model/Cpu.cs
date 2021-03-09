@@ -92,8 +92,14 @@ namespace Animated.CPU.Model
         public Register R14 { get; } = new Register("R14", "Register 14") { IsExtendedReg = true };
         public Register R15 { get; } = new Register("R15", "Register 15") { IsExtendedReg = true };
 
-        public Register    RIP    { get; } = new Register("RIP", "'IP' Instruction Pointer");
-        public Register    RFLAGS { get; } = new Register("RFLAGS", "Flags");
+        public Register    RIP    { get; } = new Register("IP", "Instruction Pointer")
+        {
+            IdAlt = ImmutableArray.Create<string>("RIP")
+        };
+        public Register    RFLAGS { get; } = new Register("FLAGS", "Flags")
+        {
+            IdAlt = ImmutableArray.Create<string>("RFLAGS")
+        };
         public Prop<ulong> CLK    { get; } = new PropULong(0);
 
         public List<Register> RegisterFile { get; }
@@ -120,7 +126,7 @@ namespace Animated.CPU.Model
         {
             foreach (var register in RegisterFile)
             {
-                if (string.Equals(register.Id, name, StringComparison.InvariantCultureIgnoreCase))
+                if (register.Match(name))
                 {
                     if (register.SetValue(value))
                     {
@@ -157,7 +163,13 @@ namespace Animated.CPU.Model
         InComplete = 4,
     }
 
-   
+
+    public class RegisterMode
+    {
+        public string Id      { get; set; }
+        public int    Size    { get; set; }
+        public ulong  BitMask { get; set; }
+    }
 
    
     public class Register : Prop<ulong>
@@ -169,13 +181,27 @@ namespace Animated.CPU.Model
         }
 
         public string                Id            { get; set; }
-        public IReadOnlyList<string> IdAlt         { get; set; }
         public string                Name          { get; set; }
         public string                Description   { get; set; }
+        public string?               LastUsedAs    { get; set; }
         public bool                  IsExtendedReg { get; set; }
         
-        public string ValueHex => Value.ToString("X").PadLeft(64 / 8 * 2, '0');
+        // TODO: Refactor to use RegisterMode
+        public IReadOnlyList<string> IdAlt         { get; set; }
+        
+        public string ValueHex       => Value.ToString("X").PadLeft(64 / 8 * 2, '0');
 
+        public int LastUsedAsSize
+        {
+            get
+            {
+                if (LastUsedAs == null) return 64;
+                if (LastUsedAs.StartsWith("e")) return 32;
+
+                return 64;
+
+            }
+        }
 
         public IEnumerable<string> AllIds()
         {

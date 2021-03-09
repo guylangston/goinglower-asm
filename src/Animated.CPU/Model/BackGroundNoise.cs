@@ -9,11 +9,17 @@ namespace Animated.CPU.Model
     {
         static Random r = new Random();
 
-        public BackGroundNoise(Scene scene, DBlock b) : base(scene, b)
+        private DBlock bounds;
+
+        public BackGroundNoise(Scene scene, DBlock bounds) : base(scene, new DBlock()
         {
-            Bounds     = b.Inner;
-            Speed      = new SKPoint(r.Next(-30, 30) / 30f, r.Next(-30, 30) / 30f);
-            Location   = new SKPoint(r.Next(0, (int)b.W), r.Next(0, (int)b.H));
+            W = 3,
+            H = 3
+        })
+        {
+            Bounds   = bounds.Inner;
+            Speed    = new SKPoint(r.Next(-30, 30) / 30f, r.Next(-30, 30) / 30f);
+            Location = new SKPoint(r.Next(0, (int)Bounds.W), r.Next(0, (int)Bounds.H));
 
             Paint = new SKPaint()
             {
@@ -27,10 +33,9 @@ namespace Animated.CPU.Model
             };
         }
 
-        public SKPaint Paint  { get; set; }
-        public SKPaint Paint2 { get; set; }
-        public IRect   Bounds { get; set; }
-        
+        public SKPaint Paint    { get; set; }
+        public SKPaint Paint2   { get; set; }
+        public IRect   Bounds   { get; set; }
         public SKPoint Location { get; set; }
         public SKPoint Speed    { get; set; }
 
@@ -61,11 +66,15 @@ namespace Animated.CPU.Model
                 Location = new SKPoint(Location.X, Bounds.Y2);
                 Speed    = new SKPoint(Speed.X, -Math.Abs(Speed.Y));
             }
+
+            Block.X = Location.X;
+            Block.Y = Location.Y;
+            
         }
         
         protected override void Draw(DrawContext surface)
         {
-            surface.Canvas.DrawCircle(Location.X, Location.Y, 3, Paint);
+            surface.Canvas.DrawCircle(Location.X, Location.Y, Block.W, Paint);
 
             foreach (var e in this.Parent.Children.Where(x=>x is BackGroundNoise).Cast<BackGroundNoise>())
             {

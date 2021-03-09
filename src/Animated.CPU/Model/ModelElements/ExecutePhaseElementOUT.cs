@@ -27,6 +27,7 @@ namespace Animated.CPU.Model
             text = Add(new TextBlockElement(this, Block, Scene.Styles.FixedFont));
         }
 
+       
         protected override void Step(TimeSpan step)
         {
             IsEnabled     = master.StateMachine.GetSeq(this) <= master.StateMachine.GetSeq(master.StateMachine.Current); 
@@ -54,8 +55,12 @@ namespace Animated.CPU.Model
                 
                 foreach (var arg in decode.Args.Where(x=>(x.InOut & InOut.Out) > 0).Distinct(DecodedArg.Compare))
                 {
-                    var val = Model.Alu.GetOutput(decode, arg);
+                    if (arg.Register != null)
+                    {
+                        arg.Register.LastUsedAs = arg.Value;    
+                    }
 
+                    var val = Model.Alu.GetOutput(decode, arg);
                     var loc = text.Write($"OUT A{arg.Index}: ");
                     text.Write(arg.Value.PadRight(10), Scene.Styles.FixedFontCyan);
                     text.Write(" ");
@@ -74,6 +79,7 @@ namespace Animated.CPU.Model
                     {
                         if (arg.Register != null && Scene.TryRecurseElementFromModel(arg.Register, out var eReg))
                         {
+                            
                             loc.CustomDraw = (c) => {
                                 var a = loc.LastDraw;
                                 var b = eReg.Block.Inner.MR;
