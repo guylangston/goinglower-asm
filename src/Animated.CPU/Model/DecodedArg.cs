@@ -12,6 +12,7 @@ namespace Animated.CPU.Model
         public InOut     InOut       { get; set; }
         public bool      IsImmediate => Value != null && Value.StartsWith("0x");
         public bool      IsPointer   => Value != null && Value.StartsWith("[");
+        public string?   Description { get; set; }
 
         public override string ToString() => Value;
         

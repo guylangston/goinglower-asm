@@ -29,8 +29,12 @@ namespace Animated.CPU.Animation
                 var    h1     = Scene.StyleFactory.GetPaint(this, "h1");
                 var    h1bg   = Scene.StyleFactory.GetPaint(this, "h1bg");
 
+                var size = new SKRect();
+                h1.MeasureText(Title, ref size);
+
                 surface.DrawTextAndBGAtTopMiddle(Title, 
-                    Block.Outer.TM + new SKPoint(0,  Block.Margin.Top + Block.Border.Top - 10),
+                    Block.Outer.TM + new SKPoint(0,  
+                        Block.Margin.Top + Block.Border.Top - (size.Height*2/3)),
                     h1, h1bg, new SKPoint(10, 4));
 
             }

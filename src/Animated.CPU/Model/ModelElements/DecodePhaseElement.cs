@@ -34,7 +34,7 @@ namespace Animated.CPU.Model
             IsHighlighted = (master.Active == this);
             
             text.Clear();
-            var decode = Model.Asm;
+            var decode = Model.DecodeResult;
             if (decode != null)
             {
                 text.Write("   ASM: ", Scene.Styles.FixedFontDarkGray);
@@ -49,7 +49,7 @@ namespace Animated.CPU.Model
                     text.WriteLine(decode.Description, Scene.Styles.FixedFontGray);
                 }
                 
-                urlOpCode = text.WriteUrl($"https://www.felixcloutier.com/x86/{decode.OpCode}", "WIKI");
+                urlOpCode = text.WriteUrl($"https://www.felixcloutier.com/x86/{decode.OpCode}#description", "WIKI");
             }
             
             

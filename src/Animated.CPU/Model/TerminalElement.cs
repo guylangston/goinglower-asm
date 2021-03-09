@@ -45,7 +45,7 @@ namespace Animated.CPU.Model
             
             text.WriteLine($"Step: {Scene.Cpu?.Story?.CurrentIndex}, Active: {Scene.ElementALU.StateMachine.Current}");
             text.WriteLine($"Frames: {Scene.FrameCount}, elapsed {Scene.Elapsed:c} = {Scene.FPS:0.0} fps");
-            text.WriteLine($"Mouse: {Scene.DebugPointAt}; KeyPress: {Scene.LastKeyPress}");
+            text.WriteLine($"Mouse: {Scene.DebugPointAt} | {Scene.DebugText}; KeyPress: {Scene.LastKeyPress}");
             if (Scene.DebugPointAt != SKPoint.Empty)
             {
                 decorate.Clear();

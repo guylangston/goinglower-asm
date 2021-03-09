@@ -2,11 +2,14 @@ using System;
 using Animated.CPU.Animation;
 using Animated.CPU.Backend.LLDB;
 using Animated.CPU.Model;
+using Gdk;
 using Gtk;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 using SkiaSharp.Views.Gtk;
+using Device=Gdk.Device;
 using UI = Gtk.Builder.ObjectAttribute;
+using Window=Gtk.Window;
 
 namespace Animated.CPU.GTK
 {
@@ -15,7 +18,8 @@ namespace Animated.CPU.GTK
         private SKDrawingArea skiaView;
         private Scene scene;
         private uint timerId;
-        private TimeSpan interval; 
+        private TimeSpan interval;
+        private (double X, double Y) last;
 
         public MainWindow()
             : this(new Builder("MainWindow.glade"))
@@ -56,9 +60,10 @@ namespace Animated.CPU.GTK
             };
             
             //  Window Events
-            this.DeleteEvent      += OnWindowDeleteEvent;
-            this.KeyPressEvent    += KeyPress;
-            this.ButtonPressEvent += OnButtonPressEvent;
+            this.DeleteEvent       += OnWindowDeleteEvent;
+            this.KeyPressEvent     += KeyPress;
+            this.ButtonPressEvent  += OnButtonPressEvent;
+            this.MotionNotifyEvent += OnMotion;
             
             // Paint Events
             skiaView.PaintSurface += OnPaintSurface;
@@ -75,9 +80,22 @@ namespace Animated.CPU.GTK
             
         }
 
+        private void OnMotion(object o, MotionNotifyEventArgs args)
+        {
+            // Seems to only report drag events
+            scene.DebugText = $"Motion: {args.Event.X}, {args.Event.Y}";
+        }
+
         private void OnButtonPressEvent(object o, ButtonPressEventArgs args)
         {
-            scene.ButtonPress(args.Event.Button, args.Event.X, args.Event.Y, args);
+            if (last == (args.Event.X, args.Event.Y)) return; // HACK: Dub click events
+            
+            if (args.Event.Button == 1 && args.Event.Type == EventType.ButtonPress)
+            {
+                scene.ButtonPress(args.Event.Button, args.Event.X, args.Event.Y, args);
+                last = (args.Event.X, args.Event.Y);
+            }
+            
         }
 
         private void KeyPress(object o, KeyPressEventArgs args)
@@ -93,6 +111,7 @@ namespace Animated.CPU.GTK
         private bool OnUpdateTimer()
         {
             scene?.StepExec(interval);
+            
             this.QueueDraw();
 
             return true;

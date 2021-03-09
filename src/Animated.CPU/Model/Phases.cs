@@ -26,7 +26,7 @@ namespace Animated.CPU.Model
             this.Alu = alu;
         }
 
-        public DecodedInstruction? Asm => DecodedInstruction.Parse(Alu.Cpu, Alu.StoryStep?.Asm);
+        public DecodedInstruction? DecodeResult => DecodedInstruction.Parse(Alu.Cpu, Alu.StoryStep?.Asm);
         
         public override string ToString() => "Decode";
     }
@@ -41,7 +41,7 @@ namespace Animated.CPU.Model
         }
         
         public string? AsmText => Alu.StoryStep?.Asm;
-        public DecodedInstruction? Asm => DecodedInstruction.Parse(Alu.Cpu, Alu.StoryStep?.Asm);
+        public DecodedInstruction? DecodeResult => DecodedInstruction.Parse(Alu.Cpu, Alu.StoryStep?.Asm);
 
         
         public override string ToString() => "Execute";

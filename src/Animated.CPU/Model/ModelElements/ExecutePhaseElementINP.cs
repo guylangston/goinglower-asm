@@ -41,7 +41,7 @@ namespace Animated.CPU.Model
             text.Block = this.Block;
             text.Clear();
 
-            var decode = Model.Asm;
+            var decode = Model.DecodeResult;
             if (decode?.Args != null && decode.Args.Any())
             {
                 foreach (var arg in decode.Args.Where(x=>(x.InOut & InOut.In) > 0).Distinct(DecodedArg.Compare))
@@ -59,11 +59,17 @@ namespace Animated.CPU.Model
                     {
                         text.Write(val.ValueRaw, Scene.Styles.FixedFontYellow);
                         text.Write("=");
-                        text.WriteLine(val.ValueParsed, Scene.Styles.FixedFontCyan);
+                        text.Write(val.ValueParsed, Scene.Styles.FixedFontCyan);
+                        
                     }
                     else
                     {
-                        text.WriteLine("?", Scene.Styles.FixedFontDarkGray);
+                        text.Write("?", Scene.Styles.FixedFontDarkGray);
+                    }
+                    text.WriteLine();
+                    if (arg.Description != null)
+                    {
+                        text.WriteLine($"    {arg.Description}");
                     }
                     
                     if (IsHighlighted)

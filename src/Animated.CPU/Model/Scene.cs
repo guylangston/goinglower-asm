@@ -6,6 +6,14 @@ using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
+    public class SimpleSection : Section<Scene, string>
+    {
+        public SimpleSection(IElement parent, string model, DBlock block) : base(parent, model, block)
+        {
+            Title = model;
+        }
+    }
+    
     public class Scene : SceneBase<Cpu, StyleFactory>
     {
         public Scene(DBlock region) : base(new StyleFactory())
@@ -20,11 +28,11 @@ namespace Animated.CPU.Model
         public ElementRegisterFile ElementRegisterFile { get; set; }
         public TerminalElement     Terminal            { get; set; }
         
-        public Action<string, object> SendCommand         { get; set; }
-        public ALUElement             ElementALU          { get; set; }
-        public string                 LastKeyPress        { get; set; }
-        public bool                   UseEmbelishments            { get; set; } = true;
-
+        public Action<string, object> SendCommand      { get; set; }
+        public ALUElement             ElementALU       { get; set; }
+        public string                 LastKeyPress     { get; set; }
+        public bool                   UseEmbelishments { get; set; } = true;
+        public string                 DebugText        { get; set; }
 
         protected override void InitScene()
         {
@@ -35,6 +43,14 @@ namespace Animated.CPU.Model
             }
 
             float w     = Block.Inner.W / 4;
+
+            var cpu = Add(new SimpleSection(this, "CPU", 
+                DBlock.FromTwoPoints(new SKPoint(50, 20), new SKPoint(970, 1020))));
+            
+            var ram = Add(new SimpleSection(this, "RAM", 
+                DBlock.FromTwoPoints(new SKPoint(990, 20), new SKPoint(1440, 1020))));
+            
+
             var   stack = Add(new StackElement(this, Block, DOrient.Horz));
             this.ElementRegisterFile = stack.Add(new ElementRegisterFile(stack, Model.RegisterFile, DBlock.JustWidth(w).Set(20, 1, 10)));
             this.ElementALU = stack.Add(new ALUElement(stack, Model.ALU, DBlock.JustWidth(w).Set(20, 1, 10)));
@@ -48,12 +64,16 @@ namespace Animated.CPU.Model
             dBlock.Set(0, 3, 10);
             Terminal   = Add(new TerminalElement(this, new Terminal(), dBlock));
         }
-
         
-
         protected override void InitSceneComplete()
         {
             ElementALU.Start();
+            int cc = 0;
+            while (cc < 50 && ElementALU.Story.Current.Asm == null)
+            {
+                ElementALU.StateMachine.ExecNext();
+                cc++;
+            }
         }
 
         public override void StepScene(TimeSpan s)
@@ -123,6 +143,7 @@ namespace Animated.CPU.Model
                 if (hit != null && hit.Selection is TextBlockElement.Span span && span.Url != null)
                 {
                     ShowUrl(span.Url);
+                    return;
                 }
             }
         }

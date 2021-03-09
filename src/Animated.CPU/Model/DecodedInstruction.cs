@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 
 namespace Animated.CPU.Model
 {
@@ -56,7 +57,7 @@ namespace Animated.CPU.Model
         {
             if (inst == null) return;
             
-            inst.Url = "https://www.aldeid.com/wiki/X86-assembly/Instructions/"+inst.OpCode;
+            inst.Url = LookupUrlForOpCode(inst.OpCode);
             
             if (inst.OpCode == "mov")
             {
@@ -167,16 +168,27 @@ namespace Animated.CPU.Model
             
             if (inst.OpCode == "jl")
             {
+                inst.Url            = LookupUrlForOpCode("Jcc");
                 inst.A1.InOut       = InOut.In;
-                inst.FriendlyName   = "Jump If Less Than";
+                inst.A1.Description = "Destination";
+                inst.FriendlyName   = "Jump short if less (SF≠ OF).";
                 inst.FriendlyMethod = $"if flags[LessThan] rip {Assign} {inst.A1}";      // Find Previous Line (is Compare then get args)
+                
+                inst.Args.Add(new DecodedArg()
+                {
+                    IsImplied = true,
+                    Value     = "FLAGS",
+                    Register  = cpu.RFLAGS,
+                    InOut     = InOut.In
+                });
                 return;
             }
             
             if (inst.OpCode == "jle")
             {
+                inst.Url            = LookupUrlForOpCode("Jcc");
                 inst.A1.InOut       = InOut.In;
-                inst.FriendlyName   = "Jump If Less Than Or Equal";
+                inst.FriendlyName   = "Jump short if less or equal (ZF=1 or SF≠ OF).";
                 inst.FriendlyMethod = $"if flags(<=) rip {Assign} {inst.A1}";      // Find Previous Line (is Compare then get args)
                 return;
             }
@@ -187,7 +199,10 @@ namespace Animated.CPU.Model
             if (inst.A2 != null) inst.A2.InOut = InOut.In  | InOut.InComplete;
         }
 
-        
+        private static string LookupUrlForOpCode(string opcode)
+        {
+            return $"https://www.aldeid.com/wiki/X86-assembly/Instructions/{opcode}";
+        }
 
         public override string ToString() => OpCode.PadRight(6) +
                                              (Args == null ? "" : string.Join(',', Args));

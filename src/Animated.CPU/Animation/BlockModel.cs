@@ -115,6 +115,16 @@ namespace Animated.CPU.Animation
         {
         }
 
+        public static DBlock FromTwoPoints(SKPoint a, SKPoint b)
+        {
+            var x1 = Math.Min(a.X, b.X);
+            var x2 = Math.Max(a.X, b.X);
+            var y1 = Math.Min(a.Y, b.Y);
+            var y2 = Math.Max(a.Y, b.Y);
+
+            return new DBlock(x1, y1, x2 - x1, y2 - y1);
+        }
+
         public bool IsDefaultValue => X == 0 && X == 0 && W == 0 && H == 0;
         
         public float X  { get; set; }

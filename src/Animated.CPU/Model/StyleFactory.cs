@@ -68,24 +68,23 @@ namespace Animated.CPU.Model
                 TextSize = 15,
                 Color    = SKColor.Parse("#eee")
             };
-
+            TextH1 = new SKPaint()
+            {
+                TextSize = 25,
+                Color    = SKColors.White
+            };
+            TextH1BG = new SKPaint()
+            {
+                Style = SKPaintStyle.Fill,
+                Color = SKColor.Parse("#555")
+            };
+            
             Arrow = new SKPaint()
             {
                 Style       = SKPaintStyle.Stroke,
                 StrokeWidth = 1.5f,
                 Color       = SKColors.Lime,
                 IsAntialias = true
-            };
-            
-            TextH1 = new SKPaint()
-            {
-                TextSize = 25,
-                Color    = SKColors.Yellow
-            };
-            TextH1BG = new SKPaint()
-            {
-                Style = SKPaintStyle.Fill,
-                Color = SKColor.Parse("#555")
             };
 
             Highlighted = Selected = Arrow;

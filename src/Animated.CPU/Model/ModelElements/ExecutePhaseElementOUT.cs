@@ -43,7 +43,7 @@ namespace Animated.CPU.Model
             text.Block = this.Block;
             text.Clear();
 
-            var decode = Model.Asm;
+            var decode = Model.DecodeResult;
             if (decode?.Args != null && decode.Args.Any())
             {
                 text.WriteLine();
