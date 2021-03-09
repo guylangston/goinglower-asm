@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using SkiaSharp;
 
@@ -81,20 +82,25 @@ namespace Animated.CPU.Animation
         {
             Scene.DebugHits.Clear();
             DrawBackGround(surface);
-            foreach (var element in ChildrenRecursive(VisitOnDraw))
+
+            var drawOrder = ChildrenRecursive(VisitOnDraw)
+                            .Where(x => x != this && (x is ElementBase eb && !eb.IsHidden))
+                            .OrderBy(x => x.Block?.Z ?? 0)
+                            .ToImmutableArray();
+            
+            foreach (var element in drawOrder.Where(x=>(x.Block?.Z ?? 0) < 100))
             {
-                if (element == this) continue;
-                if (element is ElementBase eb && eb.IsHidden) continue;
-                
                 element.DrawExec(surface);
             }
             
-            foreach (var element in ChildrenRecursive(VisitOnDraw))
+            foreach (var element in drawOrder)
             {
-                if (element == this) continue;
-                if (element is ElementBase eb && eb.IsHidden) continue;
-                
                 element.DecorateExec(surface);
+            }
+            
+            foreach (var element in drawOrder.Where(x=>(x.Block?.Z ?? 0) >= 100))
+            {
+                element.DrawExec(surface);
             }
             
             DrawOverlay(surface);
@@ -102,7 +108,10 @@ namespace Animated.CPU.Animation
 
         private bool VisitOnDraw(IElement e)
         {
-            if (e is ElementBase eb && !eb.IsEnabled) return false;
+            if (e is ElementBase eb)
+            {
+                if (!eb.IsEnabled || eb.IsHidden) return false;
+            }
             return true;
         }
 

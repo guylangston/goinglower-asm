@@ -5,7 +5,8 @@ namespace Animated.CPU.Animation
 {
     public abstract class Section<TScene, TModel> : Element<TScene, TModel> where TScene:IScene
     {
-        
+        private SKRect posTitle;
+
         protected Section(IElement parent, TModel model, DBlock block) : base(parent, model, block)
         {
             if (parent == null) throw new ArgumentNullException(nameof(parent));
@@ -32,7 +33,7 @@ namespace Animated.CPU.Animation
                 var size = new SKRect();
                 h1.MeasureText(Title, ref size);
 
-                surface.DrawTextAndBGAtTopMiddle(Title, 
+                posTitle = surface.DrawTextAndBGAtTopMiddle(Title, 
                     Block.Outer.TM + new SKPoint(0,  
                         Block.Margin.Top + Block.Border.Top - (size.Height*2/3)),
                     h1, h1bg, new SKPoint(10, 4));
@@ -43,6 +44,19 @@ namespace Animated.CPU.Animation
         protected override void Step(TimeSpan step)
         {
             
+        }
+
+        public override PointSelectionResult? GetSelectionAtPoint(SKPoint p)
+        {
+            var hit =  base.GetSelectionAtPoint(p);
+            if (hit != null && posTitle.Contains(p))
+            {
+                hit.Selection = ("Title", posTitle);
+                return hit;
+            }
+            
+            return null;
+
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Animated.CPU.Animation
         object     Model    { get; }
         DBlock?    Block    { get; set; }
         IAnimator? Animator { get; set; }
-        
+
         void InitExec();
         void StepExec(TimeSpan step);
         void DrawExec(DrawContext surface);

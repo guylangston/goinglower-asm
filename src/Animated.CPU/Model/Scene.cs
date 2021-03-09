@@ -22,17 +22,18 @@ namespace Animated.CPU.Model
         }
         
         // Helpers
-        public Cpu                 Cpu                 => Model;
-        public MemoryViewElement   ElementInstructions { get; set; }
-        public CodeSection         ElementCode         { get; set; }
-        public ElementRegisterFile ElementRegisterFile { get; set; }
-        public TerminalElement     Terminal            { get; set; }
-        
-        public Action<string, object> SendCommand      { get; set; }
-        public ALUElement             ElementALU       { get; set; }
-        public string                 LastKeyPress     { get; set; }
-        public bool                   UseEmbelishments { get; set; } = true;
-        public string                 DebugText        { get; set; }
+        public Cpu                    Cpu                 => Model;
+        public MemoryViewElement      ElementInstructions { get; set; }
+        public CodeSection            ElementCode         { get; set; }
+        public ElementRegisterFile    ElementRegisterFile { get; set; }
+        public TerminalElement        Terminal            { get; set; }
+        public DialogElement          Dialog              { get; set; }
+
+        public Action<string, object> SendCommand         { get; set; }
+        public ALUElement             ElementALU          { get; set; }
+        public string                 LastKeyPress        { get; set; }
+        public bool                   UseEmbelishments    { get; set; } = true;
+        public string                 DebugText           { get; set; }
 
         protected override void InitScene()
         {
@@ -60,11 +61,16 @@ namespace Animated.CPU.Model
             });
             this.ElementCode = stack.Add(new CodeSection(stack, Model.Story.MainFile, DBlock.JustWidth(w).Set(10, 1, 10)));
 
-            var dBlock = new DBlock(300, 1050, 900, 400);
-            dBlock.Set(0, 3, 10);
-            Terminal   = Add(new TerminalElement(this, new Terminal(), dBlock));
+            var bTerm = new DBlock(30, 1050, 900, 400);
+            bTerm.Set(0, 3, 10);
+            Terminal   = Add(new TerminalElement(this, new Terminal(), bTerm));
+            
+            
+            var bDialog = new DBlock(600, 400, 900, 400);
+            bDialog.Set(0, 3, 10);
+            this.Dialog = Add(new DialogElement(this, new Dialog(), bDialog));
         }
-        
+
         protected override void InitSceneComplete()
         {
             ElementALU.Start();
@@ -87,6 +93,8 @@ namespace Animated.CPU.Model
             // surface.DrawText($"{FrameCount} frames at {Elapsed.TotalSeconds:0.00} sec. {lastKey} | {Mouse}", 
             //     Styles.GetPaint(this, "debug"),
             //     new SKPoint(0,0));
+            
+            surface.Canvas.DrawText("0xGoingLower", new SKPoint(10,20), Styles.TextLogo);
 
             if (DebugPointAt != SKPoint.Empty)
             {
@@ -113,6 +121,16 @@ namespace Animated.CPU.Model
 
             switch (key)
             {
+                
+                case "t":
+                    Dialog.Model = new Dialog()
+                    {
+                        Title = "Dialog Test"
+                    };
+                    Dialog.Model.Lines.Add("Hello World");
+                    Dialog.IsHidden = !Dialog.IsHidden;
+                    break;
+                
                 case "s":
                     ElementALU.Start();
                     break;

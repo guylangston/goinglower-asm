@@ -1,6 +1,13 @@
-﻿public static int ForLoop(int count)
+﻿// C# dotnet core 5, linux
+
+
+
+
+
+
+public static int ForLoop(int count)
 {
-    var sum = 0;  // Break-Here
+    var sum = 0;
     for (var x = 0; 
         x < count; 
         x++)

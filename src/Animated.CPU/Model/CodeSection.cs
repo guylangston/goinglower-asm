@@ -11,12 +11,14 @@ namespace Animated.CPU.Model
 
         public CodeSection(IElement parent, SourceFile model, DBlock block) : base(parent, model, block)
         {
-            Title = model.ShortName;
+            Title = "Source Code";
         }
 
         protected override void Init()
         {
             text = Add(new TextBlockElement(this, this.Block, Scene.Styles.FixedFont));
+
+            
             uint cc = 1;
             foreach (var line in Model.Lines)
             {
@@ -28,7 +30,7 @@ namespace Animated.CPU.Model
             }
         }
 
-        protected override void Step(TimeSpan step)
+        protected override void Step(TimeSpan step) 
         {
             
 

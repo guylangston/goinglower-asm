@@ -1,3 +1,5 @@
+using System;
+using System.Text;
 using Animated.CPU.Animation;
 
 namespace Animated.CPU.Model
@@ -47,7 +49,50 @@ namespace Animated.CPU.Model
             var span = e.Write(txt, e.Scene.StyleFactory.GetPaint(e, "url"));
             span.Url = url;
             return span;
+        }
+        
+        public static void WriteLineWithHighlights(this TextBlockElement e, FormattableString fs)
+        {
+            WriteWithHighlights(e, fs);
+            e.WriteLine();
+        }
 
+
+        public static void WriteWithHighlights(this TextBlockElement e, FormattableString fs)
+        {
+            var f = fs.Format;
+            if (f.Length < 3)
+            {
+                e.Write(f);
+                return;
+            }
+            
+            var i = 0;
+            var s = 0;
+            
+            while (i < f.Length-1)
+            {
+                if (f[i] == '{' && char.IsDigit(f[i+1]))
+                {
+                    var ss = i;
+                    i++;
+                    while (char.IsDigit(f[i]))
+                    {
+                        i++;
+                    }
+                    if (f[i] == '}')
+                    {
+                        // Segment dont
+                        e.Write(f[s..ss]);
+                        var idx = int.Parse(f[(ss+1)..i]);
+                        e.Write(fs.GetArgument(idx), e.Scene.StyleFactory.GetPaint(e, "arg"));
+                        
+                    }
+                    s = i+1;
+                }
+
+                i++;
+            }
         }
     }
 }
