@@ -22,7 +22,8 @@ namespace Animated.CPU.Model
             Title = "Terminal";
         }
 
-        public Exception? Error { get; set; }
+        public object Status { get; set; }
+        public Exception? Error  { get; set; }
 
         protected override void Init()
         {
@@ -34,6 +35,18 @@ namespace Animated.CPU.Model
         protected override void Step(TimeSpan step)
         {
             text.Clear();
+
+            if (Status != null)
+            {
+                if (Status is FormattableString fs)
+                {
+                    text.WriteLineWithHighlights(fs);
+                }
+                else
+                {
+                    text.WriteLine(Status.ToString());
+                }
+            }
 
             if (Error != null)
             {
@@ -68,23 +81,8 @@ namespace Animated.CPU.Model
                 }
                  
             }
-            // if (Scene.DebugHits.Any())
-            // {
-            //     foreach (var hit in Scene.DebugHits)
-            //     {
-            //         text.WriteLine(hit.ToString());
-            //     }
-            //     
-            // }
-            text.WriteLine();
-            if (Scene.Cpu?.Story?.ReadMe != null)
-            {
-                foreach (var line in Scene.Cpu.Story.ReadMe)
-                {
-                    text.WriteLine(line);
-                }
-            }
-
+         
+            
         }
 
         protected override void Decorate(DrawContext surface)

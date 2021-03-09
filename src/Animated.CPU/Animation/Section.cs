@@ -1,4 +1,5 @@
 using System;
+using Animated.CPU.Model;
 using SkiaSharp;
 
 namespace Animated.CPU.Animation
@@ -14,9 +15,9 @@ namespace Animated.CPU.Animation
             if (block == null) throw new ArgumentNullException(nameof(block));
         }
         
-        public string? Title { get; set; }
-        
-        public bool IsHighlighted { get; set; }
+        public string? Title         { get; set; }
+        public string? TitleAction   { get; set; }
+        public bool    IsHighlighted { get; set; }
 
         protected override void Draw(DrawContext surface)
         {
@@ -51,12 +52,22 @@ namespace Animated.CPU.Animation
             var hit =  base.GetSelectionAtPoint(p);
             if (hit != null && posTitle.Contains(p))
             {
-                hit.Selection = ("Title", posTitle);
+                if (TitleAction != null)
+                {
+                    hit.Selection = new ActionModel()
+                    {
+                        Name = TitleAction,
+                        Arg  = this
+                    };    
+                }
+                
                 return hit;
             }
             
             return null;
 
         }
+
+        
     }
 }

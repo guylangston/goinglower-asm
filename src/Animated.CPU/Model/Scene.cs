@@ -22,6 +22,8 @@ namespace Animated.CPU.Model
         {
             Block = region;
         }
+
+        public const string Version = "0.2alpha";
         
         // Helpers
         public Cpu                    Cpu                 => Model;
@@ -49,9 +51,11 @@ namespace Animated.CPU.Model
 
             var cpu = Add(new SimpleSection(this, "CPU", 
                 DBlock.FromTwoPoints(new SKPoint(50, 20), new SKPoint(970, 1020))));
+            cpu.TitleAction = "CPU";
             
             var ram = Add(new SimpleSection(this, "RAM", 
                 DBlock.FromTwoPoints(new SKPoint(990, 20), new SKPoint(1440, 1020))));
+            ram.TitleAction = "RAM";
             
 
             var   stack = Add(new StackElement(this, Block, DOrient.Horz));
@@ -59,7 +63,8 @@ namespace Animated.CPU.Model
             this.ElementALU = stack.Add(new ALUElement(stack, Model.ALU, DBlock.JustWidth(w).Set(20, 1, 10)));
             this.ElementInstructions = stack.Add(new MemoryViewElement(stack, DBlock.JustWidth(w).Set(20, 1, 10), Model.Instructions)
             {
-                Title = "Instructions"
+                Title = "Instructions",
+                TitleAction = "ASM"
             });
             this.ElementCode = stack.Add(new CodeSection(stack, Model.Story.MainFile, DBlock.JustWidth(w).Set(10, 1, 10)));
 
@@ -78,7 +83,7 @@ namespace Animated.CPU.Model
 
             foreach (var action in new string[] { "Help", "Quit", "Next", "Previous"})
             {
-                var x = Add(new ButtonElement(this, new Action()
+                var x = Add(new ButtonElement(this, new ActionModel()
                     {
                         Name = action,
                         Arg  = action
@@ -119,7 +124,7 @@ namespace Animated.CPU.Model
             //     Styles.GetPaint(this, "debug"),
             //     new SKPoint(0,0));
             
-            surface.Canvas.DrawText("0xGoingLower", new SKPoint(10,20), Styles.TextLogo);
+            surface.Canvas.DrawText($"0xGoingLower v{Version}", new SKPoint(10,20), Styles.TextLogo);
 
             if (DebugPointAt != SKPoint.Empty)
             {
@@ -161,6 +166,12 @@ namespace Animated.CPU.Model
                     Dialog.IsHidden = !Dialog.IsHidden;
                     break;
                 
+                
+                case "F1":
+                case "h":
+                    PerformAction(new ActionModel("Help"));
+                    break;
+                
                 case "s":
                     ElementALU.Start();
                     break;
@@ -200,26 +211,69 @@ namespace Animated.CPU.Model
                         PerformAction(be.Model);
                         return;
                     }
+                    else if (hit.Selection is ActionModel am)
+                    {
+                        PerformAction(am);
+                        return;
+                    }
 
                 }
             }
         }
 
-        private void PerformAction(Action act)
+        private void PerformAction(ActionModel act)
         {
+            Terminal.Status = null;
             if (act.Name == "Quit")
             {
                 SendCommand.Invoke("QUIT", null);
                 return;
             }
-            
-            Dialog.Model = new Dialog()
+
+            if (act.Name == "Help")
             {
-                Title = "Action"
-            };
-            Dialog.Model.Lines.Add(act.Name);
-            Dialog.Image    = null;
-            Dialog.IsHidden = false;
+                Dialog.Model = new Dialog()
+                {
+                    Title = "Help"
+                };
+                if (Cpu?.Story?.ReadMe != null)
+                {
+                    foreach (var line in Cpu.Story.ReadMe)
+                    {
+                        Dialog.Model.Lines.Add(line);
+                    }
+                }
+                Dialog.IsHidden = !Dialog.IsHidden;
+                return;
+            }
+            
+            if (act.Name == nameof(ElementRegisterFile))
+            {
+                Dialog.Model = new Dialog()
+                {
+                    Title = "Registers"
+                };
+                Dialog.Image    = this.bitmap1;
+                Dialog.IsHidden = false;
+                
+                return;
+            }
+            
+            if (act.Name == "CPU")
+            {
+                ShowUrl("https://en.wikipedia.org/wiki/X86-64");
+                return;
+            }
+            
+            if (act.Name == "ASM")
+            {
+                ShowUrl("https://sonictk.github.io/asm_tutorial/");
+                return;
+            }
+            
+            
+
+            Terminal.Status = (FormattableString)$"Unhandled Action: {act.Name}, {act.Arg}";
         }
 
         private void ShowUrl(string spanUrl)

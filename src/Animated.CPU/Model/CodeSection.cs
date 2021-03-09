@@ -18,7 +18,6 @@ namespace Animated.CPU.Model
         {
             text = Add(new TextBlockElement(this, this.Block, Scene.Styles.FixedFont));
 
-            
             uint cc = 1;
             foreach (var line in Model.Lines)
             {

@@ -3,20 +3,30 @@ using Animated.CPU.Animation;
 
 namespace Animated.CPU.Model
 {
-    public class Action
+    public class ActionModel
     {
-        public string Name { get; set; }
-        public object Arg  { get; set; }
+        public ActionModel()
+        {
+        }
+
+        public ActionModel(string name, object? arg = null)
+        {
+            Name = name;
+            Arg  = arg;
+        }
+
+        public string  Name { get; set; }
+        public object? Arg  { get; set; }
     }
     
     public class ButtonElement : ElementBase
     {
-        public ButtonElement(IElement parent, Action action, DBlock b) : base(parent.Scene, parent, b)
+        public ButtonElement(IElement parent, ActionModel actionModel, DBlock b) : base(parent.Scene, parent, b)
         {
-            base.Model = action;
+            base.Model = actionModel;
         }
 
-        public new Action Model => (Action)base.Model;
+        public new ActionModel Model => (ActionModel)base.Model;
 
         protected override void Step(TimeSpan step)
         {

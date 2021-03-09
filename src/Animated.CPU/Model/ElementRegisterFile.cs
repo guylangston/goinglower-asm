@@ -13,7 +13,8 @@ namespace Animated.CPU.Model
     {
         public ElementRegisterFile(IElement parent, List<Register> model, DBlock block) : base(parent, model, block)
         {
-            Title = "Register File";
+            Title       = "Register File";
+            TitleAction = GetType().Name;
         }
 
         protected override void Init()
