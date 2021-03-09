@@ -47,6 +47,9 @@ namespace Animated.CPU.Model
                     Add(new BackGroundNoise(this, Block));
             }
 
+            var ww = 1920;
+            var hh = 1090;
+
             float w     = Block.Inner.W / 4;
 
             var cpu = Add(new SimpleSection(this, "CPU", 
@@ -68,12 +71,13 @@ namespace Animated.CPU.Model
             });
             this.ElementCode = stack.Add(new CodeSection(stack, Model.Story.MainFile, DBlock.JustWidth(w).Set(10, 1, 10)));
 
-            var bTerm = new DBlock(30, 1050, 900, 400);
+            var bTerm = new DBlock(30, hh + 1, 900, 400);
             bTerm.Set(0, 3, 10);
             Terminal   = Add(new TerminalElement(this, new Terminal(), bTerm));
+
+            var d = 400;
             
-            
-            var bDialog = new DBlock(600, 400, 900, 900);
+            var bDialog = new DBlock(600, d, 900, hh-d - 30);
             bDialog.Set(0, 3, 10);
             this.Dialog = Add(new DialogElement(this, new Dialog(), bDialog));
 
@@ -123,6 +127,8 @@ namespace Animated.CPU.Model
             // surface.DrawText($"{FrameCount} frames at {Elapsed.TotalSeconds:0.00} sec. {lastKey} | {Mouse}", 
             //     Styles.GetPaint(this, "debug"),
             //     new SKPoint(0,0));
+            
+            surface.DrawRect(Block.Outer, Styles.Border);
             
             surface.Canvas.DrawText($"0xGoingLower v{Version}", new SKPoint(10,20), Styles.TextLogo);
 
