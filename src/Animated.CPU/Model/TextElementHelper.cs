@@ -24,11 +24,11 @@ namespace Animated.CPU.Model
                 {
                     if (size == 64 && cc == 8)
                     {
-                        e.Write("::", gray);
+                        e.Write("-", sep);
                     }
                     else if (size == 32 && cc == 4)
                     {
-                        e.Write("::", gray);
+                        e.Write("-", sep);
                     }
                     else
                     {
@@ -45,20 +45,23 @@ namespace Animated.CPU.Model
         
         public static TextBlockElement.Span WriteUrl(this TextBlockElement e, string url, string txt)
         {
-            e.Write("↗");
+            var gray = e.Scene.StyleFactory.GetPaint(e, "FixedFontDarkGray");
+            e.Write("[↗", gray);
             var span = e.Write(txt, e.Scene.StyleFactory.GetPaint(e, "url"));
             span.Url = url;
+            e.Write("]", gray);
+            
             return span;
         }
         
-        public static void WriteLineWithHighlights(this TextBlockElement e, FormattableString fs)
+        public static void WriteLineFormatted(this TextBlockElement e, FormattableString fs)
         {
-            WriteWithHighlights(e, fs);
+            WriteFormatted(e, fs);
             e.WriteLine();
         }
 
 
-        public static void WriteWithHighlights(this TextBlockElement e, FormattableString fs)
+        public static void WriteFormatted(this TextBlockElement e, FormattableString fs)
         {
             var f = fs.Format;
             if (f.Length < 3)

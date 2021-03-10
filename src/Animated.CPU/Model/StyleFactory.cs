@@ -31,6 +31,7 @@ namespace Animated.CPU.Model
             FixedFontDarkGray = Clone(FixedFont, p => p.Color = SKColors.Gray);
             FixedFontURL      = Clone(FixedFont, p => p.Color = SKColors.LimeGreen);
             FixedFontArg      = Clone(FixedFont, p => p.Color = SKColors.LightSalmon);
+            FixedFontSource   = Clone(FixedFont, p => p.Color = SKColors.LightCoral);
             
             
             SmallFont = new SKPaint()
@@ -118,9 +119,12 @@ namespace Animated.CPU.Model
 
             Highlighted = Selected = Arrow;
         }
+        
+        public PropertyInfo[] Props { get; }
 
         public SKPaint ButtonText        { get; }
         public SKPaint ButtonBg          { get; }
+        public SKPaint FixedFontSource      { get; }
         public SKPaint FixedFontArg      { get; }
         public SKPaint FixedFontURL      { get; }
         public SKPaint BackGround        { get; }
@@ -142,7 +146,6 @@ namespace Animated.CPU.Model
         public SKPaint Highlighted       { get; }
         public SKPaint SmallFont         { get; }
         
-        public PropertyInfo[] Props             { get; }
 
         public static SKPaint Clone(SKPaint cpy, Action<SKPaint> then)
         {

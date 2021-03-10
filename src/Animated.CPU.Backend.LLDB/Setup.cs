@@ -50,7 +50,69 @@ namespace Animated.CPU.Backend.LLDB
                 if (step == null) throw new Exception($"Unable to parse: {stepFile}");
                 cpu.Story.Steps.Add(step);
             }
-            var done = 1;
+            
+            
+            
+            // HACKS
+            // see: /home/guy/repo/cpu.anim/src/Sample/Scripts/Introduction-ForLoop/Slides.md
+            cpu.Story.Steps[2].Comment = new StoryAnnotation()
+            { 
+                Format = Format.Text,
+                Text = "This is part of the calling preamble,\n" +
+                       "we can ignore it for now",
+                Tags = new List<Tag>()
+                {
+                    new Tag()
+                    {
+                      Name  = "edi",
+                      Value = "var count"
+                    } 
+                }
+            };
+            cpu.Story.Steps[3].Comment = new StoryAnnotation()
+            { 
+                Format = Format.Text,
+                Text = "Just a fancy way of doing `mov eax, 0`",
+                Tags = new List<Tag>()
+                {
+                    new Tag()
+                    {
+                        Name  = "eax",
+                        Value = "var sum"
+                    } 
+                }
+            };
+            cpu.Story.Steps[4].Comment = new StoryAnnotation()
+            { 
+                Format = Format.Text,
+                Tags = new List<Tag>()
+                {
+                    new Tag()
+                    {
+                        Name  = "esi",
+                        Value = "var x"
+                    } 
+                }
+            };
+            
+            cpu.Story.Slides.Add(new StoryAnnotation()
+            {
+                Title = "History",
+                Format = Format.Markdown,
+                Text = @"A CPU's register size covers both addressing (memory pointers) and general calculations (ADD, MUL, etc). 
+Conceptually, it is easier of they are the same size, but they don't need to be. 
+
+x86 family journey:
+- 16-bit [8086](https://en.wikipedia.org/wiki/Intel_8086) chip in 1976; which is we the x86 comes from
+- 32-bit [80386](https://en.wikipedia.org/wiki/Intel_80386) chip in 1985
+- 64-bit [AMD-64 aka x86-64](https://en.wikipedia.org/wiki/X86-64) design by AMD (not Intel) in 2000 for the AMD K8 chips. 
+  Intel's cleaner but not backwards compatible IA-64 effectively failed in the marketplace.
+- After 64-bit we got special purpose 128-bit computation with MMX and onwards. (These are out of scope now)
+
+TODO: Diagram with die-size, clock speed, and transistor count
+
+x86-64 allows 64-bit addresses @RIP but 32-bit general registers @EAX, @EBX, etc. This is effectively the dotnet model."
+            });
         }
         
         private IEnumerable<string> FindStepFiles(string folder)

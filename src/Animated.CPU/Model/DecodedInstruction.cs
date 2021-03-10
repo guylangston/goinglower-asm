@@ -4,20 +4,31 @@ using System.Net.NetworkInformation;
 
 namespace Animated.CPU.Model
 {
+    public enum OpCategory
+    {
+        None,
+        Bit,
+        Compare,
+        Jump
+    }
+    
     public class DecodedInstruction
     {
         public string            Text  { get; set; }
         public string            OpCode { get; set; }
         public List<DecodedArg>? Args   { get; set; }
 
-        public string? FriendlyName   { get; set; }
-        public string? FriendlyMethod { get; set; }
-        public string? Url            { get; set; }
-        public string? Description    { get; set; }
-            
-        public DecodedArg? A1 => Args != null && Args.Count > 0 ? Args[0] : null;
-        public DecodedArg? A2 => Args != null && Args.Count > 1 ? Args[1] : null;
-        
+        public string?    FriendlyName   { get; set; }
+        public string?    FriendlyMethod { get; set; }
+        public string?    Url            { get; set; }
+        public string?    Description    { get; set; }
+        public OpCategory Category       { get; set; }
+
+        public DecodedArg? A1             => Args != null && Args.Count > 0 ? Args[0] : null;
+        public DecodedArg? A2             => Args != null && Args.Count > 1 ? Args[1] : null;
+
+        public const string Assign = "<=:";
+
         public static DecodedInstruction? Parse(Cpu cpu, string line)
         {
             if (string.IsNullOrWhiteSpace(line)) return null;
@@ -50,8 +61,6 @@ namespace Animated.CPU.Model
             BuildFriendly(cpu, ri);
             return ri;
         }
-        
-        public const string Assign = "<=:";
 
         private static void BuildFriendly(Cpu cpu, DecodedInstruction inst)
         {
@@ -82,6 +91,7 @@ namespace Animated.CPU.Model
                 inst.FriendlyName = "Bitwise Exclusive Or";
                 inst.A1.InOut     = InOut.InOut;
                 inst.A2.InOut     = InOut.In;
+                inst.Category      = OpCategory.Bit;
                 if (inst.A1.Value == inst.A2.Value)
                 {
                     inst.FriendlyMethod = $"{inst.A1} {Assign} 0";
@@ -96,6 +106,7 @@ namespace Animated.CPU.Model
             if (inst.OpCode == "and")
             {
                 inst.FriendlyName = "Bitwise AND";
+                inst.Category     = OpCategory.Bit;
                 inst.A1.InOut     = InOut.InOut;
                 inst.A2.InOut     = InOut.In;
                 inst.Description = "BIT Operator\n" +
@@ -107,6 +118,7 @@ namespace Animated.CPU.Model
             }
             if (inst.OpCode == "or")
             {
+                inst.Category     = OpCategory.Bit;
                 inst.FriendlyName = "Bitwise OR";
                 inst.A1.InOut     = InOut.InOut;
                 inst.A2.InOut     = InOut.In;
@@ -136,6 +148,7 @@ namespace Animated.CPU.Model
             
             if (inst.OpCode == "cmp")
             {
+                inst.Category = OpCategory.Compare;
                 inst.A1.InOut = InOut.In;
                 inst.A2.InOut = InOut.In;
                 inst.Args.Add(new DecodedArg()
@@ -152,6 +165,7 @@ namespace Animated.CPU.Model
             
             if (inst.OpCode == "test")
             {
+                inst.Category = OpCategory.Compare;
                 inst.A1.InOut = InOut.In;
                 inst.A2.InOut = InOut.In;
                 inst.Args.Add(new DecodedArg()
@@ -168,6 +182,7 @@ namespace Animated.CPU.Model
             
             if (inst.OpCode == "jl")
             {
+                inst.Category       = OpCategory.Jump;
                 inst.Url            = LookupUrlForOpCode("Jcc");
                 inst.A1.InOut       = InOut.In;
                 inst.A1.Description = "Destination";
@@ -186,6 +201,7 @@ namespace Animated.CPU.Model
             
             if (inst.OpCode == "jle")
             {
+                inst.Category       = OpCategory.Jump;
                 inst.Url            = LookupUrlForOpCode("Jcc");
                 inst.A1.InOut       = InOut.In;
                 inst.FriendlyName   = "Jump short if less or equal (ZF=1 or SF≠ OF).";

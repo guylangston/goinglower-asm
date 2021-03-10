@@ -1,4 +1,5 @@
 using System;
+using System.Text.Encodings.Web;
 using Animated.CPU.Animation;
 using SkiaSharp;
 
@@ -17,7 +18,7 @@ namespace Animated.CPU.Model
             this.master = master;
             Title       = "Fetch";
             Block.Set(4, 1, 10);
-            Block.Margin = new DBorder(30, 4, 4, 4);
+            Block.Margin = new DBorder(10, 4, 4, 4);
         }
         
 
@@ -34,7 +35,7 @@ namespace Animated.CPU.Model
             {
                 text.Clear();
 
-                text.Write("Intruction Ptr".PadRight(12) + ": ", Scene.Styles.FixedFontDarkGray);
+                text.Write("Instruction Ptr".PadRight(12) + ": ", Scene.Styles.FixedFontDarkGray);
                 text.WriteLine(DisplayHelper.ToHex(Model.RIP), Scene.Styles.FixedFontWhite);
 
                 text.Write("Machine Code".PadRight(12) + ": ", Scene.Styles.FixedFontDarkGray);

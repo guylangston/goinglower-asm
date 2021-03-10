@@ -148,6 +148,20 @@ namespace Animated.CPU.Model
             return null;
         }
         
+        public bool TryGetReg(string name, out Register match)
+        {
+            foreach (var reg in RegisterFile)
+            {
+                if (reg.Match(name))
+                {
+                    match = reg;
+                    return true;
+                }
+            }
+            match = null;
+            return false;
+        }
+        
        
     }
 
@@ -182,9 +196,9 @@ namespace Animated.CPU.Model
         public string                Description   { get; set; }
         public string?               LastUsedAs    { get; set; }
         public bool                  IsExtendedReg { get; set; }
+        public string?               TagValue      { get; set; }
         
-        // TODO: Refactor to use RegisterMode
-        public IReadOnlyList<string> IdAlt         { get; set; }
+        public IReadOnlyList<string> IdAlt         { get; set; }  // TODO: Refactor to use RegisterMode
         
         public string ValueHex       => Value.ToString("X").PadLeft(64 / 8 * 2, '0');
 
@@ -199,6 +213,8 @@ namespace Animated.CPU.Model
 
             }
         }
+
+        
 
         public IEnumerable<string> AllIds()
         {

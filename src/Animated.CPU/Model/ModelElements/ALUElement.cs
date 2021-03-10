@@ -19,6 +19,7 @@ namespace Animated.CPU.Model
         protected override void Init()
         {
             var stack = Add(new StackElement(this, Block, DOrient.Vert));
+            this.StoryStep  = stack.Add(new StoryStepPhaseElement(stack, Model.StoryStep));
             this.Fetch      = stack.Add(new FetchPhaseElement(stack, Model.Fetch,this));
             this.Decode     = stack.Add(new DecodePhaseElement(stack, Model.Decode,this));
             this.ExecuteINP = stack.Add(new ExecutePhaseElementINP(stack, Model.Execute,this));
@@ -27,6 +28,7 @@ namespace Animated.CPU.Model
             StateMachine = new StoryStateMachine(Scene, this);
         }
 
+        public StoryStepPhaseElement  StoryStep    { get; private set; }
         public FetchPhaseElement      Fetch        { get; private set; }
         public DecodePhaseElement     Decode       { get; private set; }
         public ExecutePhaseElementINP ExecuteINP   { get; private set; }
@@ -39,7 +41,8 @@ namespace Animated.CPU.Model
 
         protected override void Step(TimeSpan step)
         {
-            if (StateMachine.Current == StateMachine.StepForward) StateMachine.ExecNext(); 
+            if (StateMachine.Current == StateMachine.StepForward) StateMachine.ExecNext();
+            StoryStep.Model = Model.StoryStep;
         }
 
         public void Start()

@@ -28,7 +28,7 @@ namespace Animated.CPU.Model
         // Helpers
         public Cpu                    Cpu                 => Model;
         public MemoryViewElement      ElementInstructions { get; set; }
-        public CodeSection            ElementCode         { get; set; }
+        public CodeElement            ElementCode         { get; set; }
         public ElementRegisterFile    ElementRegisterFile { get; set; }
         public TerminalElement        Terminal            { get; set; }
         public DialogElement          Dialog              { get; set; }
@@ -68,7 +68,7 @@ namespace Animated.CPU.Model
                 Title = "Instructions",
                 TitleAction = "ASM"
             });
-            this.ElementCode = stack.Add(new CodeSection(stack, Model.Story.MainFile, DBlock.JustWidth(w).Set(10, 1, 10)));
+            this.ElementCode = stack.Add(new CodeElement(stack, Model.Story.MainFile, DBlock.JustWidth(w).Set(10, 1, 10)));
 
             var bTerm = new DBlock(30, hh + 10, 900, 400);
             bTerm.Set(0, 3, 10);
@@ -109,7 +109,8 @@ namespace Animated.CPU.Model
             }
             foreach (var reg in ElementRegisterFile.ChildrenRecursiveAre<ElementRegister>())
             {
-                reg.IsHidden = true;
+                reg.IsHidden        = true;
+                reg.Model.IsChanged = false;
             }
         }
 
@@ -176,7 +177,7 @@ namespace Animated.CPU.Model
                     break;
                 
                 case "s":
-                    ElementALU.Start();
+                    this.InitSceneComplete();
                     break;
                 
                 case "d":

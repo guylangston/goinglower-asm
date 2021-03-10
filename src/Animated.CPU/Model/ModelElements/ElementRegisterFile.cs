@@ -110,6 +110,12 @@ namespace Animated.CPU.Model
                     text.Write(Model.LastUsedAs, Scene.Styles.FixedFontYellow);
                     text.Write("]", Scene.Styles.FixedFontDarkGray);
                 }
+                if (Model.TagValue != null)
+                {
+                    text.Write(" <", Scene.Styles.FixedFontDarkGray);
+                    text.Write(Model.TagValue, Scene.Styles.FixedFontSource);
+                    text.Write(">", Scene.Styles.FixedFontDarkGray);
+                }
                 text.WriteLine();
 
                 if (IsHighlighted)
@@ -131,6 +137,8 @@ namespace Animated.CPU.Model
 
         protected override void Draw(DrawContext surface)
         {
+            surface.Canvas.DrawRect(Block.Inner.ToSkRect(), Scene.Styles.BackGroundAlt);
+            
             if (IsHighlighted)
             {
                 surface.Canvas.DrawRect(Block.BorderRect.ToSkRect(), Scene.Styles.Selected);

@@ -39,9 +39,11 @@ namespace Animated.CPU.Model
             {
                 text.Write("   ASM: ", Scene.Styles.FixedFontDarkGray);
                 text.WriteLine(decode, Scene.Styles.FixedFontYellow);
-                text.Write("  Name: \"", Scene.Styles.FixedFontDarkGray);
+                
+                text.Write("  Name: ", Scene.Styles.FixedFontDarkGray);
                 text.Write(decode.FriendlyName, Scene.Styles.FixedFontWhite);
-                text.WriteLine("\"", Scene.Styles.FixedFontDarkGray);
+                text.WriteLine();
+                
                 text.Write("Pseudo: ", Scene.Styles.FixedFontDarkGray);
                 text.WriteLine(decode.FriendlyMethod, Scene.Styles.FixedFontWhite);
                 if (decode.Description != null)

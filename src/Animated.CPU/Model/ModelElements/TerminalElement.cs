@@ -40,7 +40,7 @@ namespace Animated.CPU.Model
             {
                 if (Status is FormattableString fs)
                 {
-                    text.WriteLineWithHighlights(fs);
+                    text.WriteLineFormatted(fs);
                 }
                 else
                 {
@@ -56,9 +56,9 @@ namespace Animated.CPU.Model
             }
             
             
-            text.WriteLineWithHighlights($"Step: {Scene.Cpu?.Story?.CurrentIndex}, Active: {Scene.ElementALU.StateMachine.Current}");
-            text.WriteLineWithHighlights($"Frames: {Scene.FrameCount}, elapsed {Scene.Elapsed:c} = {Scene.FPS:0.0} fps");
-            text.WriteLineWithHighlights($"Mouse: {Scene.DebugPointAt} | {Scene.DebugText}; KeyPress: {Scene.LastKeyPress}");
+            text.WriteLineFormatted($"Step: {Scene.Cpu?.Story?.CurrentIndex}, Active: {Scene.ElementALU.StateMachine.Current}");
+            text.WriteLineFormatted($"Frames: {Scene.FrameCount}, elapsed {Scene.Elapsed:c} = {Scene.FPS:0.0} fps");
+            text.WriteLineFormatted($"Mouse: {Scene.DebugPointAt} | {Scene.DebugText}; KeyPress: {Scene.LastKeyPress}");
             if (Scene.DebugPointAt != SKPoint.Empty)
             {
                 decorate.Clear();
@@ -69,11 +69,11 @@ namespace Animated.CPU.Model
                     {
                         if (hit.Selection is TextBlockElement.Span span && span.Url != null)
                         {
-                            text.WriteWithHighlights($"MOUSE ===> {element} URL: {span.Url}");    
+                            text.WriteFormatted($"MOUSE ===> {element} URL: {span.Url}");    
                         }
                         else
                         {
-                            text.WriteWithHighlights($"MOUSE ===> {element} SEL: {hit.Selection}");
+                            text.WriteFormatted($"MOUSE ===> {element} SEL: {hit.Selection}");
                         }
                         text.WriteLine();
 

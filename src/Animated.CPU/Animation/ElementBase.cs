@@ -152,15 +152,10 @@ namespace Animated.CPU.Animation
         protected abstract void Step(TimeSpan step);
         protected abstract void Draw(DrawContext surface);
         protected virtual void Decorate(DrawContext surface) {  /* Nothing by default */ }
-
-
-     
-
+        
         public int                     ChildrenCount => elements?.Count ?? 0;
         public IReadOnlyList<IElement> Children      => (IReadOnlyList<IElement>)elements;
         
-        
-
         public IEnumerable<IElement> ChildrenRecursive()
         {
             yield return this;

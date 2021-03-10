@@ -3,20 +3,20 @@ using System.Linq;
 using Animated.CPU.Animation;
 using SkiaSharp;
 
-namespace Animated.CPU.Model
+namespace Animated.CPU.Model.ModelElements
 {
-    public class CodeSection : Section<Scene, SourceFile>
+    public class CodeElement : Section<Scene, SourceFile>
     {
         private TextBlockElement text;
 
-        public CodeSection(IElement parent, SourceFile model, DBlock block) : base(parent, model, block)
+        public CodeElement(IElement parent, SourceFile model, DBlock block) : base(parent, model, block)
         {
             Title = "Source Code";
         }
 
         protected override void Init()
         {
-            text = Add(new TextBlockElement(this, this.Block, Scene.Styles.FixedFont));
+            text = Add(new TextBlockElement(this, this.Block, Scene.Styles.FixedFontSource));
 
             uint cc = 1;
             foreach (var line in Model.Lines)
