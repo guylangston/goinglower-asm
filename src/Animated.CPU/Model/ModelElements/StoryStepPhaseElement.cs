@@ -8,11 +8,11 @@ namespace Animated.CPU.Model
     {
         private TextBlockElement text;
         
-        public StoryStepPhaseElement(IElement parent, StoryStep model) : base(parent, model, new DBlock(0,0,0,200))
+        public StoryStepPhaseElement(IElement parent, StoryStep model) : base(parent, model, new DBlock(0,0,0,140))
         {
             Title = null;
-            Block.Set(4, 0, 10);
-            Block.Margin = new DBorder(30, 4, 4, 4);
+            Block.Set(0, 0, 0);
+            Block.Margin = new DBorder(15, 4, 4, 4);
         }
         
         protected override void Init()
@@ -25,8 +25,7 @@ namespace Animated.CPU.Model
             text.Clear();
             if (Model != null)
             {
-                text.WriteFormatted($"Step: {Scene.Cpu.Story.CurrentIndex}/{Scene.Cpu.Story.Steps.Count}");
-                text.WriteLine();
+                
 
                 if (Model.Comment != null)
                 {
@@ -37,15 +36,18 @@ namespace Animated.CPU.Model
                     {
                         foreach (var tag in Model.Comment.Tags)
                         {
-                            text.WriteLineFormatted($"Tag {tag.Name} <- {tag.Value}");
-
+                            text.WriteLineFormatted($"{tag.Name} <=> {tag.Value}");
                             if (Scene.Cpu.TryGetReg(tag.Name, out var reg))
                             {
-                                reg.TagValue = tag.Value;
+                                reg.TagValue  = tag.Value;
+                                reg.IsChanged = true;
                             }
                         }
                     }
                 }
+                
+                text.WriteFormatted($"Step: {Scene.Cpu.Story.CurrentIndex}/{Scene.Cpu.Story.Steps.Count}");
+                text.WriteLine();
 
                 
             }

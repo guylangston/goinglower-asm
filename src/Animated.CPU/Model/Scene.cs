@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Animated.CPU.Animation;
 using Animated.CPU.Model.ModelElements;
 using SkiaSharp;
@@ -23,7 +25,7 @@ namespace Animated.CPU.Model
             Block = region;
         }
 
-        public const string Version = "0.2alpha";
+        public const string Version = "0.3-alpha";
         
         // Helpers
         public Cpu                    Cpu                 => Model;
@@ -112,6 +114,35 @@ namespace Animated.CPU.Model
                 reg.IsHidden        = true;
                 reg.Model.IsChanged = false;
             }
+
+            if (Model.Story?.ReadMe != null && Model.Story.ReadMe.Any())
+            {
+                ShowDialog("README", Model.Story.ReadMe);
+            }
+        }
+
+        private void ShowDialog(string? slideTitle, string slideText)
+            => ShowDialog(slideTitle, StringHelper.ToLines(slideText).ToList());
+        
+        private void ShowDialog(string? slideTitle, IReadOnlyList<string> lines)
+        {
+            Dialog.Model = new Dialog()
+            {
+                Title = slideTitle,
+                Lines = lines
+            };
+            Dialog.Image    = null;
+            Dialog.IsHidden = false;
+        }
+        
+        private void ShowDialog(string? slideTitle, SKBitmap image)
+        {
+            Dialog.Model = new Dialog()
+            {
+                Title = slideTitle,
+            };
+            Dialog.Image    = image;
+            Dialog.IsHidden = false;
         }
 
         public override void StepScene(TimeSpan s)
@@ -160,14 +191,7 @@ namespace Animated.CPU.Model
                     return;
                 
                 case "t":
-                    Dialog.Model = new Dialog()
-                    {
-                        Title = "Dialog Test"
-                    };
-                    Dialog.Model.Lines.Add("Hello World");
-
-                    Dialog.Image    = bitmap1;
-                    Dialog.IsHidden = !Dialog.IsHidden;
+                    ShowDialog("Test", bitmap1);
                     break;
                 
                 
@@ -176,19 +200,27 @@ namespace Animated.CPU.Model
                     PerformAction(new ActionModel("Help"));
                     break;
                 
+                case "F2":
+                case "?":
+                    PerformAction(new ActionModel("CurrentSlide"));
+                    break;
+                
                 case "s":
                     this.InitSceneComplete();
                     break;
                 
                 case "d":
                 case "n":
+                case "period":
                     ElementALU.Next();
                     break;
                 
                 case "a":
                 case "p":
+                case "comma":
                     ElementALU.Prev();
                     break;
+                
                 case "q":
                     SendCommand.Invoke("QUIT", null);
                     break;
@@ -236,18 +268,12 @@ namespace Animated.CPU.Model
 
             if (act.Name == "Help")
             {
-                Dialog.Model = new Dialog()
-                {
-                    Title = "Help"
-                };
+                
                 if (Cpu?.Story?.ReadMe != null)
                 {
-                    foreach (var line in Cpu.Story.ReadMe)
-                    {
-                        Dialog.Model.Lines.Add(line);
-                    }
+                    ShowDialog("ReadMe", Cpu.Story.ReadMe);
                 }
-                Dialog.IsHidden = !Dialog.IsHidden;
+                
                 return;
             }
             
@@ -272,6 +298,16 @@ namespace Animated.CPU.Model
             if (act.Name == "ASM")
             {
                 ShowUrl("https://sonictk.github.io/asm_tutorial/");
+                return;
+            }
+            
+            if (act.Name == "CurrentSlide")
+            {
+                var s = Model.Story.CurrentSlide;
+                if (s is not null)
+                {
+                    ShowDialog(s.Title, s.Text);
+                }
                 return;
             }
             

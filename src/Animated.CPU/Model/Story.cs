@@ -7,14 +7,19 @@ namespace Animated.CPU.Model
     public class Story
     {
         public int             CurrentIndex { get; set; }
+        public int             CurrentSlideIndex { get; set; }
         public List<StoryStep> Steps        { get; set; }
 
-        public StoryStep      Current  => Steps[CurrentIndex];
+        
         public SourceProvider Source   { get; set; }
         public SourceFile     MainFile { get; set; }
         public string[]       ReadMe   { get; set; }
 
         public List<StoryAnnotation> Slides { get; } = new List<StoryAnnotation>();
+
+
+        public StoryStep?       Current      => GeneralHelper.ByIndexOrDefault(Steps, CurrentIndex);
+        public StoryAnnotation? CurrentSlide => GeneralHelper.ByIndexOrDefault(Slides, CurrentSlideIndex);
     }
 
     public enum Format
@@ -39,6 +44,8 @@ namespace Animated.CPU.Model
         public string    Text        { get; set; }
         public Format    Format      { get; set; }
         public List<Tag> Tags        { get; set; }
+
+        public int? SlideLink { get; set; } // Store Slide link
         
     }
 

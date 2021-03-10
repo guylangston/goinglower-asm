@@ -7,8 +7,8 @@ namespace Animated.CPU.Model
 {
     public class Dialog
     {
-        public string       Title { get; set; }
-        public List<string> Lines { get; } = new List<string>();
+        public string?       Title { get; set; }
+        public IReadOnlyList<string>? Lines { get; set; }
     }
     
     public class DialogElement : Section<Scene, Dialog>
@@ -36,14 +36,19 @@ namespace Animated.CPU.Model
         {
             Title = Model.Title;
             this.text.Clear();
-            foreach (var line in Model.Lines)
+            if (Model.Lines != null)
             {
-                text.WriteLine(line);
+                foreach (var line in Model.Lines)
+                {
+                    text.WriteLine(line);
+                }    
             }
         }
 
         protected override void Draw(DrawContext surface)
         {
+            surface.DrawRect(Scene.Block.Outer, Scene.Styles.BackGround);
+            
             base.Draw(surface);
 
             if (Image != null)

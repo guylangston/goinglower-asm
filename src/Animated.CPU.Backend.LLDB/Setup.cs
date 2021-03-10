@@ -99,19 +99,26 @@ namespace Animated.CPU.Backend.LLDB
             {
                 Title = "History",
                 Format = Format.Markdown,
-                Text = @"A CPU's register size covers both addressing (memory pointers) and general calculations (ADD, MUL, etc). 
-Conceptually, it is easier of they are the same size, but they don't need to be. 
+                Text = 
+@"
+A CPU's register size covers both addressing (memory pointers) and general calculations 
+(ADD, MUL, etc). Conceptually, it is easier of they are the same size, 
+but they don't need to be. 
 
 x86 family journey:
-- 16-bit [8086](https://en.wikipedia.org/wiki/Intel_8086) chip in 1976; which is we the x86 comes from
+- 16-bit [8086](https://en.wikipedia.org/wiki/Intel_8086) chip in 1976; 
+  which is we the x86 comes from
 - 32-bit [80386](https://en.wikipedia.org/wiki/Intel_80386) chip in 1985
-- 64-bit [AMD-64 aka x86-64](https://en.wikipedia.org/wiki/X86-64) design by AMD (not Intel) in 2000 for the AMD K8 chips. 
+- 64-bit [AMD-64 aka x86-64](https://en.wikipedia.org/wiki/X86-64) design by 
+  AMD (not Intel) in 2000 for the AMD K8 chips. 
   Intel's cleaner but not backwards compatible IA-64 effectively failed in the marketplace.
-- After 64-bit we got special purpose 128-bit computation with MMX and onwards. (These are out of scope now)
+- After 64-bit we got special purpose 128-bit computation with MMX and onwards. 
+  (These are out of scope now)
 
 TODO: Diagram with die-size, clock speed, and transistor count
 
-x86-64 allows 64-bit addresses @RIP but 32-bit general registers @EAX, @EBX, etc. This is effectively the dotnet model."
+x86-64 allows 64-bit addresses @RIP but 32-bit general registers @EAX, @EBX, etc. 
+This is effectively the dotnet model."
             });
         }
         
