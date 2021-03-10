@@ -155,6 +155,7 @@ namespace Animated.CPU.Animation
 
 
         public IEnumerable<T> ChildrenAre<T>() => this.Children.Where(x => x is T).Cast<T>();
+        public IEnumerable<T> ChildrenRecursiveAre<T>() => this.ChildrenRecursive().Where(x => x is T).Cast<T>();
 
         public int                     ChildrenCount => elements?.Count ?? 0;
         public IReadOnlyList<IElement> Children      => (IReadOnlyList<IElement>)elements;

@@ -44,6 +44,7 @@ namespace Animated.CPU.Model
 
         public ElementRegister(IElement parent, Register model, DBlock block) : base(parent, model, block)
         {
+            IsHidden = true;
         }
         
      
@@ -58,7 +59,7 @@ namespace Animated.CPU.Model
             });
             
             // var bytes = new byte[8];
-            // this.Bytes = Add(new ByteArrayElement(this, new ByteArrayModel(bytes, "", ""))
+            // this.Bytes = Add(new ByteArrayElement(this, new ByteArrayM]odel(bytes, "", ""))
             // {
             //     Block = Block.Inset(30, 25)
             // });
@@ -70,6 +71,10 @@ namespace Animated.CPU.Model
 
         protected override void Step(TimeSpan step)
         {
+            if (Model.IsChanged)
+            {
+                IsHidden = false;
+            }
             IsHighlighted = Model.IsChanged;
 
             Block = text.Block;

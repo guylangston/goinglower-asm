@@ -51,7 +51,7 @@ namespace Animated.CPU.Model
             if (Current == StepForward)
             {
                 // loop back until we run out of steps
-                if (alu.Story.CurrentIndex < alu.Story.Steps.Count)
+                if (alu.Story.CurrentIndex < alu.Story.Steps.Count-1)
                 {
                     alu.Story.CurrentIndex++;
                     Current = Fetch;
@@ -74,6 +74,11 @@ namespace Animated.CPU.Model
                     Current = ExecuteOut;
                     return;
                 }
+            }
+            else if (Current == Finished)
+            {
+                Current = ExecuteOut;
+                return;
             }
             
             Current = PrevInSeq();

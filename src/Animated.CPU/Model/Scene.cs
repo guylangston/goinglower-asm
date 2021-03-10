@@ -32,7 +32,6 @@ namespace Animated.CPU.Model
         public ElementRegisterFile    ElementRegisterFile { get; set; }
         public TerminalElement        Terminal            { get; set; }
         public DialogElement          Dialog              { get; set; }
-
         public Action<string, object> SendCommand         { get; set; }
         public ALUElement             ElementALU          { get; set; }
         public string                 LastKeyPress        { get; set; }
@@ -71,7 +70,7 @@ namespace Animated.CPU.Model
             });
             this.ElementCode = stack.Add(new CodeSection(stack, Model.Story.MainFile, DBlock.JustWidth(w).Set(10, 1, 10)));
 
-            var bTerm = new DBlock(30, hh + 1, 900, 400);
+            var bTerm = new DBlock(30, hh + 10, 900, 400);
             bTerm.Set(0, 3, 10);
             Terminal   = Add(new TerminalElement(this, new Terminal(), bTerm));
 
@@ -81,9 +80,7 @@ namespace Animated.CPU.Model
             bDialog.Set(0, 3, 10);
             this.Dialog = Add(new DialogElement(this, new Dialog(), bDialog));
 
-
             var rel = bTerm.CreateRelative(BlockAnchor.TR, false, new SKPoint(20, 0), new SKPoint(60, 20));
-
 
             foreach (var action in new string[] { "Help", "Quit", "Next", "Previous"})
             {
@@ -98,11 +95,7 @@ namespace Animated.CPU.Model
                 rel = rel.CreateRelative(BlockAnchor.TR, false, new SKPoint(20, 0), new SKPoint(60, 20));
             }
             
-
-
             this.bitmap1 = SKBitmap.Decode("/home/guy/repo/cpu.anim/doc/IntelIntro-GeneralArch.png");
-
-
         }
 
         protected override void InitSceneComplete()
@@ -113,6 +106,10 @@ namespace Animated.CPU.Model
             {
                 ElementALU.StateMachine.ExecNext();
                 cc++;
+            }
+            foreach (var reg in ElementRegisterFile.ChildrenRecursiveAre<ElementRegister>())
+            {
+                reg.IsHidden = true;
             }
         }
 

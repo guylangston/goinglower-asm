@@ -46,6 +46,8 @@ namespace Animated.CPU.Model
             var decode = Model.DecodeResult;
             if (decode?.Args != null && decode.Args.Any())
             {
+                
+                
                 text.WriteLine();
                 text.Write("---[ ", Scene.Styles.FixedFontDarkGray);
                 text.Write(decode.OpCode.ToUpperInvariant(), Scene.Styles.FixedFontYellow);
@@ -59,6 +61,10 @@ namespace Animated.CPU.Model
                     if (arg.Register != null)
                     {
                         arg.Register.LastUsedAs = arg.Value;    
+                        if (Scene.TryRecurseElementFromModel(arg.Register, out var eReg) && eReg is ElementBase eb)
+                        {
+                            eb.IsHidden = false;
+                        }
                     }
 
                     var val = Model.Alu.GetOutput(decode, arg);

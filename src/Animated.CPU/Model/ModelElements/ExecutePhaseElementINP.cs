@@ -49,6 +49,10 @@ namespace Animated.CPU.Model
                     if (arg.Register != null)
                     {
                         arg.Register.LastUsedAs = arg.Value;    
+                        if (Scene.TryRecurseElementFromModel(arg.Register, out var eReg) && eReg is ElementBase eb)
+                        {
+                            eb.IsHidden = false;
+                        } 
                     }
                     
                     var val = Model.Alu.GetInput(decode, arg);

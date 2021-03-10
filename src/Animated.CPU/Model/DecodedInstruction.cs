@@ -192,6 +192,13 @@ namespace Animated.CPU.Model
                 inst.FriendlyMethod = $"if flags(<=) rip {Assign} {inst.A1}";      // Find Previous Line (is Compare then get args)
                 return;
             }
+            
+            if (inst.OpCode == "ret")
+            {
+                inst.FriendlyName   = "return to caller";
+                inst.FriendlyMethod = "pop the last call from the instruction stack and jump to it,";
+                return;
+            }
 
             inst.FriendlyName   = null;
             inst.FriendlyMethod = null;
