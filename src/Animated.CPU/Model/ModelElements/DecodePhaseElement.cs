@@ -60,7 +60,7 @@ namespace Animated.CPU.Model
             if (master.Active == this)
             {
                 var seg = Scene.Cpu.Instructions.GetByAddress(master.Story.Current.RIP);
-                if (seg != null && Scene.TryRecurseElementFromModel(seg, out var eRip))
+                if (seg != null && Scene.TryGetElementFromModelRecurse(seg, out var eRip))
                 {
                     var a = Block.Outer.MR;
                     var b = eRip.Block.Inner.ML;

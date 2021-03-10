@@ -154,8 +154,7 @@ namespace Animated.CPU.Animation
         protected virtual void Decorate(DrawContext surface) {  /* Nothing by default */ }
 
 
-        public IEnumerable<T> ChildrenAre<T>() => this.Children.Where(x => x is T).Cast<T>();
-        public IEnumerable<T> ChildrenRecursiveAre<T>() => this.ChildrenRecursive().Where(x => x is T).Cast<T>();
+     
 
         public int                     ChildrenCount => elements?.Count ?? 0;
         public IReadOnlyList<IElement> Children      => (IReadOnlyList<IElement>)elements;
@@ -188,20 +187,23 @@ namespace Animated.CPU.Animation
                 }    
             }
         }
+        
+        public IEnumerable<T> ChildrenAre<T>() => this.Children.Where(x => x is T).Cast<T>();
+        public IEnumerable<T> ChildrenRecursiveAre<T>() => this.ChildrenRecursive().Where(x => x is T).Cast<T>();
 
-        public T GetChild<T>(int index) where T:IElement
+        public T GetElementByIndex<T>(int index) where T:IElement
             => (T)Children[index];
 
-        public T GetChildByElementType<T>() where T:IElement
+        public T GetElementByTypeImmediate<T>() where T:IElement
             => (T)Children.First(x => x is T);
         
-        public IElement RecurseByModel<TModel>(Func<TModel, bool> where) 
+        public IElement GetElementByModelRecurse<TModel>(Func<TModel, bool> where) 
             => ChildrenRecursive().First(x => x.Model is TModel tm && where(tm));
         
-        public IElement RecurseByModel<TModel>(TModel match) 
+        public IElement GetElementByModelRecurse<TModel>(TModel match) 
             => ChildrenRecursive().First(x => x.Model is TModel tm && object.ReferenceEquals(tm, match));
         
-        public virtual bool TryRecurseElementFromModel<T>(T findThis, out IElement found)
+        public virtual bool TryGetElementFromModelRecurse<T>(T findThis, out IElement found)
         {
             foreach (var element in ChildrenRecursive())
             {
@@ -216,9 +218,9 @@ namespace Animated.CPU.Animation
             return false;
         }
         
-        public virtual IElement RecurseElementFromModelSafe<T>(T findThis)
+        public virtual IElement GetElementFromModelRecurseSafe<T>(T findThis)
         {
-            if (TryRecurseElementFromModel(findThis, out var e))
+            if (TryGetElementFromModelRecurse(findThis, out var e))
             {
                 return e;
             }

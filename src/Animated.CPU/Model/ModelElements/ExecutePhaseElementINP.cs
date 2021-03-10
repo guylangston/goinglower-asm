@@ -49,7 +49,7 @@ namespace Animated.CPU.Model
                     if (arg.Register != null)
                     {
                         arg.Register.LastUsedAs = arg.Value;    
-                        if (Scene.TryRecurseElementFromModel(arg.Register, out var eReg) && eReg is ElementBase eb)
+                        if (Scene.TryGetElementFromModelRecurse(arg.Register, out var eReg) && eReg is ElementBase eb)
                         {
                             eb.IsHidden = false;
                         } 
@@ -78,7 +78,7 @@ namespace Animated.CPU.Model
                     
                     if (IsHighlighted)
                     {
-                        if (arg.Register != null && Scene.TryRecurseElementFromModel(arg.Register, out var eReg))
+                        if (arg.Register != null && Scene.TryGetElementFromModelRecurse(arg.Register, out var eReg))
                         {
                             loc.CustomDraw = (c) => {
                                 if (IsHighlighted)
@@ -147,7 +147,7 @@ namespace Animated.CPU.Model
             if (IsHighlighted)
             {
                 var seg = Scene.Cpu.Instructions.GetByAddress(master.Story.Current.RIP);
-                if (seg != null && Scene.TryRecurseElementFromModel(seg, out var eRip))
+                if (seg != null && Scene.TryGetElementFromModelRecurse(seg, out var eRip))
                 {
                     var a = Block.Outer.MR;
                     var b = eRip.Block.Inner.ML;
