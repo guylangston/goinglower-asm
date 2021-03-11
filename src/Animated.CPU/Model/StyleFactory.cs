@@ -15,7 +15,7 @@ namespace Animated.CPU.Model
             this.Props = GetType().GetProperties();
             FixedFont = new SKPaint()
             {
-                TextSize = 15,
+                TextSize = 16,
                 Color    = SKColor.Parse("#ccc"),
                 Typeface = SKTypeface.FromFamilyName(
                     MonoSpace, 

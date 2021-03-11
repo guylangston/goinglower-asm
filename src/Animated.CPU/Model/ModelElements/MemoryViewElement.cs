@@ -112,9 +112,9 @@ namespace Animated.CPU.Model.ModelElements
             
                 txt.Block.H = Block.H = (Model.SourceAnchor != null ? txt.LineHeight*4 : txt.LineHeight*3) + 10;
             
-                txt.Background = this.IndexInParent % 2 == 0
-                    ? Scene.Styles.BackGround
-                    : Scene.Styles.BackGroundAlt;
+                // txt.Background = this.IndexInParent % 2 == 0
+                //     ? Scene.Styles.BackGround
+                //     : Scene.Styles.BackGroundAlt;
             
 
                 txt.IsEnabled = Block.Y <= Parent.Block.Inner.Y2;    

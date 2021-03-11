@@ -77,7 +77,7 @@ namespace Animated.CPU.Model
             }
             IsHighlighted = Model.IsChanged;
 
-            Block = text.Block;
+            
             
             
             text.Clear();
@@ -87,15 +87,17 @@ namespace Animated.CPU.Model
             
             if (Model is FlagsRegister flags)
             {
-                text.WriteLine(Convert.ToString((long)flags.Value, 2).PadLeft(16, '0'));
+                
                 var xx = 0;
-                foreach (var (name, val) in flags.GetFlags().Where(x=>x.val))
+                foreach (var (name, val) in flags.GetFlags().Reverse())
                 {
                     if (xx > 0) text.Write(" ");
-                    text.Write(name);
+                    var span = text.Write(name[1..3], val ? Scene.Styles.FixedFontArg :  Scene.Styles.FixedFontDarkGray);
+                    span.Model = name;
                     xx++;
                 }
                 text.WriteLine();
+                text.WriteLine(Convert.ToString((long)flags.Value, 2).PadLeft(12, '0'));
                 text.WriteUrl("https://en.wikipedia.org/wiki/FLAGS_register", "WIKI");
                 text.WriteLine();
             }
@@ -130,6 +132,9 @@ namespace Animated.CPU.Model
                     text.WriteLine(Convert.ToString((long)Model.Value, 2), Scene.Styles.SmallFont);    
                 }
             }
+
+            text.Resize();
+            Block = text.Block;
             
             
         }

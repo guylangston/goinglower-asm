@@ -197,6 +197,13 @@ namespace Animated.CPU.Animation
             var b = this[anchor, inner];
             return new DBlock(b.X + rel.X, b.Y + rel.Y, size.X, size.Y);
         }
+
+        public void CenterAt(DBlock centerAt)
+        {
+            var c = centerAt.Inner.MM;
+            X = c.X - W/2;
+            Y = c.Y - H/2;
+        }
     }
 
     public class DynamicDBlock : DBlock

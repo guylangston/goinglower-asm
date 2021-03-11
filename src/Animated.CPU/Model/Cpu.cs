@@ -277,17 +277,18 @@ namespace Animated.CPU.Model
         public IEnumerable<(string name, bool val)> GetFlags()
         {
             // Organised my most interesting first
-            yield return ("(ZF)Zero", ZeroFlag);
-            yield return ("(OF)Overflow", OverflowFlag);
-            yield return ("(SF)Sign", SignFlag);
             yield return ("(CF)Carry", CarryFlag);
-
+            yield return (" __ ", false);
             yield return ("(PF)Parity", ParityFlag);
+            yield return (" __ ", false);
             yield return ("(AF)Adjust", AdjustFlag);
+            yield return (" __ ", false);
+            yield return ("(ZF)Zero", ZeroFlag);
+            yield return ("(SF)Sign", SignFlag);
             yield return ("(TF)Trap", TrapFlag);
             yield return ("(IF)Interrupt", InterruptFlag);
             yield return ("(DF)Direction", DirectionFlag);
-            
+            yield return ("(OF)Overflow", OverflowFlag);
         }
         
 

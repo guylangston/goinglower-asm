@@ -69,6 +69,8 @@ namespace Animated.CPU.Animation
                 Model = model;
                 return this;
             }
+
+            public override string ToString() => $"Span(L:{3})";
         }
         
         void UpdateLineHeight()
@@ -275,5 +277,10 @@ namespace Animated.CPU.Animation
         }
 
         public float CalcHeight() => lines.Count * LineHeight;
+
+        public void Resize()
+        {
+            Block.H = CalcHeight();
+        }
     }
 }

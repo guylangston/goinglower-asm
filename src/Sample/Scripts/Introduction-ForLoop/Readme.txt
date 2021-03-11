@@ -7,7 +7,8 @@
       #     # #    # # #   ## #    # #       #    # ##  ## #      #   #  
        #####   ####  # #    #  ####  #######  ####  #    # ###### #    # 
 
--------[ Build your intuition for how your code executes on silicon ]--------
+-------[ Build your intuition for our your code executes on silicon ]--------
+ (*) Real Code                (*) Real CPU                 (*) Real World 
              
                  __                 _                   
                / _| ___  _ __     | | ___   ___  _ __  

@@ -35,6 +35,15 @@ namespace Animated.CPU.Model
         protected override void Step(TimeSpan step)
         {
             Title = Model.Title;
+
+            if (Image != null)
+            {
+                if (Image.Width > Block.W) Block.W = Image.Width;
+                if (Image.Height > Block.H) Block.H = Image.Height;
+            }
+
+            Block.CenterAt(Scene.Block);
+            
             this.text.Clear();
             if (Model.Lines != null)
             {
@@ -53,7 +62,7 @@ namespace Animated.CPU.Model
 
             if (Image != null)
             {
-                var dest = Block.Inner.Inset(20, 20).ToSkRect();
+                var dest = Block.Inner.ToSkRect();
                 surface.Canvas.DrawBitmap(Image, dest);    
             }
             
