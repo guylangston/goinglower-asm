@@ -56,7 +56,7 @@ namespace Animated.CPU.Animation
                         LastDraw.X, 
                         LastDraw.Y - Line.H, 
                         LastDraw.X + TextSize.Width, 
-                        LastDraw.Y );
+                        LastDraw.Y + Line.FooterY );
             
             public Span SetTag(object tag)
             {

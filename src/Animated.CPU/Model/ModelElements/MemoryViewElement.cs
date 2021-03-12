@@ -133,14 +133,26 @@ namespace Animated.CPU.Model.ModelElements
                     var line = Scene.ElementCode.GetLine(l.Line);
                     if (line != null)
                     {
-                        var arr = new ArrowElement(
+                        var arr = new DockedArrow(
                             new DockPoint(this),
-                            new DockPoint(Scene.ElementCode, line),
+                            new DockPoint(Scene.ElementCode, line)
+                            {
+                                AnchorInner = true
+                            },
                             Scene.Styles.Arrow
                         );
                         arr.Step();
                         arr.Draw(surface.Canvas);
-
+                        
+                        
+                        // Custom: outline line
+                        surface.DrawRect(
+                            new DBlock(
+                                line.LastDrawRect.Left, 
+                                line.LastDrawRect.Top, 
+                                Scene.ElementCode.Block.Inner.W, 
+                                line.LastDrawRect.Height + 3),
+                            Scene.Styles.Arrow);
                     }
                     
                 }

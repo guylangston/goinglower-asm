@@ -20,17 +20,32 @@ namespace Animated.CPU
             Span    = span;
         }
 
-        public IElement               Element { get;  }
-        public TextBlockElement.Span? Span    { get; }
-        
-        public BlockAnchor Anchor      { get; set; }
-        public bool        AnchorInner { get; set; }
-        public SKPoint     Offset           { get; set; } // in the direction of the dock
+        public IElement               Element     { get; }
+        public TextBlockElement.Span? Span        { get; }
+        public BlockAnchor            Anchor      { get; set; }
+        public bool                   AnchorInner { get; set; }
+        public SKPoint                Offset      { get; set; }// in the direction of the dock
+
+        public SKPoint GetDock()
+        {
+            if (Span is null)
+            {
+                return Element.Block[Anchor, AnchorInner];
+            }
+            else
+            {
+                var outer = Element.Block[Anchor, AnchorInner];
+                
+                var tb = new DBlock(Span.LastDrawRect);
+                var inner = tb[Anchor, AnchorInner];
+                return new SKPoint(outer.X, inner.Y);   // HACK - Just take the Y pos for inner (as the default scene only uses horx arrows)
+            }
+        }
     }
 
-    public class ArrowElement
+    public class DockedArrow
     {
-        public ArrowElement(DockPoint start, DockPoint end, SKPaint style)
+        public DockedArrow(DockPoint start, DockPoint end, SKPaint style)
         {
             Start      = start;
             End        = end;
@@ -80,10 +95,10 @@ namespace Animated.CPU
         {
             if (IsHidden) return;
 
-            var a0 = Start.Element.Block[Start.Anchor, Start.AnchorInner];
+            var a0 = Start.GetDock();
             var a1 = a0 + Start.Offset;
-            
-            var a3 = End.Element.Block[End.Anchor, End.AnchorInner];
+
+            var a3 = End.GetDock();
             var a2 = a3 + End.Offset;
             
             // TODO: Convert to path
@@ -110,7 +125,7 @@ namespace Animated.CPU
     }
     
     
-    public class Arrow
+    public class ArrowByPoint
     {
         public SKPaint Style     { get; set; }
         public SKPoint Start     { get; set; }
@@ -122,7 +137,7 @@ namespace Animated.CPU
         public SKPaint LabelStyle { get; set; }
         public string  LabelText  { get; set; }
 
-        public Arrow RelativeWayPoints(SKPoint relStart, SKPoint relEnd)
+        public ArrowByPoint RelativeWayPoints(SKPoint relStart, SKPoint relEnd)
         {
             WayPointA = Start + relStart;
             WayPointB = End + relEnd;

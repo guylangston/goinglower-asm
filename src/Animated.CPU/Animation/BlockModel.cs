@@ -112,6 +112,14 @@ namespace Animated.CPU.Animation
             H = h;
         }
 
+        public DBlock(SKRect rect)
+        {
+            X = rect.Left;
+            Y = rect.Top;
+            W = rect.Width;
+            H = rect.Height;
+        }
+
         public DBlock(DBlockProps copy) : base(copy)
         {
         }

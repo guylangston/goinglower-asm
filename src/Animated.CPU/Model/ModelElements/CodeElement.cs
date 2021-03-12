@@ -11,7 +11,7 @@ namespace Animated.CPU.Model.ModelElements
 
         public CodeElement(IElement parent, SourceFile model, DBlock block) : base(parent, model, block)
         {
-            Title = "Source Code";
+            Title = model.Title ?? model.Name;
         }
 
         protected override void Init()

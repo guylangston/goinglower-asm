@@ -54,7 +54,7 @@ namespace Animated.CPU.Model
                 var seg = Scene.Cpu.Instructions.GetByAddress(Model.RIP);
                 if (seg != null && Scene.TryGetElementFromModelRecurse(seg, out var eRip))
                 {
-                    var arr = new ArrowElement(
+                    var arr = new DockedArrow(
                         new DockPoint(this),
                         new DockPoint(eRip),
                         Scene.Styles.Arrow
