@@ -18,7 +18,7 @@ namespace Animated.CPU.Model
     }
     
     
-    public class ByteArrayElement : Element<Scene, ByteArrayModel>
+    public class ByteArrayElement : Element<SceneExecute, ByteArrayModel>
     {
 
         public ByteArrayElement(IElement parent, ByteArrayModel model) : base(parent, model)

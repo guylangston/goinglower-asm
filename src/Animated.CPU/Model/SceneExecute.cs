@@ -8,7 +8,7 @@ using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
-    public class SimpleSection : Section<Scene, string>
+    public class SimpleSection : Section<SceneExecute, string>
     {
         public SimpleSection(IElement parent, string model, DBlock block) : base(parent, model, block)
         {
@@ -16,18 +16,18 @@ namespace Animated.CPU.Model
         }
     }
     
-    public class Scene : SceneBase<Cpu, StyleFactory>
+    public class SceneExecute : SceneBase<Cpu, StyleFactory>
     {
         private SKBitmap bitmap1;
         private CodeElement ElementCodeIL;
         private CodeElement ElementCodeASM;
 
-        public Scene(DBlock region) : base(new StyleFactory())
+        public SceneExecute(DBlock region) : base(new StyleFactory())
         {
             Block = region;
         }
 
-        public const string Version = "0.4-alpha";
+        public const string Version = "0.5𝛼";
         
         // Helpers
         public Cpu                    Cpu                 => Model;

@@ -5,13 +5,13 @@ using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
-    public class BackGroundNoise : Element<Scene>
+    public class BackGroundNoise : Element<SceneExecute>
     {
         static Random r = new Random();
 
         private DBlock bounds;
 
-        public BackGroundNoise(Scene scene, DBlock bounds) : base(scene, new DBlock()
+        public BackGroundNoise(SceneExecute scene, DBlock bounds) : base(scene, new DBlock()
         {
             W = 3,
             H = 3

@@ -7,9 +7,9 @@ namespace Animated.CPU.Animation
 {
     public class DrawContext : Drawing // Use Base Class to add draw func
     {
-        public Scene Scene { get; }
+        public SceneExecute Scene { get; }
 
-        public DrawContext(Scene scene, SKCanvas canvas) : base(canvas)
+        public DrawContext(SceneExecute scene, SKCanvas canvas) : base(canvas)
         {
             Scene = scene;
         }

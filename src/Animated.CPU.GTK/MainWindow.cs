@@ -16,7 +16,7 @@ namespace Animated.CPU.GTK
     class MainWindow : Window
     {
         private SKDrawingArea skiaView;
-        private Scene scene;
+        private SceneExecute scene;
         private uint timerId;
         private TimeSpan interval;
         private (double X, double Y) last;
@@ -49,7 +49,7 @@ namespace Animated.CPU.GTK
             var region = new DBlock(0, 0, skiaView.WidthRequest, skiaView.HeightRequest)
                 .Set(20, 0, 0);
             
-            scene = new Scene(region)
+            scene = new SceneExecute(region)
             {
                 Model = cpu,
                 SendCommand = (cmd, obj) => {

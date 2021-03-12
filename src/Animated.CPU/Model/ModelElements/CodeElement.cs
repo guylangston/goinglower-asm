@@ -5,7 +5,7 @@ using SkiaSharp;
 
 namespace Animated.CPU.Model.ModelElements
 {
-    public class CodeElement : Section<Scene, SourceFile>
+    public class CodeElement : Section<SceneExecute, SourceFile>
     {
         private TextBlockElement text;
 

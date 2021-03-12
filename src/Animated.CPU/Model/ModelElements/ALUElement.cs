@@ -9,7 +9,7 @@ namespace Animated.CPU.Model
     
     
     
-    public class ALUElement : Section<Scene, ArithmeticLogicUnit>
+    public class ALUElement : Section<SceneExecute, ArithmeticLogicUnit>
     {
         public ALUElement(IElement scene, ArithmeticLogicUnit alu, DBlock b) : base(scene, alu, b)
         {

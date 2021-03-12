@@ -12,7 +12,7 @@ namespace Animated.CPU.Model
         
     }
     
-    public class TerminalElement : Section<Scene, Terminal>
+    public class TerminalElement : Section<SceneExecute, Terminal>
     {
         private TextBlockElement text;
         

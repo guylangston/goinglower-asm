@@ -11,7 +11,7 @@ namespace Animated.CPU.Model
         public IReadOnlyList<string>? Lines { get; set; }
     }
     
-    public class DialogElement : Section<Scene, Dialog>
+    public class DialogElement : Section<SceneExecute, Dialog>
     {
         private TextBlockElement text;
         

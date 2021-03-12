@@ -5,7 +5,7 @@ using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
-    public class FetchPhaseElement : Section<Scene, PhaseFetch>
+    public class FetchPhaseElement : Section<SceneExecute, PhaseFetch>
     {
         private TextBlockElement text;
         ALUElement master;

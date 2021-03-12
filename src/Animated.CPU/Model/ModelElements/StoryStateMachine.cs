@@ -9,10 +9,10 @@ namespace Animated.CPU.Model
     
     public class StoryStateMachine : StateMachine<IElement>
     {
-        private readonly Scene scene;
+        private readonly SceneExecute scene;
         private readonly ALUElement alu;
 
-        public StoryStateMachine(Scene scene, ALUElement alu) : base(true)
+        public StoryStateMachine(SceneExecute scene, ALUElement alu) : base(true)
         {
             this.scene = scene;
             this.alu   = alu;

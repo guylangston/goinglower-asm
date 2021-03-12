@@ -9,7 +9,7 @@ namespace Animated.CPU.Model
 {
 
     
-    public class ElementRegisterFile : Section<Scene, List<Register>>
+    public class ElementRegisterFile : Section<SceneExecute, List<Register>>
     {
         public ElementRegisterFile(IElement parent, List<Register> model, DBlock block) : base(parent, model, block)
         {
@@ -42,7 +42,7 @@ namespace Animated.CPU.Model
         }
     }
 
-    public class ElementRegister : Element<Scene, Register>
+    public class ElementRegister : Element<SceneExecute, Register>
     {
         private TextBlockElement text;
 

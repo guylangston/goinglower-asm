@@ -4,7 +4,7 @@ using Animated.CPU.Animation;
 
 namespace Animated.CPU.Model
 {
-    public class StoryStepPhaseElement : Section<Scene, StoryStep>
+    public class StoryStepPhaseElement : Section<SceneExecute, StoryStep>
     {
         private TextBlockElement text;
         

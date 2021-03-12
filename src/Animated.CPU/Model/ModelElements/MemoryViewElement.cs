@@ -6,7 +6,7 @@ using SkiaSharp;
 
 namespace Animated.CPU.Model.ModelElements
 {
-    public class MemoryViewElement : Section<Scene, MemoryView>
+    public class MemoryViewElement : Section<SceneExecute, MemoryView>
     {
         private StackElement stack;
 
@@ -65,7 +65,7 @@ namespace Animated.CPU.Model.ModelElements
 
     }
     
-    public class SegmentElement : Element<Scene, MemoryView.Segment>
+    public class SegmentElement : Element<SceneExecute, MemoryView.Segment>
     {
         private ByteArrayElement mem;
         private TextBlockElement txt;

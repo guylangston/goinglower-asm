@@ -4,7 +4,7 @@ using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
-    public class DecodePhaseElement : Section<Scene, PhaseDecode>
+    public class DecodePhaseElement : Section<SceneExecute, PhaseDecode>
     {
         private TextBlockElement text;
         ALUElement master;
