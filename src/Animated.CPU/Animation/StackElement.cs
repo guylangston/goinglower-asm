@@ -28,7 +28,8 @@ namespace Animated.CPU.Animation
             Orient = orient;
         }
 
-        public DOrient Orient { get; set; }
+        public bool    SkipHidden { get; set; } = true;
+        public DOrient Orient     { get; set; }
 
         public void Layout()
         {
@@ -38,7 +39,7 @@ namespace Animated.CPU.Animation
                 var off = inner.Y;
                 foreach (var child in Children)
                 {
-                    if (child is ElementBase eb && eb.IsHidden) continue;
+                    if (SkipHidden && child is ElementBase eb && eb.IsHidden) continue;
                     
                     if (child.Block == null)
                     {
@@ -59,7 +60,7 @@ namespace Animated.CPU.Animation
                 var off = inner.X;
                 foreach (var child in Children)
                 {
-                    if (child is ElementBase eb && eb.IsHidden) continue;
+                    if (SkipHidden &&child is ElementBase eb && eb.IsHidden) continue;
                     
                     if (child.Block == null)
                     {

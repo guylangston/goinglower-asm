@@ -24,10 +24,7 @@ namespace Animated.CPU.Model.ModelElements
 
             for (int i = 0; i < 20; i++)
             {
-                stack.Add(new SegmentElement(stack, null, new DynamicDBlock()
-                {
-                    DesiredHeight = 30
-                }));    
+                stack.Add(new SegmentElement(stack, null, null));    
             }
         }
 
@@ -93,19 +90,14 @@ namespace Animated.CPU.Model.ModelElements
             if (Model != null)
             {
                 IsEnabled = true;
-                if (Model.SourceAnchor != null)
-                {
-                    txt.WriteLine(Model.SourceAnchor, Scene.Styles.FixedFontYellow);
-                }
+             
+                txt.Write($"@{DisplayHelper.ToHex(Model.Address)} ", Scene.Styles.FixedFontDarkGray);
+                txt.Write(Model.Raw?.ToHex().PadRight(8), Scene.Styles.FixedFontCyan);
+                txt.Write(" ", Scene.Styles.FixedFontDarkGray);
+                txt.WriteLine(Model.SourceAsm, Scene.Styles.FixedFontYellow);
 
-                txt.Write("|   ", Scene.Styles.FixedFontDarkGray);
-                txt.WriteLine(Model.SourceAsm, Scene.Styles.FixedFontCyan);
-            
-                txt.Write("|   ", Scene.Styles.FixedFontDarkGray);
-                txt.Write($"{Model.Raw?.ToHex()} @ [{DisplayHelper.ToHex(Model.Address)}]".PadLeft(40), Scene.Styles.FixedFontDarkGray);
-            
-            
-                txt.Block.H = Block.H = (Model.SourceAnchor != null ? txt.LineHeight*4 : txt.LineHeight*3) + 10;
+                
+                Block.H = txt.Block.H = txt.CalcHeight();
             
                 // txt.Background = this.IndexInParent % 2 == 0
                 //     ? Scene.Styles.BackGround

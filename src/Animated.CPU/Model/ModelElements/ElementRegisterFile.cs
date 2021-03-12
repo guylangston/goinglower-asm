@@ -19,7 +19,11 @@ namespace Animated.CPU.Model
 
         protected override void Init()
         {
-            var stack = Add(new StackElement(this, Block, DOrient.Vert));
+            var stack = Add(new StackElement(this, Block, DOrient.Vert)
+            {
+                SkipHidden = false
+            });
+            
             
             foreach (var reg in Model.WithIndex())
             {
@@ -117,17 +121,17 @@ namespace Animated.CPU.Model
                 }
                 text.WriteLine();
 
-                if (IsHighlighted)
+                if (true) //IsHighlighted)
                 {
                     text.Write($"DEC: ", Scene.Styles.FixedFontDarkGray);
                     text.WriteLine($"{Model.Value:#,##0}", Scene.Styles.FixedFontCyan);
                 }
             
-                if (IsHighlighted)
-                {
-                    text.Write($"BIN: ", Scene.Styles.FixedFontDarkGray);
-                    text.WriteLine(Convert.ToString((long)Model.Value, 2), Scene.Styles.SmallFont);    
-                }
+                // if (IsHighlighted)
+                // {
+                //     text.Write($"BIN: ", Scene.Styles.FixedFontDarkGray);
+                //     text.WriteLine(Convert.ToString((long)Model.Value, 2), Scene.Styles.SmallFont);    
+                // }
             }
 
             text.Resize();
