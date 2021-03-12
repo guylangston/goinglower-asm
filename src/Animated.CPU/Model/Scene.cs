@@ -53,7 +53,7 @@ namespace Animated.CPU.Model
             var ww = 1920;
             var hh = 1090;
 
-            float w     = Block.Inner.W / 5;
+            float w     = Block.Inner.W / 4;
 
             // var cpu = Add(new SimpleSection(this, "CPU", 
             //     DBlock.FromTwoPoints(new SKPoint(50, 20), new SKPoint(970, 1020))));
@@ -72,20 +72,21 @@ namespace Animated.CPU.Model
             if (Cpu.Story.IL != null)
             {
                 this.ElementCodeIL = stack.Add(new CodeElement(stack, Cpu.Story.IL, 
-                    DBlock.JustWidth(w)));    
+                    DBlock.JustWidth(w)));
+                this.ElementCodeIL.IsHidden = true;
             }
 
             if (Cpu.Story.Asm != null)
             {
                 this.ElementCodeASM = stack.Add(new CodeElement(stack, Cpu.Story.Asm, 
-                    DBlock.JustWidth(w)));    
+                    DBlock.JustWidth(w)));
+                this.ElementCodeASM.IsHidden = true;
             }
             
             this.ElementInstructions = stack.Add(new MemoryViewElement(stack,  
                 DBlock.JustWidth(w),
                 Model.Instructions));
-
-
+            
             this.ElementALU          = stack.Add(new ALUElement(stack, Model.ALU, 
                 DBlock.JustWidth(w)));
             

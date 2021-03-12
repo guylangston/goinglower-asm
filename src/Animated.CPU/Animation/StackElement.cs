@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using SkiaSharp;
 
 namespace Animated.CPU.Animation
@@ -37,6 +38,8 @@ namespace Animated.CPU.Animation
                 var off = inner.Y;
                 foreach (var child in Children)
                 {
+                    if (child is ElementBase eb && eb.IsHidden) continue;
+                    
                     if (child.Block == null)
                     {
                         child.Block = new DBlock()
@@ -56,6 +59,8 @@ namespace Animated.CPU.Animation
                 var off = inner.X;
                 foreach (var child in Children)
                 {
+                    if (child is ElementBase eb && eb.IsHidden) continue;
+                    
                     if (child.Block == null)
                     {
                         child.Block = new DBlock()

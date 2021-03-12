@@ -149,7 +149,7 @@ namespace Animated.CPU.Model.ModelElements
                         surface.DrawRect(
                             new DBlock(
                                 line.LastDrawRect.Left, 
-                                line.LastDrawRect.Top, 
+                                line.LastDrawRect.Top + 1, 
                                 Scene.ElementCode.Block.Inner.W, 
                                 line.LastDrawRect.Height + 3),
                             Scene.Styles.Arrow);
