@@ -27,7 +27,7 @@ namespace Animated.CPU.Model
             Block = region;
         }
 
-        public const string Version = "0.3-alpha";
+        public const string Version = "0.4-alpha";
         
         // Helpers
         public Cpu                    Cpu                 => Model;
@@ -85,7 +85,10 @@ namespace Animated.CPU.Model
             
             this.ElementInstructions = stack.Add(new MemoryViewElement(stack,  
                 DBlock.JustWidth(w),
-                Model.Instructions));
+                Model.Instructions)
+            {
+                Title = "Executable Memory"
+            });
             
             this.ElementALU          = stack.Add(new ALUElement(stack, Model.ALU, 
                 DBlock.JustWidth(w)));
