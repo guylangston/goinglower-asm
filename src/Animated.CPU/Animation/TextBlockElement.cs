@@ -10,7 +10,7 @@ namespace Animated.CPU.Animation
     {
         private readonly List<Line> lines;
         
-        public TextBlockElement(IElement? parent, DBlock b, SKPaint defaultStyle) : base(parent.Scene, parent, b)
+        public TextBlockElement(IElement? parent, DBlock b, SKPaint defaultStyle) : base(parent, b)
         {
             DefaultStyle = defaultStyle;
             lines        = new List<Line>();

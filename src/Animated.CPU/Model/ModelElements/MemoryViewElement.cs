@@ -67,7 +67,7 @@ namespace Animated.CPU.Model.ModelElements
     
     public class SegmentElement : Element<SceneExecute, MemoryView.Segment>
     {
-        private ByteArrayElement mem;
+        
         private TextBlockElement txt;
 
         public SegmentElement(IElement parent, MemoryView.Segment model, DBlock block) : base(parent, model, block)

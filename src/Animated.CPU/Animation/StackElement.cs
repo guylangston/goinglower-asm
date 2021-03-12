@@ -7,23 +7,14 @@ namespace Animated.CPU.Animation
 {
     public abstract class ContainerElement : ElementBase  // Strong Types are not needed here, as we only act on elements
     {
-        protected ContainerElement(IElement parent) : base(parent.Scene, parent)
-        {
-        }
-
-        protected ContainerElement(IElement parent, DBlock b) : base(parent.Scene, parent, b)
+        protected ContainerElement(IElement parent, DBlock b) : base(parent, b)
         {
         }
     }
     
     public class StackElement : ContainerElement  
     {
-        public StackElement(IElement? parent, DOrient orient) : base(parent)
-        {
-            Orient = orient;
-        }
-
-        public StackElement(IElement? parent, DBlock b, DOrient orient) : base(parent, b)
+        public StackElement(IElement parent, DBlock b, DOrient orient) : base(parent, b)
         {
             Orient = orient;
         }

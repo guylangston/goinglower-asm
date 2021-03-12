@@ -24,23 +24,19 @@ namespace Animated.CPU.Animation
         private static  int nextId = 0;
         private int id;
 
-        protected ElementBase()
+        protected ElementBase() // Only for IScene
         {
-            Scene = null;
+            if (this is not IScene) throw new Exception($"Expected: IScene but got {this.GetType().Name}");
+            
             id    = nextId++;
         }
 
-        protected ElementBase(IScene scene, IElement? parent)
+        protected ElementBase(IElement parent, DBlock? b)
         {
-            Scene  = scene ?? throw new ArgumentNullException(nameof(scene));
+            if (parent is null) throw new Exception("Must have parent");
+            if (this is IScene) throw new Exception("Use IScene constructor");
             Parent = parent;
-            id     = nextId++;
-        }
-
-        protected ElementBase(IScene scene, IElement? parent, DBlock b)
-        {
-            Scene  = scene ?? throw new ArgumentNullException(nameof(scene));
-            Parent = parent;
+            Scene  = parent.Scene;
             Block  = b;
             id     = nextId++;
         }
@@ -48,7 +44,7 @@ namespace Animated.CPU.Animation
         public IScene    Scene        { get; private set; }
         public IElement? Parent       { get; private set; }
         public object?   Model        { get; set; }
-        public DBlock    Block        { get; set; }
+        public DBlock?   Block        { get; set; }
         public IAnimator Animator     { get; set; } = EmptyAnimator.Instance;
         public bool      IsHidden     { get; set; }
         public bool      IsEnabled    { get; set; } = true;      // Step And Draw are not called

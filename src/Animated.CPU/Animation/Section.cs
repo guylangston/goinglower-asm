@@ -82,7 +82,13 @@ namespace Animated.CPU.Animation
             return null;
 
         }
-
-        
+    }
+    
+    public class SimpleSection<TScene, TModel> : Section<TScene, TModel> where TScene:IScene
+    {
+        public SimpleSection(IElement parent, TModel model, DBlock block) : base(parent, model, block)
+        {
+            Title = model?.ToString();
+        }
     }
 }

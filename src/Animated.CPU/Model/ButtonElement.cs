@@ -21,7 +21,7 @@ namespace Animated.CPU.Model
     
     public class ButtonElement : ElementBase
     {
-        public ButtonElement(IElement parent, ActionModel actionModel, DBlock b) : base(parent.Scene, parent, b)
+        public ButtonElement(IElement parent, ActionModel actionModel, DBlock b) : base(parent, b)
         {
             base.Model = actionModel;
         }

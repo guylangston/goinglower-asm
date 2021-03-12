@@ -98,7 +98,7 @@ namespace Animated.CPU.Model
                     xx++;
                 }
                 text.WriteLine();
-                text.WriteLine(Convert.ToString((long)flags.Value, 2).PadLeft(12, '0'));
+                text.WriteLine(Convert.ToString((long)flags.Value, 2).PadLeft(12, '0').Replace("0", " 0 ").Replace("1", " 1 "));
                 text.WriteUrl("https://en.wikipedia.org/wiki/FLAGS_register", "WIKI");
                 text.WriteLine();
             }

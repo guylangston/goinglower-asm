@@ -8,14 +8,6 @@ using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
-    public class SimpleSection : Section<SceneExecute, string>
-    {
-        public SimpleSection(IElement parent, string model, DBlock block) : base(parent, model, block)
-        {
-            Title = model;
-        }
-    }
-    
     public class SceneExecute : SceneBase<Cpu, StyleFactory>
     {
         private SKBitmap bitmap1;
@@ -27,7 +19,7 @@ namespace Animated.CPU.Model
             Block = region;
         }
 
-        public const string Version = "0.5𝛼";
+        public const string Version = "0.5-alpha";
         
         // Helpers
         public Cpu                    Cpu                 => Model;
@@ -188,7 +180,8 @@ namespace Animated.CPU.Model
             
             surface.DrawRect(Block.Outer, Styles.Border);
             
-            surface.DrawText($"0xGoingLower v{Version}", Styles.TextLogo, Block, BlockAnchor.BR);
+            surface.DrawText($"0xGoingLower        .", Styles.TextLogo, Block, BlockAnchor.BR);
+            surface.DrawText(Version + " .", Styles.FixedFontBlue, Block, BlockAnchor.BR);
 
             if (DebugPointAt != SKPoint.Empty)
             {

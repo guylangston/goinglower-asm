@@ -10,7 +10,7 @@ namespace Animated.CPU.Animation
     
     public abstract class SceneBase<TModel, TStyle> : ElementBase,  IScene where TStyle:IStyleFactory
     {
-        protected SceneBase(TStyle styleFactory) 
+        protected SceneBase(TStyle styleFactory)  
         {
             Styles = styleFactory;
             SetScene(this);
