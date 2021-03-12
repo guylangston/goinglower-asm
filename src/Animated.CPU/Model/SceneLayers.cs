@@ -69,12 +69,17 @@ namespace Animated.CPU.Model
             throw new NotImplementedException();
         }
 
+        public override void ProcessEvent(object platform, string name, object args)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void KeyPress(object platformKeyObject, string key)
         {
             throw new NotImplementedException();
         }
 
-        public override void ButtonPress(uint eventButton, double eventX, double eventY, object interop)
+        public override void MousePress(uint eventButton, double eventX, double eventY, object interop)
         {
             throw new NotImplementedException();
         }

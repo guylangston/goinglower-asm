@@ -195,7 +195,10 @@ namespace Animated.CPU.Model
             canvas.Clear(Styles.GetColor(this, "bg"));
         }
 
-        
+        public override void ProcessEvent(object platform, string name, object args)
+        {
+            
+        }
 
         public override void KeyPress(object platformKeyObject, string key)
         {
@@ -249,7 +252,7 @@ namespace Animated.CPU.Model
             }
         }
 
-        public override void ButtonPress(uint eventButton, double eventX, double eventY, object interop)
+        public override void MousePress(uint eventButton, double eventX, double eventY, object interop)
         {
             DebugPointAt = new SKPoint((float)eventX, (float)eventY);
             DebugButton  = eventButton;

@@ -7,34 +7,47 @@ using SkiaSharp;
 
 namespace Animated.CPU.Animation
 {
-    
-    public abstract class SceneBase<TModel, TStyle> : ElementBase,  IScene where TStyle:IStyleFactory
+    public abstract class SceneBase : ElementBase, IScene 
     {
-        protected SceneBase(TStyle styleFactory)  
-        {
-            Styles = styleFactory;
-            SetScene(this);
-        }
-        
-        protected SceneBase(IScene scene,  DBlock b, TStyle styleFactory) 
-        {
-            Styles = styleFactory;
-            SetScene(this);
-            Block = b;
-        }
+        public TimeSpan      Elapsed      { get; protected set; }
+        public IStyleFactory StyleFactory { get; protected set; }
 
-        public TimeSpan Elapsed    { get; private set; }
-        public TStyle   Styles     { get; }
-        public int      FrameCount { get; private set; }
+        public int      FrameCount { get; protected set; }
         public float    FPS        => (float)FrameCount / (float)Elapsed.TotalSeconds ;
         
         // Debugging
         public SKPoint        DebugPointAt { get; set; }
         public uint           DebugButton  { get; set; }
         public List<IElement> DebugHits    { get; } = new List<IElement>();
+
         
-        // Helpers
-        IStyleFactory IScene.StyleFactory => Styles;
+        protected abstract void DrawOverlay(DrawContext drawing);
+        protected abstract void DrawBackGround(DrawContext drawing);
+
+        public abstract void ProcessEvent(object platform, string name, object args);
+        public abstract void KeyPress(object platformKeyObject, string key);
+        public abstract void MousePress(uint eventButton, double eventX, double eventY, object interop);
+    }
+    
+    
+    public abstract class SceneBase<TModel, TStyle> : SceneBase where TStyle:IStyleFactory
+    {
+        protected SceneBase(TStyle styleFactory)  
+        {
+            StyleFactory = Styles = styleFactory;
+            SetScene(this);
+        }
+        
+        protected SceneBase(IScene scene,  DBlock b, TStyle styleFactory) 
+        {
+            StyleFactory = Styles = styleFactory;
+            SetScene(this);
+            Block = b;
+        }
+
+        
+        public  TStyle Styles { get; }
+        
         
         public new TModel Model
         {
@@ -115,11 +128,7 @@ namespace Animated.CPU.Animation
             return true;
         }
 
-        protected abstract void DrawOverlay(DrawContext drawing);
-        protected abstract void DrawBackGround(DrawContext drawing);
-        
-        public abstract void KeyPress(object platformKeyObject, string key);
-        public abstract void ButtonPress(uint eventButton, double eventX, double eventY, object interop);
+      
 
 
 

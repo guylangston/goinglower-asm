@@ -7,9 +7,9 @@ namespace Animated.CPU.Animation
 {
     public class DrawContext : Drawing // Use Base Class to add draw func
     {
-        public SceneExecute Scene { get; }
+        public IScene Scene { get; }
 
-        public DrawContext(SceneExecute scene, SKCanvas canvas) : base(canvas)
+        public DrawContext(IScene scene, SKCanvas canvas) : base(canvas)
         {
             Scene = scene;
         }
@@ -93,9 +93,10 @@ namespace Animated.CPU.Animation
         // Debugging
         SKPoint   DebugPointAt    { get; }
         List<IElement> DebugHits { get; }
-        
 
-        void KeyPress(object platformKeyObject, string key);
+        // Send commands/input/events
+        void ProcessEvent(object platform, string name, object args);
+        void KeyPress(object platform, string key);
     }
 
     public static class SceneHelper

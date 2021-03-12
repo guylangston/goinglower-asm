@@ -1,7 +1,5 @@
 using System;
 using Animated.CPU.Animation;
-using Animated.CPU.Backend.LLDB;
-using Animated.CPU.Model;
 using Gdk;
 using Gtk;
 using SkiaSharp;
@@ -16,7 +14,7 @@ namespace Animated.CPU.GTK
     class MainWindow : Window
     {
         private SKDrawingArea skiaView;
-        private SceneExecute scene;
+        private SceneBase scene;
         private uint timerId;
         private TimeSpan interval;
         private (double X, double Y) last;
@@ -30,15 +28,7 @@ namespace Animated.CPU.GTK
         private MainWindow(Builder builder)
             : base(builder.GetObject("MainWindow").Handle)
         {
-            var setup = new Setup();
-            var cpu   = new Cpu();
-            var cfg   = new Setup.Config()
-            {
-                StoryId = "Introduction-ForLoop",
-                BaseFolder = "/home/guy/repo/cpu.anim/src/Sample/Scripts/Introduction-ForLoop",
-                CompileBaseFolder = "/home/guy/repo/cpu.anim/src/Sample/Scripts"
-            };
-            setup.InitCpuFromDisk(cfg, cpu);
+           
             
             builder.Autoconnect(this);
             
@@ -48,14 +38,8 @@ namespace Animated.CPU.GTK
 
             var region = new DBlock(0, 0, skiaView.WidthRequest, skiaView.HeightRequest)
                 .Set(20, 0, 0);
-            
-            scene = new SceneExecute(region)
-            {
-                Model = cpu,
-                SendCommand = (cmd, obj) => {
-                    if (cmd == "QUIT") Application.Quit();
-                }
-            };
+
+            scene = Init.BuildScene(region);
             
             //  Window Events
             this.DeleteEvent       += OnWindowDeleteEvent;
@@ -81,7 +65,7 @@ namespace Animated.CPU.GTK
         private void OnMotion(object o, MotionNotifyEventArgs args)
         {
             // Seems to only report drag events
-            scene.DebugText = $"Motion: {args.Event.X}, {args.Event.Y}";
+            scene.ProcessEvent(args, "DebugText", $"Motion: {args.Event.X}, {args.Event.Y}");
         }
 
         private void OnButtonPressEvent(object o, ButtonPressEventArgs args)
@@ -90,7 +74,7 @@ namespace Animated.CPU.GTK
             
             if (args.Event.Button == 1 && args.Event.Type == EventType.ButtonPress)
             {
-                scene.ButtonPress(args.Event.Button, args.Event.X, args.Event.Y, args);
+                scene.MousePress(args.Event.Button, args.Event.X, args.Event.Y, args);
                 last = (args.Event.X, args.Event.Y);
             }
             
