@@ -13,7 +13,7 @@ namespace Animated.CPU.Model
     {
         public ElementRegisterFile(IElement parent, List<Register> model, DBlock block) : base(parent, model, block)
         {
-            Title       = "Register File";
+            Title       = "Registers";
             TitleAction = GetType().Name;
         }
 
@@ -76,9 +76,6 @@ namespace Animated.CPU.Model
                 IsHidden = false;
             }
             IsHighlighted = Model.IsChanged;
-
-            
-            
             
             text.Clear();
             text.Write($"{Model.Id}", Scene.Styles.FixedFontYellow);

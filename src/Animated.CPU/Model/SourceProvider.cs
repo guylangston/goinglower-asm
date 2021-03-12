@@ -6,11 +6,15 @@ namespace Animated.CPU.Model
     
     public class SourceFile
     {
-        public string                ShortName { get; set; }
-        public string                FileName  { get; set; }
-        public IReadOnlyList<string> Lines     { get; set; }
+        public string                Name { get; set; }
+        public string                Path  { get; set; }
+        
+        public string                AltName { get; set; }
+        public IReadOnlyList<string> Lines   { get; set; }
+        public string                Title   { get; set; }
+        public string                Format  { get; set; }
 
-        public override string ToString() => ShortName ?? FileName;
+        public override string ToString() => Name ?? Path;
     }
 
     public class SourceFileAnchor
@@ -44,11 +48,13 @@ namespace Animated.CPU.Model
             
             var s = new SourceFile()
             {
-                ShortName = Path.GetFileName(txtFile),
-                FileName  = txtFile,
+                Name = Path.GetFileName(txtFile),
+                Title     = Path.GetFileName(txtFile),
+                Format = Path.GetExtension(txtFile).Remove(0, 1),
+                Path      = txtFile,
                 Lines     = File.ReadAllLines(txtFile)
             };
-            files[s.FileName] = s;
+            files[s.Path] = s;
             return s;
         }
         

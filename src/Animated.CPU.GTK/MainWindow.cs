@@ -30,26 +30,24 @@ namespace Animated.CPU.GTK
         private MainWindow(Builder builder)
             : base(builder.GetObject("MainWindow").Handle)
         {
-            var dir = "/home/guy/repo/cpu.anim/src/Sample/Scripts/Introduction-ForLoop";
-            var src = "/home/guy/repo/cpu.anim/src/Sample/Scripts/Introduction-ForLoop/CodeClean.txt";
-            
-
-            var sourceProvider = new SourceProvider();
-            var main = sourceProvider.Load(src);
-            
-            //var parser = new Parser(sourceProvider);
-            var setup  = new Setup();
-            var cpu    = new Cpu();
-            setup.InitFromDisk(dir, cpu, sourceProvider, main);
+            var setup = new Setup();
+            var cpu   = new Cpu();
+            var cfg   = new Setup.Config()
+            {
+                StoryId = "Introduction-ForLoop",
+                BaseFolder = "/home/guy/repo/cpu.anim/src/Sample/Scripts/Introduction-ForLoop",
+                CompileBaseFolder = "/home/guy/repo/cpu.anim/src/Sample/Scripts"
+            };
+            setup.InitCpuFromDisk(cfg, cpu);
             
             builder.Autoconnect(this);
             
             skiaView              =  new SKDrawingArea();
-            skiaView.WidthRequest =  1960;
+            skiaView.WidthRequest =  1920;
             skiaView.HeightRequest =  1080;
 
             var region = new DBlock(0, 0, skiaView.WidthRequest, skiaView.HeightRequest)
-                .Set(50, 0, 0);
+                .Set(20, 0, 0);
             
             scene = new Scene(region)
             {

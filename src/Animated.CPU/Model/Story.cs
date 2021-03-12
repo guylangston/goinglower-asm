@@ -6,18 +6,17 @@ namespace Animated.CPU.Model
 {
     public class Story
     {
-        public int             CurrentIndex { get; set; }
-        public int             CurrentSlideIndex { get; set; }
-        public List<StoryStep> Steps        { get; set; }
-
+        public int                      CurrentIndex      { get; set; }
+        public int                      CurrentSlideIndex { get; set; }
+        public List<StoryStep>          Steps             { get; set; }
+        public SourceProvider           Source            { get; set; }
+        public SourceFile               MainFile          { get; set; }
+        public SourceFile               ReadMe            { get; set; }
+        public List<MemoryView.Segment> Disasmbled        { get; set; }
+        public List<StoryAnnotation>    Slides            { get; } = new List<StoryAnnotation>();
+        public SourceFile?              IL                { get; set; }
+        public SourceFile?              Asm               { get; set; }
         
-        public SourceProvider Source   { get; set; }
-        public SourceFile     MainFile { get; set; }
-        public string[]       ReadMe   { get; set; }
-
-        public List<StoryAnnotation> Slides { get; } = new List<StoryAnnotation>();
-
-
         public StoryStep?       Current      => GeneralHelper.ByIndexOrDefault(Steps, CurrentIndex);
         public StoryAnnotation? CurrentSlide => GeneralHelper.ByIndexOrDefault(Slides, CurrentSlideIndex);
     }

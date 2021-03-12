@@ -81,34 +81,14 @@ namespace Animated.CPU.Model
                         if (arg.Register != null && Scene.TryGetElementFromModelRecurse(arg.Register, out var eReg))
                         {
                             loc.CustomDraw = (c) => {
-                                if (IsHighlighted)
-                                {
-                                    var a = loc.LastDraw;
-                                    var b = eReg.Block.Inner.MR;
-                                    new Arrow()
-                                    {
-                                        Start     = a,
-                                        WayPointA = a + new SKPoint(-20, 0),
-                                        WayPointB = b + new SKPoint(+20, 0),
-                                        End       = b,
-                                        Style     = Scene.Styles.Arrow
-                                    }.Draw(c.Canvas);
-                                }
-                                else
-                                {
-                                    var a = loc.LastDraw;
-                                    var b = eReg.Block.Inner.MR;
-                                    new Arrow()
-                                    {
-                                        Start     = a,
-                                        WayPointA = a + new SKPoint(-20, 0),
-                                        WayPointB = b + new SKPoint(+20, 0),
-                                        End       = b,
-                                        Style     = Scene.Styles.FixedFontGray
-                                    }.Draw(c.Canvas);
-                                }
                                 
-                                
+                                var arr = new ArrowElement(
+                                    new DockPoint(this),
+                                    new DockPoint(eReg),
+                                    IsHighlighted ? Scene.Styles.Arrow : Scene.Styles.ArrowGray
+                                );
+                                arr.Step();
+                                arr.Draw(c.Canvas);
                             };
 
                         }
@@ -149,16 +129,13 @@ namespace Animated.CPU.Model
                 var seg = Scene.Cpu.Instructions.GetByAddress(master.Story.Current.RIP);
                 if (seg != null && Scene.TryGetElementFromModelRecurse(seg, out var eRip))
                 {
-                    var a = Block.Outer.MR;
-                    var b = eRip.Block.Inner.ML;
-                    new Arrow()
-                    {
-                        Start     = a,
-                        WayPointA = a + new SKPoint(20, 0),
-                        WayPointB = b + new SKPoint(-20, 0),
-                        End       = b,
-                        Style     = Scene.Styles.Arrow
-                    }.Draw(surface.Canvas);
+                    var arr = new ArrowElement(
+                        new DockPoint(this),
+                        new DockPoint(eRip),
+                        Scene.Styles.Arrow
+                    );
+                    arr.Step();
+                    arr.Draw(surface.Canvas);
                 }
             }
             

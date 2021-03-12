@@ -19,6 +19,8 @@ namespace Animated.CPU.Model
     public class Scene : SceneBase<Cpu, StyleFactory>
     {
         private SKBitmap bitmap1;
+        private CodeElement ElementCodeIL;
+        private CodeElement ElementCodeASM;
 
         public Scene(DBlock region) : base(new StyleFactory())
         {
@@ -51,26 +53,49 @@ namespace Animated.CPU.Model
             var ww = 1920;
             var hh = 1090;
 
-            float w     = Block.Inner.W / 4;
+            float w     = Block.Inner.W / 5;
 
-            var cpu = Add(new SimpleSection(this, "CPU", 
-                DBlock.FromTwoPoints(new SKPoint(50, 20), new SKPoint(970, 1020))));
-            cpu.TitleAction = "CPU";
-            
-            var ram = Add(new SimpleSection(this, "RAM", 
-                DBlock.FromTwoPoints(new SKPoint(990, 20), new SKPoint(1440, 1020))));
-            ram.TitleAction = "RAM";
-            
+            // var cpu = Add(new SimpleSection(this, "CPU", 
+            //     DBlock.FromTwoPoints(new SKPoint(50, 20), new SKPoint(970, 1020))));
+            // cpu.TitleAction = "CPU";
+            //
+            // var ram = Add(new SimpleSection(this, "RAM", 
+            //     DBlock.FromTwoPoints(new SKPoint(990, 20), new SKPoint(1440, 1020))));
+            // ram.TitleAction = "RAM";
+            //
 
             var   stack = Add(new StackElement(this, Block, DOrient.Horz));
-            this.ElementRegisterFile = stack.Add(new ElementRegisterFile(stack, Model.RegisterFile, DBlock.JustWidth(w).Set(20, 1, 10)));
-            this.ElementALU = stack.Add(new ALUElement(stack, Model.ALU, DBlock.JustWidth(w).Set(20, 1, 10)));
-            this.ElementInstructions = stack.Add(new MemoryViewElement(stack, DBlock.JustWidth(w).Set(20, 1, 10), Model.Instructions)
+            
+            this.ElementCode   = stack.Add(new CodeElement(stack, Model.Story.MainFile, 
+                DBlock.JustWidth(w)));
+
+            if (Cpu.Story.IL != null)
             {
-                Title = "Instructions",
-                TitleAction = "ASM"
-            });
-            this.ElementCode = stack.Add(new CodeElement(stack, Model.Story.MainFile, DBlock.JustWidth(w).Set(10, 1, 10)));
+                this.ElementCodeIL = stack.Add(new CodeElement(stack, Cpu.Story.IL, 
+                    DBlock.JustWidth(w)));    
+            }
+
+            if (Cpu.Story.Asm != null)
+            {
+                this.ElementCodeASM = stack.Add(new CodeElement(stack, Cpu.Story.Asm, 
+                    DBlock.JustWidth(w)));    
+            }
+            
+            this.ElementInstructions = stack.Add(new MemoryViewElement(stack,  
+                DBlock.JustWidth(w),
+                Model.Instructions));
+
+
+            this.ElementALU          = stack.Add(new ALUElement(stack, Model.ALU, 
+                DBlock.JustWidth(w)));
+            
+            this.ElementRegisterFile = stack.Add(new ElementRegisterFile(stack, Model.RegisterFile, 
+                DBlock.JustWidth(w)));
+
+            foreach (var ss in stack.Children)
+            {
+                ss.Block?.Set(5, 1, 10);
+            }
 
             var bTerm = new DBlock(30, hh + 10, 900, 400);
             bTerm.Set(0, 3, 10);
@@ -115,10 +140,10 @@ namespace Animated.CPU.Model
                 reg.Model.IsChanged = false;
             }
 
-            if (Model.Story?.ReadMe != null && Model.Story.ReadMe.Any())
-            {
-                ShowDialog("README", Model.Story.ReadMe);
-            }
+            // if (Model.Story?.ReadMe != null && Model.Story.ReadMe.Any())
+            // {
+            //     ShowDialog("README", Model.Story.ReadMe);
+            // }
         }
 
         private void ShowDialog(string? slideTitle, string slideText)
@@ -159,7 +184,7 @@ namespace Animated.CPU.Model
             
             surface.DrawRect(Block.Outer, Styles.Border);
             
-            surface.Canvas.DrawText($"0xGoingLower v{Version}", new SKPoint(10,20), Styles.TextLogo);
+            surface.DrawText($"0xGoingLower v{Version}", Styles.TextLogo, Block, BlockAnchor.BR);
 
             if (DebugPointAt != SKPoint.Empty)
             {
@@ -271,7 +296,7 @@ namespace Animated.CPU.Model
                 
                 if (Cpu?.Story?.ReadMe != null)
                 {
-                    ShowDialog("ReadMe", Cpu.Story.ReadMe);
+                    ShowDialog("ReadMe", Cpu.Story.ReadMe.Lines);
                 }
                 
                 return;

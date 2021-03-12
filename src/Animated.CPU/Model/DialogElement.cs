@@ -47,6 +47,7 @@ namespace Animated.CPU.Model
             this.text.Clear();
             if (Model.Lines != null)
             {
+                text.WriteLine("OxGoingLower", Scene.Styles.FixedFontHuge);
                 foreach (var line in Model.Lines)
                 {
                     text.WriteLine(line);

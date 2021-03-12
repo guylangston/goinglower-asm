@@ -13,7 +13,7 @@ namespace Animated.CPU.Model
     {
         public ALUElement(IElement scene, ArithmeticLogicUnit alu, DBlock b) : base(scene, alu, b)
         {
-            Title = "ALU";
+            Title = "A-L-U";
         }
 
         protected override void Init()

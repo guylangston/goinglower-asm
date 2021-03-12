@@ -32,6 +32,10 @@ namespace Animated.CPU.Model
             FixedFontURL      = Clone(FixedFont, p => p.Color = SKColors.LimeGreen);
             FixedFontArg      = Clone(FixedFont, p => p.Color = SKColors.LightSalmon);
             FixedFontSource   = Clone(FixedFont, p => p.Color = SKColors.LightCoral);
+            FixedFontHuge     = Clone(FixedFont, p => {
+                p.Color    = SKColors.LightCoral;
+                p.TextSize = 36;
+            });  
             
             
             SmallFont = new SKPaint()
@@ -116,15 +120,24 @@ namespace Animated.CPU.Model
                 Color       = SKColors.Lime,
                 IsAntialias = true
             };
+            ArrowGray = new SKPaint()
+            {
+                Style       = SKPaintStyle.Stroke,
+                StrokeWidth = 1.5f,
+                Color       = SKColors.DarkGray,
+                IsAntialias = true
+            };
 
             Highlighted = Selected = Arrow;
         }
+
         
+
         public PropertyInfo[] Props { get; }
 
         public SKPaint ButtonText        { get; }
         public SKPaint ButtonBg          { get; }
-        public SKPaint FixedFontSource      { get; }
+        public SKPaint FixedFontSource   { get; }
         public SKPaint FixedFontArg      { get; }
         public SKPaint FixedFontURL      { get; }
         public SKPaint BackGround        { get; }
@@ -139,12 +152,14 @@ namespace Animated.CPU.Model
         public SKPaint FixedFontDarkGray { get; }
         public SKPaint Border            { get; }
         public SKPaint Arrow             { get; }
+        public SKPaint ArrowGray         { get; }
         public SKPaint TextLogo          { get; }
         public SKPaint TextH1            { get; }
         public SKPaint TextH1BG          { get; }
         public SKPaint Selected          { get; }
         public SKPaint Highlighted       { get; }
         public SKPaint SmallFont         { get; }
+        public SKPaint FixedFontHuge     { get;  }
         
 
         public static SKPaint Clone(SKPaint cpy, Action<SKPaint> then)

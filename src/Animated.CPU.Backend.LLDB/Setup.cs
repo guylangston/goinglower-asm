@@ -8,15 +8,51 @@ namespace Animated.CPU.Backend.LLDB
 {
     public class Setup
     {
-        public void InitFromDisk(string folder, Cpu cpu, SourceProvider source, SourceFile mainSource)
+        public class Config
         {
-            var parser = new Parser(source);
-            var fState = Path.Combine(folder, "S0000-method.clru");
-            var method = parser.ParseCLRU(File.ReadAllLines(fState));
-            cpu.Instructions = new MemoryView(method);
+            public string CompileBaseFolder { get; set; }  // /home/guy/repo/cpu.anim/src/Sample
+            public string BaseFolder        { get; set; }  // /home/guy/repo/cpu.anim/src/Sample/Scripts/Introduction-ForLoop
+            public string StoryId           { get; set; }  // Introduction-ForLoop
             
-            var fInit = Path.Combine(folder, "S0001-step.state");
-            foreach (var regD in parser.ParseRegisters(File.ReadAllLines(fInit).Skip(4)))
+            public bool TryGetPath(string rel, out string fullPath)
+            {
+                var p = System.IO.Path.Combine(BaseFolder, rel);
+                if (Directory.Exists(p) || File.Exists(p))
+                {
+                    fullPath = p;
+                    return true;
+                }
+
+                fullPath = null;
+                return false;
+            }
+            
+            public string GetExpectedPath(string rel)
+            {
+                if (TryGetPath(rel, out var p))
+                {
+                    return p;
+                }
+                throw new Exception($"Not found: {rel}");
+            }
+
+            public SourceFile ReadAsTextLinesElseNull(SourceProvider prov, string rel)
+            {
+                if (TryGetPath(rel, out var p))
+                {
+                    return prov.Load(p);
+                }
+                return null;
+            }
+        }
+        
+        public void InitCpuFromDisk(Config cfg, Cpu cpu)
+        {
+            cpu.Story = BuildStory(cfg);
+            
+            cpu.Instructions = new MemoryView(cpu.Story.Disasmbled);
+            
+            foreach (var regD in cpu.Story.Steps.First().Delta)
             {
                 if (regD.ValueParsed != null)
                 {
@@ -28,34 +64,53 @@ namespace Animated.CPU.Backend.LLDB
                 }
             }
 
-            cpu.Story = new Story()
-            {
-                Steps = new List<StoryStep>(),
-                Source = source,
-                MainFile = mainSource,
-                ReadMe = File.ReadAllLines(Path.Combine(folder, "Readme.txt"))
-            };
-            cpu.Stack = new MemoryView(new[]
-            {
-                new MemoryView.Segment()
-                {
-                    SourceAsm = "TODO",
-                    Raw       = ExampleCPU.RandomBytes(10)
-                }
-            });
+        }
 
-            foreach (var stepFile in FindStepFiles(folder))
+        public Story BuildStory(Config cfg)
+        {
+            var source = new SourceProvider();
+            var main   = source.Load(cfg.GetExpectedPath("CodeClean.txt"));
+            
+            var parser = new Parser(source);
+            var dis = parser.ParseCLRU(File.ReadAllLines(cfg.GetExpectedPath("S0000-method.clru"))).ToList();
+            
+            var story = new Story()
+            {
+                Steps      = new List<StoryStep>(),
+                Source     = source,
+                Disasmbled = dis,
+                MainFile   = main,
+                ReadMe     = cfg.ReadAsTextLinesElseNull(source, "ReadMe.txt"),
+                IL         = cfg.ReadAsTextLinesElseNull(source, "Code.il"),
+                Asm        = cfg.ReadAsTextLinesElseNull(source, "Code.asm"),
+            };
+
+            foreach (var stepFile in FindStepFiles(cfg.BaseFolder))
             {
                 var step = parser.ParseStep(File.ReadAllLines(stepFile));
                 if (step == null) throw new Exception($"Unable to parse: {stepFile}");
-                cpu.Story.Steps.Add(step);
+                story.Steps.Add(step);
             }
-            
-            
-            
-            // HACKS
+
+            TryEnrich(story, cfg);
+
+            return story;
+        }
+
+        private void TryEnrich(Story story, Config cfg)
+        {
+            if (cfg.StoryId == "Introduction-ForLoop")
+            {
+                Enrich_IntroductionForLoop(story, cfg);
+                
+            }
+        }
+
+        private void Enrich_IntroductionForLoop(Story story, Config cfg)
+        {
+             // HACKS
             // see: /home/guy/repo/cpu.anim/src/Sample/Scripts/Introduction-ForLoop/Slides.md
-            cpu.Story.Steps[2].Comment = new StoryAnnotation()
+            story.Steps[2].Comment = new StoryAnnotation()
             { 
                 Format = Format.Text,
                 Text = "This is part of the calling preamble,\n" +
@@ -69,7 +124,7 @@ namespace Animated.CPU.Backend.LLDB
                     } 
                 }
             };
-            cpu.Story.Steps[3].Comment = new StoryAnnotation()
+            story.Steps[3].Comment = new StoryAnnotation()
             { 
                 Format = Format.Text,
                 Text = "Just a fancy way of doing `mov eax, 0`",
@@ -82,7 +137,7 @@ namespace Animated.CPU.Backend.LLDB
                     } 
                 }
             };
-            cpu.Story.Steps[4].Comment = new StoryAnnotation()
+            story.Steps[4].Comment = new StoryAnnotation()
             { 
                 Format = Format.Text,
                 Tags = new List<Tag>()
@@ -95,7 +150,7 @@ namespace Animated.CPU.Backend.LLDB
                 }
             };
             
-            cpu.Story.Slides.Add(new StoryAnnotation()
+            story.Slides.Add(new StoryAnnotation()
             {
                 Title = "History",
                 Format = Format.Markdown,
@@ -121,7 +176,7 @@ x86-64 allows 64-bit addresses @RIP but 32-bit general registers @EAX, @EBX, etc
 This is effectively the dotnet model."
             });
         }
-        
+
         private IEnumerable<string> FindStepFiles(string folder)
         {
             int cc = 2;

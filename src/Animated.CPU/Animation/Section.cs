@@ -26,8 +26,17 @@ namespace Animated.CPU.Animation
 
             if (Block.Border.All > 0)
             {
-                surface.Canvas.DrawRect(Block.BorderRect.ToSkRect(),
-                    Scene.StyleFactory.GetPaint(this, IsHighlighted ? "Highlighted" : "border"));    
+                if (IsHighlighted)
+                {
+                    surface.DrawHighlight(this);
+                }
+                else
+                {
+                    surface.Canvas.DrawRect(Block.BorderRect.ToSkRect(),
+                        Scene.StyleFactory.GetPaint(this, "border"));    
+                }
+                
+                    
             }
             
             

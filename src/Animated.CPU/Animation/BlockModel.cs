@@ -15,6 +15,7 @@ namespace Animated.CPU.Animation
     
     public enum BlockAnchor
     {
+        None,
         TL, TM, TR,
         ML, MM, MR,
         BL, BM, BR

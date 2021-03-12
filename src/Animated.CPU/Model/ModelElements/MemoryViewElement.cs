@@ -8,12 +8,16 @@ namespace Animated.CPU.Model.ModelElements
 {
     public class MemoryViewElement : Section<Scene, MemoryView>
     {
+        private StackElement stack;
+
         public MemoryViewElement(IElement scene, DBlock b, MemoryView memory) : base(scene, memory, b)
         {
             
         }
 
-        private StackElement stack;
+        public int Max      { get; set; } = 16;
+        public int LookBack { get; set; } = 3;
+        
         protected override void Init()
         {
             stack = Add(new StackElement(this, Block, DOrient.Vert));
@@ -25,11 +29,6 @@ namespace Animated.CPU.Model.ModelElements
                     DesiredHeight = 30
                 }));    
             }
-            
-            
-            
-            
-            
         }
 
         protected override void Step(TimeSpan step)
@@ -62,15 +61,11 @@ namespace Animated.CPU.Model.ModelElements
                 {
                     pair.First.IsEnabled = false;
                 }
-                
             }
-            
-            
 
         }
 
-        public int Max      { get; set; } = 16;
-        public int LookBack { get; set; } = 3;
+
     }
     
     public class SegmentElement : Element<Scene, MemoryView.Segment>
@@ -130,7 +125,7 @@ namespace Animated.CPU.Model.ModelElements
         {
             if (IsSelected)
             {
-                surface.DrawHighlight(Block.Outer.ToSkRect(), Scene.Styles.Selected, 1f);
+                surface.DrawHighlight(this);
 
                 var l = Model.SourceAnchor ?? Model.SourceAnchorClosest;
                 if (l != null)
@@ -138,24 +133,14 @@ namespace Animated.CPU.Model.ModelElements
                     var line = Scene.ElementCode.GetLine(l.Line);
                     if (line != null)
                     {
-                        var stylesArrow = Scene.Styles.Arrow;
-                        new Arrow()
-                        {
-                            Start     = Block.Inner.MR,
-                            WayPointA = Block.Inner.MR + new SKPoint(20, 0),
-                            WayPointB = line.LastDraw + new SKPoint(-20, 2),
-                            End       = line.LastDraw + new SKPoint(Block.W, 2),
-                            Style     = stylesArrow,
-                        }.Draw(surface.Canvas);
+                        var arr = new ArrowElement(
+                            new DockPoint(this),
+                            new DockPoint(Scene.ElementCode, line),
+                            Scene.Styles.Arrow
+                        );
+                        arr.Step();
+                        arr.Draw(surface.Canvas);
 
-
-                        // var r = new SKRect(
-                        //     Block.X,
-                        //     line.Line.Y,
-                        //     Block.X2,
-                        //     line.Line.Y + line.Line.H);
-                        //
-                        // surface.Canvas.DrawRect(r, stylesArrow);
                     }
                     
                 }

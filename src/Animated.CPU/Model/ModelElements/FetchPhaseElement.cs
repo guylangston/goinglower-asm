@@ -54,16 +54,13 @@ namespace Animated.CPU.Model
                 var seg = Scene.Cpu.Instructions.GetByAddress(Model.RIP);
                 if (seg != null && Scene.TryGetElementFromModelRecurse(seg, out var eRip))
                 {
-                    var a = Block.Outer.MR;
-                    var b = eRip.Block.Inner.ML;
-                    new Arrow()
-                    {
-                        Start     = a,
-                        WayPointA = a + new SKPoint(20, 0),
-                        WayPointB = b + new SKPoint(-20, 0),
-                        End       = b,
-                        Style     = Scene.Styles.Arrow
-                    }.Draw(surface.Canvas);
+                    var arr = new ArrowElement(
+                        new DockPoint(this),
+                        new DockPoint(eRip),
+                        Scene.Styles.Arrow
+                    );
+                    arr.Step();
+                    arr.Draw(surface.Canvas);
                 }    
             }
         }
