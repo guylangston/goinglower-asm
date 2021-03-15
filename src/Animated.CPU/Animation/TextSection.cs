@@ -35,6 +35,8 @@ namespace Animated.CPU.Animation
 
         protected override void Step(TimeSpan step)
         {
+            if (text == null) return;
+            
             base.Step(step);
 
             if (IsSourceChanged)
@@ -46,9 +48,13 @@ namespace Animated.CPU.Animation
                     var  map = Parser.Parse(GetLines(Model));
                     foreach (var line in map.Walk())
                     {
-                        text.Write(line.txt, line.ident == null 
+                        var span = text.Write(line.txt, line.ident == null 
                             ? normal 
                             : Scene.StyleFactory.GetPaint(this, $"font-{line.ident.Colour ?? line.ident.Name}"));
+                        if (span != null)
+                        {
+                            span.SetModel(line.line);
+                        }
                     }
 
                     IsSourceChanged = false;
@@ -58,8 +64,12 @@ namespace Animated.CPU.Animation
                     uint cc = 1;
                     foreach (var line in GetLines(Model))
                     {
-                        text.Write($"{cc.ToString().PadLeft(3)}: ", prefix)
-                            .SetModel(cc);
+                        var span = text.Write($"{cc.ToString().PadLeft(3)}: ", prefix);
+                        if (span != null)
+                        {
+                            span.SetModel(cc);
+                        }    
+                            
                         text.WriteLine(line);
                     
                         cc++;

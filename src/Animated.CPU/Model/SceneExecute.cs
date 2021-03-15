@@ -60,19 +60,19 @@ namespace Animated.CPU.Model
             this.ElementCode   = stack.Add(new CodeElement(stack, Model.Story.MainFile, 
                 DBlock.JustWidth(w)));
 
-            if (Cpu.Story.IL != null)
-            {
-                this.ElementCodeIL = stack.Add(new CodeElement(stack, Cpu.Story.IL, 
-                    DBlock.JustWidth(w)));
-                this.ElementCodeIL.IsHidden = true;
-            }
-
-            if (Cpu.Story.Asm != null)
-            {
-                this.ElementCodeASM = stack.Add(new CodeElement(stack, Cpu.Story.Asm, 
-                    DBlock.JustWidth(w)));
-                this.ElementCodeASM.IsHidden = true;
-            }
+            // if (Cpu.Story.IL != null)
+            // {
+            //     this.ElementCodeIL = stack.Add(new CodeElement(stack, Cpu.Story.IL, 
+            //         DBlock.JustWidth(w)));
+            //     this.ElementCodeIL.IsHidden = true;
+            // }
+            //
+            // if (Cpu.Story.Asm != null)
+            // {
+            //     this.ElementCodeASM = stack.Add(new CodeElement(stack, Cpu.Story.Asm, 
+            //         DBlock.JustWidth(w)));
+            //     this.ElementCodeASM.IsHidden = true;
+            // }
             
             this.ElementInstructions = stack.Add(new MemoryViewElement(stack,  
                 DBlock.JustWidth(w),
@@ -296,7 +296,6 @@ namespace Animated.CPU.Model
 
             if (act.Name == "Help")
             {
-                
                 if (Cpu?.Story?.ReadMe != null)
                 {
                     ShowDialog("ReadMe", Cpu.Story.ReadMe.Lines);

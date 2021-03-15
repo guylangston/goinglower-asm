@@ -19,6 +19,8 @@ namespace Animated.CPU.Parsers
     public abstract class Syntax
     {
         public List<List<Identifier>> Phases { get; } = new List<List<Identifier>>();
+
+        public const string CommentGray = "#666";
     }
 
     

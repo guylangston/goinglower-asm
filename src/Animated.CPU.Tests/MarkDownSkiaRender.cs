@@ -54,7 +54,7 @@ x86 family journey:
 - 16-bit [8086](https://en.wikipedia.org/wiki/Intel_8086) chip in 1976; which is we the x86 comes from
 - 32-bit [80386](https://en.wikipedia.org/wiki/Intel_80386) chip in 1985
 - 64-bit [AMD-64 aka x86-64](https://en.wikipedia.org/wiki/X86-64) design by AMD (not Intel) in 2000 for the AMD K8 chips. 
-  Intel's cleaner but not bdackwards compatible IA-64 effectively failed in the marketplace.
+  Intel's cleaner but not backwards compatible IA-64 effectively failed in the marketplace.
 - After 64-bit we got special purpose 128-bit computation with MMX and onwards. (These are out of scope now)
 
 TODO: Diagram with die-size, clock speed, and transistor count

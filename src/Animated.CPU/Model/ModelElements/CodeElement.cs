@@ -1,47 +1,38 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Animated.CPU.Animation;
+using Animated.CPU.Parsers;
 using SkiaSharp;
 
 namespace Animated.CPU.Model.ModelElements
 {
-    public class CodeElement : Section<SceneExecute, SourceFile>
+    public class CodeElement : TextSection<SceneExecute, SourceFile>
     {
-        private TextBlockElement text;
+
 
         public CodeElement(IElement parent, SourceFile model, DBlock block) : base(parent, model, block)
         {
-            Title = model.Title ?? model.Name;
+            Title  = model.Title ?? model.Name;
+            Parser = new SourceParser(new SyntaxCSharp());
+
+        }
+
+        protected override IReadOnlyList<string> GetLines(SourceFile model)
+        {
+            return model.Lines;
         }
 
         protected override void Init()
         {
-            text = Add(new TextBlockElement(this, this.Block, Scene.Styles.FixedFontSource));
+            normal = Scene.StyleFactory.GetPaint(this, "FixedFontGray");
+            prefix = Scene.StyleFactory.GetPaint(this, "FixedFontDarkGray");
 
-            uint cc = 1;
-            foreach (var line in Model.Lines)
-            {
-                text.Write($"{cc.ToString().PadLeft(3)}: ", Scene.Styles.FixedFontDarkGray)
-                    .SetModel(cc);
-                text.WriteLine(line);
-                    
-                cc++;
-            }
+            text = Add(new TextBlockElement(this, this.Block, normal));
+
+            IsSourceChanged = true;
         }
 
-        protected override void Step(TimeSpan step) 
-        {
-            
 
-        }
-
-        public TextBlockElement.Span? GetLine(uint line)
-        {
-            if (text.TryGetSpanFromModel(line, out var s))
-            {
-                return s;
-            }
-            return null;
-        }
     }
 }

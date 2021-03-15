@@ -81,7 +81,7 @@ namespace Animated.CPU.Backend.LLDB
                 Source     = source,
                 Disasmbled = dis,
                 MainFile   = main,
-                ReadMe     = cfg.ReadAsTextLinesElseNull(source, "ReadMe.txt"),
+                ReadMe     = cfg.ReadAsTextLinesElseNull(source, "Readme.txt"),
                 IL         = cfg.ReadAsTextLinesElseNull(source, "Code.il"),
                 Asm        = cfg.ReadAsTextLinesElseNull(source, "Code.asm"),
                 Binary      = cfg.ReadAsTextLinesElseNull(source, "Code.bin"),

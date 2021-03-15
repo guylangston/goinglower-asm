@@ -9,7 +9,7 @@ namespace Animated.CPU.Parsers
             // Pass 1
             Phases.Add( new List<Identifier>()
             {
-                new LineCommentIdentifier("comment", "//", "darkgray"),
+                new LineCommentIdentifier("comment", "//", Syntax.CommentGray),
                 new StringQuoteIdentifier("quote", "\" ' `", "green")
             });
             
@@ -34,7 +34,7 @@ namespace Animated.CPU.Parsers
             // Pass 1
             Phases.Add( new List<Identifier>()
             {
-                new LineCommentIdentifier("comment", ";", "darkgray"),
+                new LineCommentIdentifier("comment", ";", Syntax.CommentGray),
                 new Identifier("quote", "\" ' `", "green")
             });
             
@@ -55,7 +55,7 @@ namespace Animated.CPU.Parsers
             // Pass 1
             Phases.Add( new List<Identifier>()
             {
-                new LineCommentIdentifier("comment", "//", "darkgray"),
+                new LineCommentIdentifier("comment", "//", Syntax.CommentGray),
                 new Identifier("quote", "\" ' `", "green")
             });
             
