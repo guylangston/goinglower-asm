@@ -9,7 +9,7 @@ namespace Animated.CPU.Animation
         public SourceCodeSection(IElement parent, SourceFile model, DBlock block) : base(parent, model, block)
         {
             Title  = model.Title ?? model.Name;
-            Parser = new SourceParser(new SyntaxCSharp());
+            
         }
         
         

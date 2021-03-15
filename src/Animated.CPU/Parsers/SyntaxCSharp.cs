@@ -9,8 +9,8 @@ namespace Animated.CPU.Parsers
             // Pass 1
             Phases.Add( new List<Identifier>()
             {
-                new Identifier("comment", "//", "gray"),
-                new Identifier("quote", "\" ' `", "green")
+                new LineCommentIdentifier("comment", "//", "darkgray"),
+                new StringQuoteIdentifier("quote", "\" ' `", "green")
             });
             
             
@@ -21,7 +21,49 @@ namespace Animated.CPU.Parsers
                 new Identifier("control", "for foreach while do return if else", "lightgreen"),
                 new Identifier("type", "var string bool int byte long ulong uint int32 uint32", "cyan"),
                 new Identifier("operator", "= <= >= < > + - * / ++ -- += -= *= /=", "yellow"),
-                new Identifier("separator", "{ } ( ) ; , . :", "orange"),
+                new Identifier("separator", "[ ] { } ( ) ; , . :", "orange"),
+            });
+        }
+        
+    }
+    
+    public class SyntaxAsm : Syntax
+    {
+        public SyntaxAsm()
+        {
+            // Pass 1
+            Phases.Add( new List<Identifier>()
+            {
+                new LineCommentIdentifier("comment", ";", "darkgray"),
+                new Identifier("quote", "\" ' `", "green")
+            });
+            
+            
+            // Pass 2
+            Phases.Add( new List<Identifier>()
+            {
+                new Identifier("separator", "{ } ( ) ; , . : [ ]", "lightgreen"),
+            });
+        }
+        
+    }
+    
+    public class SyntaxIL : Syntax
+    {
+        public SyntaxIL()
+        {
+            // Pass 1
+            Phases.Add( new List<Identifier>()
+            {
+                new LineCommentIdentifier("comment", "//", "darkgray"),
+                new Identifier("quote", "\" ' `", "green")
+            });
+            
+            
+            // Pass 2
+            Phases.Add( new List<Identifier>()
+            {
+                new Identifier("separator", "{ } ( ) ; , . : [ ]", "lightgreen"),
             });
         }
         

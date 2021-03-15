@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Animated.CPU.Animation;
+using Animated.CPU.Parsers;
 
 namespace Animated.CPU.Model
 {
@@ -35,8 +36,24 @@ namespace Animated.CPU.Model
             sections = new List<SourceCodeSection>();
             foreach (var file in items.Where(x=>x!= null))
             {
-                sections.Add(stack.Add(new SourceCodeSection(stack, file , 
-                    new DBlock().Set(5, 1, 5))));
+                var code = new SourceCodeSection(stack, file, new DBlock().Set(5, 1, 5));
+                if (file.Name.EndsWith(".cs"))
+                {
+                    code.Parser = new SourceParser(new SyntaxCSharp());
+                }
+                else if (file.Name.EndsWith(".asm"))
+                {
+                    code.Parser = new SourceParser(new SyntaxAsm());
+                }
+                else if (file.Name.EndsWith(".il"))
+                {
+                    code.Parser = new SourceParser(new SyntaxIL());
+                }
+                else
+                {
+                    code.Parser = new SourceParser(new SyntaxCSharp());
+                }
+                sections.Add(stack.Add(code));
             }
 
             current               = stack.ChildrenAre<SourceCodeSection>().First();
