@@ -100,6 +100,7 @@ namespace Animated.CPU.Model
                 
                 case "d":
                 case "n":
+                case "Right":    
                 case "period":
                     i = sections.IndexOf(current);
                     if (i < sections.Count - 1)
@@ -112,6 +113,7 @@ namespace Animated.CPU.Model
                 
                 case "a":
                 case "p":
+                case "Left":
                 case "comma":
                     i = sections.IndexOf(current);
                     if (i > 0)

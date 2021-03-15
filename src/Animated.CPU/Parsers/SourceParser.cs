@@ -28,14 +28,11 @@ namespace Animated.CPU.Parsers
                 var tok = new List<ParserToken>();
                 var l   = lines[ln];
 
-                if (!string.IsNullOrWhiteSpace(l))
+                foreach (var phase in syntax.Phases)
                 {
-                    foreach (var phase in syntax.Phases)
-                    {
-                        Tokenize(phase, tok, l, ln);    
-                    }
-                    tok.Sort(((a, b) => a.Range.Start.Value.CompareTo(b.Range.Start.Value)));    
+                    Tokenize(phase, tok, l, ln);    
                 }
+                tok.Sort(((a, b) => a.Range.Start.Value.CompareTo(b.Range.Start.Value)));
                 
                 
                 ret.LineTokens.Add(tok);
@@ -59,7 +56,6 @@ namespace Animated.CPU.Parsers
             
             while (cc < s.Length)
             {
-                
                 // Already in range
                 foreach (var t in tok)
                 {

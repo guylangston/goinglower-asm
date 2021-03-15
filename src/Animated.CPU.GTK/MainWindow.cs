@@ -78,6 +78,8 @@ namespace Animated.CPU.GTK
             scene.ProcessEvent(args, "DebugText", $"Motion: {args.Event.X}, {args.Event.Y}");
         }
 
+        
+        [GLib.ConnectBefore]
         private void OnButtonPressEvent(object o, ButtonPressEventArgs args)
         {
             if (last == (args.Event.X, args.Event.Y)) return; // HACK: Dub click events
@@ -90,6 +92,7 @@ namespace Animated.CPU.GTK
             
         }
 
+        [GLib.ConnectBefore]        // https://stackoverflow.com/questions/35833643/how-to-manually-detect-arrow-keys-in-gtk-c-sharp
         private void KeyPress(object o, KeyPressEventArgs args)
         {
             scene.KeyPress(args.Event, args.Event.Key.ToString());

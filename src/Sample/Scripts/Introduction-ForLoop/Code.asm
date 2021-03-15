@@ -1,4 +1,3 @@
-
 .entry:
     push    rbp
     mov     rbp, rsp

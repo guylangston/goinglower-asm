@@ -18,7 +18,7 @@ namespace Animated.CPU.Model
         {
         }
 
-        public const string Version = "0.5-alpha";
+        public const string Version = "0.6-alpha";
         
         // Helpers
         public Cpu                    Cpu                 => Model;
@@ -236,11 +236,13 @@ namespace Animated.CPU.Model
                 case "d":
                 case "n":
                 case "period":
+                case "Down":
                     ElementLogicUnit.Next();
                     break;
                 
                 case "a":
                 case "p":
+                case "Up":
                 case "comma":
                     ElementLogicUnit.Prev();
                     break;

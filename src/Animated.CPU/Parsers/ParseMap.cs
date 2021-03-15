@@ -7,8 +7,16 @@ namespace Animated.CPU.Parsers
     {
         public IReadOnlyList<string>   Lines      { get; set; }
         public List<List<ParserToken>> LineTokens { get; set; }
+        
+        public struct Section
+        {
+            public bool        StartLine { get; set; }
+            public Identifier? Ident     { get; set; }
+            public string      Text      { get; set;}
+            public uint        LineNo    { get; set;}
+        }
 
-        public IEnumerable<(Identifier? ident, string txt, uint line)> Walk()
+        public IEnumerable<Section> Walk()
         {
             for (int cc = 0; cc < Lines.Count; cc++)
             {
@@ -21,16 +29,42 @@ namespace Animated.CPU.Parsers
                     var tt = token.Range.GetOffsetAndLength(l.Length);
                     if (tt.Offset > s)
                     {
-                        yield return (null, l[s..tt.Offset], (uint)cc);
+                        yield return new Section()
+                        {
+                            StartLine = s == 0,
+                            Ident = null,
+                            Text =l[s..tt.Offset],
+                            LineNo = (uint)cc
+                        };
+                        
                     }
-                    yield return (token.Ident, l[token.Range], (uint)cc);
+                    yield return new Section()
+                    {
+                        StartLine = tt.Offset == 0,
+                        Ident  = token.Ident,
+                        Text   = l[token.Range],
+                        LineNo = (uint)cc
+                    };
                     s = tt.Offset + tt.Length;
                 }
                 if (s < l.Length -1)
                 {
-                    yield return (null, l[s..^0], (uint)cc);
+                    yield return new Section()
+                    {
+                        StartLine = s == 0,
+                        Ident     = null,
+                        Text      = l[s..^0],
+                        LineNo    = (uint)cc
+                    };
                 }
-                yield return (null, Environment.NewLine, (uint)cc);
+                
+                yield return new Section()
+                {
+                    StartLine = s == 0,
+                    Ident     = null,
+                    Text      = Environment.NewLine,
+                    LineNo    = (uint)cc
+                };
             }
         }
     }

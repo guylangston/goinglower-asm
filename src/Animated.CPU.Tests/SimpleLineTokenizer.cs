@@ -42,7 +42,7 @@ int ForLoop(int count)
             var sb = new StringBuilder();
             foreach (var line in res.Walk())
             {
-                sb.Append(line.txt);
+                sb.Append(line.Text);
             }
             
             
@@ -66,7 +66,7 @@ int ForLoop(int count)
             var sb = new StringBuilder();
             foreach (var line in res.Walk())
             {
-                sb.Append(line.txt);
+                sb.Append(line.Text);
             }
             
             

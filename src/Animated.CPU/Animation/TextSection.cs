@@ -14,7 +14,9 @@ namespace Animated.CPU.Animation
 
         public TextSection(IElement parent, TModel model, DBlock block) : base(parent, model, block)
         {
-            Title = model?.ToString();
+            Title           = model?.ToString();
+            ShowLineNumbers = true;
+            IsSourceChanged = true;
         }
         
         public SourceParser? Parser { get; set; }  
@@ -32,6 +34,7 @@ namespace Animated.CPU.Animation
         }
         
         public bool IsSourceChanged { get; set; }
+        public bool ShowLineNumbers { get; set; }
 
         protected override void Step(TimeSpan step)
         {
@@ -48,12 +51,21 @@ namespace Animated.CPU.Animation
                     var  map = Parser.Parse(GetLines(Model));
                     foreach (var line in map.Walk())
                     {
-                        var span = text.Write(line.txt, line.ident == null 
+                        if (ShowLineNumbers && line.StartLine)
+                        {
+                            var sPrefix = text.Write($"{line.LineNo.ToString().PadLeft(3)}: ", prefix);
+                            if (sPrefix != null)
+                            {
+                                sPrefix.SetModel(line.LineNo);
+                            }    
+                        }
+                        
+                        var span = text.Write(line.Text, line.Ident == null 
                             ? normal 
-                            : Scene.StyleFactory.GetPaint(this, $"font-{line.ident.Colour ?? line.ident.Name}"));
+                            : Scene.StyleFactory.GetPaint(this, $"font-{line.Ident.Colour ?? line.Ident.Name}"));
                         if (span != null)
                         {
-                            span.SetModel(line.line);
+                            span.SetModel(line.LineNo);
                         }
                     }
 
@@ -64,12 +76,15 @@ namespace Animated.CPU.Animation
                     uint cc = 1;
                     foreach (var line in GetLines(Model))
                     {
-                        var span = text.Write($"{cc.ToString().PadLeft(3)}: ", prefix);
-                        if (span != null)
+                        if (ShowLineNumbers)
                         {
-                            span.SetModel(cc);
-                        }    
-                            
+                            var span = text.Write($"{cc.ToString().PadLeft(3)}: ", prefix);
+                            if (span != null)
+                            {
+                                span.SetModel(cc);
+                            }    
+                        }
+                        
                         text.WriteLine(line);
                     
                         cc++;
