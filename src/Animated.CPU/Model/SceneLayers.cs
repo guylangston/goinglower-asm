@@ -1,87 +1,119 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Animated.CPU.Animation;
 
 namespace Animated.CPU.Model
 {
-    public class SceneLayers : SceneBase<Story, StyleFactory>
+    public class SceneLayers : SceneBase<Cpu, StyleFactory>
     {
-        public SceneLayers(StyleFactory styleFactory) : base(styleFactory)
+        public SceneLayers(StyleFactory styleFactory, DBlock b) : base(styleFactory, b)
         {
         }
         
-        public bool UseEmbelishments { get; set; } = true;
+        public bool                   UseEmbelishments { get; set; } = true;
+        private SourceCodeSection current;
+        private List<SourceCodeSection> sections;
 
         protected override void InitScene()
         {
-            
             if (UseEmbelishments)
             {
                 for (int cc = 0; cc < 100; cc++)
                     Add(new BackGroundNoise(this, Block));
             }
+            
+            var stack = Add(new StackElement(this, Block, DOrient.Horz, StackMode.OverrideSize));
 
-            var ww = 1920;
-            var hh = 1090;
+            var items = new SourceFile?[]
+            {
+                Model.Story.MainFile,
+                Model.Story.IL , 
+                Model.Story.Asm , 
+                Model.Story.Binary , 
+            };
+            sections = new List<SourceCodeSection>();
+            foreach (var file in items.Where(x=>x!= null))
+            {
+                sections.Add(stack.Add(new SourceCodeSection(stack, file , 
+                    new DBlock().Set(5, 1, 5))));
+            }
 
-            float w = Block.Inner.W / 4;
+            current               = stack.ChildrenAre<SourceCodeSection>().First();
+            current.IsHighlighted = true;
 
-            // var cpu = Add(new SimpleSection(this, "CPU", 
-            //     DBlock.FromTwoPoints(new SKPoint(50, 20), new SKPoint(970, 1020))));
-            // cpu.TitleAction = "CPU";
-            //
-            // var ram = Add(new SimpleSection(this, "RAM", 
-            //     DBlock.FromTwoPoints(new SKPoint(990, 20), new SKPoint(1440, 1020))));
-            // ram.TitleAction = "RAM";
-            //
 
-            var stack = Add(new StackElement(this, Block, DOrient.Horz));
-            //
-            // this.ElementCode = stack.Add(new CodeElement(stack, Model.Story.MainFile, 
-            //     DBlock.JustWidth(w)));
-            //
-            // if (Cpu.Story.IL != null)
-            // {
-            //     this.ElementCodeIL = stack.Add(new CodeElement(stack, Cpu.Story.IL, 
-            //         DBlock.JustWidth(w)));
-            //     this.ElementCodeIL.IsHidden = true;
-            // }
-            //
-            // if (Cpu.Story.Asm != null)
-            // {
-            //     this.ElementCodeASM = stack.Add(new CodeElement(stack, Cpu.Story.Asm, 
-            //         DBlock.JustWidth(w)));
-            //     this.ElementCodeASM.IsHidden = true;
-            // }
+
         }
 
         protected override void InitSceneComplete()
         {
-            throw new NotImplementedException();
+            
         }
 
         protected override void DrawOverlay(DrawContext drawing)
         {
-            throw new NotImplementedException();
+            
         }
 
         protected override void DrawBackGround(DrawContext drawing)
         {
-            throw new NotImplementedException();
+            drawing.Canvas.Clear(Styles.GetColor(this, "bg"));
         }
 
         public override void ProcessEvent(object platform, string name, object args)
         {
-            throw new NotImplementedException();
+            
         }
 
         public override void KeyPress(object platformKeyObject, string key)
         {
-            throw new NotImplementedException();
+            int i;
+            switch (key)
+            {
+                
+                case "s":
+                    this.InitSceneComplete();
+                    break;
+                
+                
+                case "Key_2":
+                    SendHostCommand?.Invoke("Scene", "Execute");
+                    break;
+                
+                case "d":
+                case "n":
+                case "period":
+                    i = sections.IndexOf(current);
+                    if (i < sections.Count - 1)
+                    {
+                        current.IsHighlighted = false;
+                        current               = sections[i + 1];
+                        current.IsHighlighted = true;
+                    }
+                    break;
+                
+                case "a":
+                case "p":
+                case "comma":
+                    i = sections.IndexOf(current);
+                    if (i > 0)
+                    {
+                        current.IsHighlighted = false;
+                        current               = sections[i - 1];
+                        current.IsHighlighted = true;
+                    }
+                    break;
+                
+                case "q":
+                    SendHostCommand?.Invoke("QUIT", null);
+                    break;
+            }
         }
 
         public override void MousePress(uint eventButton, double eventX, double eventY, object interop)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

@@ -7,26 +7,63 @@ namespace Animated.CPU.GTK
 {
     public static class Init
     {
-        public static SceneBase BuildScene(DBlock region)
+        private static SceneExecute execute;
+        public static Cpu cpu;
+        public static MainWindow MainWindow { get; set; }
+        
+        
+        public static SceneBase BuildScene(string name, DBlock region)
         {
-            var setup = new Setup();
-            var cpu   = new Cpu();
-            var cfg = new Setup.Config()
+            if (cpu == null)
             {
-                StoryId           = "Introduction-ForLoop",
-                BaseFolder        = "/home/guy/repo/cpu.anim/src/Sample/Scripts/Introduction-ForLoop",
-                CompileBaseFolder = "/home/guy/repo/cpu.anim/src/Sample/Scripts"
-            };
-            setup.InitCpuFromDisk(cfg, cpu);
+                var setup = new Setup();
+                cpu   = new Cpu();
+                var cfg = new Setup.Config()
+                {
+                    StoryId           = "Introduction-ForLoop",
+                    BaseFolder        = "/home/guy/repo/cpu.anim/src/Sample/Scripts/Introduction-ForLoop",
+                    CompileBaseFolder = "/home/guy/repo/cpu.anim/src/Sample/Scripts"
+                };
+                setup.InitCpuFromDisk(cfg, cpu);
+            }
             
-            var scene = new SceneExecute(region)
+            switch (name)
             {
-                Model = cpu,
-                SendCommand = (cmd, obj) => {
-                    if (cmd == "QUIT") Application.Quit();
-                }
-            };
-            return scene;
+                case "Execute":
+                    if (execute != null) return execute;
+                    
+                    execute = new SceneExecute(region)
+                    {
+                        Model           = cpu,
+                        SendHostCommand = SendCommand 
+                    };
+                    return execute;
+                
+                case "Layers":
+                default:
+                    var layers = new SceneLayers(new StyleFactory(), region)
+                    {
+                        Model           = cpu,
+                        SendHostCommand = SendCommand 
+                    };
+                    return layers;
+            }
+            
+            
+            
+           
+        }
+        
+        
+
+        private static void SendCommand(string cmd, object obj)
+        {
+            if (cmd == "QUIT") Application.Quit();
+            
+            if (cmd == "Scene")
+            {
+                MainWindow.SetScene(obj.ToString());
+            }
         }
     }
 }

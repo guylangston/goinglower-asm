@@ -9,9 +9,9 @@ namespace Animated.CPU.Model
     public class ExecutePhaseElementOUT : Section<SceneExecute, PhaseExecute>
     {
         private TextBlockElement text;
-        ALUElement master;
+        LogicUnitElement master;
 
-        public ExecutePhaseElementOUT(IElement parent, PhaseExecute model, ALUElement master) : base(parent, model, new DBlock()
+        public ExecutePhaseElementOUT(IElement parent, PhaseExecute model, LogicUnitElement master) : base(parent, model, new DBlock()
         {
             H = 150
         })

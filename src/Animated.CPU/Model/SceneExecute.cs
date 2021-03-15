@@ -14,9 +14,8 @@ namespace Animated.CPU.Model
         private CodeElement ElementCodeIL;
         private CodeElement ElementCodeASM;
 
-        public SceneExecute(DBlock region) : base(new StyleFactory())
+        public SceneExecute(DBlock region) : base(new StyleFactory(), region)
         {
-            Block = region;
         }
 
         public const string Version = "0.5-alpha";
@@ -28,8 +27,8 @@ namespace Animated.CPU.Model
         public ElementRegisterFile    ElementRegisterFile { get; set; }
         public TerminalElement        Terminal            { get; set; }
         public DialogElement          Dialog              { get; set; }
-        public Action<string, object> SendCommand         { get; set; }
-        public ALUElement             ElementALU          { get; set; }
+        
+        public LogicUnitElement             ElementLogicUnit          { get; set; }
         public string                 LastKeyPress        { get; set; }
         public bool                   UseEmbelishments    { get; set; } = true;
         public string                 DebugText           { get; set; }
@@ -82,7 +81,7 @@ namespace Animated.CPU.Model
                 Title = "Executable Memory"
             });
             
-            this.ElementALU          = stack.Add(new ALUElement(stack, Model.ALU, 
+            this.ElementLogicUnit          = stack.Add(new LogicUnitElement(stack, Model.ALU, 
                 DBlock.JustWidth(w)));
             
             this.ElementRegisterFile = stack.Add(new ElementRegisterFile(stack, Model.RegisterFile, 
@@ -123,11 +122,11 @@ namespace Animated.CPU.Model
 
         protected override void InitSceneComplete()
         {
-            ElementALU.Start();
+            ElementLogicUnit.Start();
             int cc = 0;
-            while (cc < 50 && ElementALU.Story.Current.Asm == null)
+            while (cc < 50 && ElementLogicUnit.Story.Current.Asm == null)
             {
-                ElementALU.StateMachine.ExecNext();
+                ElementLogicUnit.StateMachine.ExecNext();
                 cc++;
             }
             foreach (var reg in ElementRegisterFile.ChildrenRecursiveAre<ElementRegister>())
@@ -237,17 +236,21 @@ namespace Animated.CPU.Model
                 case "d":
                 case "n":
                 case "period":
-                    ElementALU.Next();
+                    ElementLogicUnit.Next();
                     break;
                 
                 case "a":
                 case "p":
                 case "comma":
-                    ElementALU.Prev();
+                    ElementLogicUnit.Prev();
+                    break;
+                
+                case "Key_1":
+                    SendHostCommand?.Invoke("Scene", "Layers");
                     break;
                 
                 case "q":
-                    SendCommand.Invoke("QUIT", null);
+                    SendHostCommand?.Invoke("QUIT", null);
                     break;
             }
         }
@@ -287,7 +290,7 @@ namespace Animated.CPU.Model
             Terminal.Status = null;
             if (act.Name == "Quit")
             {
-                SendCommand.Invoke("QUIT", null);
+                SendHostCommand.Invoke("QUIT", null);
                 return;
             }
 

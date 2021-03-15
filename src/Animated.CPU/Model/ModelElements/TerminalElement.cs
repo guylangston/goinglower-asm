@@ -56,7 +56,7 @@ namespace Animated.CPU.Model
             }
             
             
-            text.WriteLineFormatted($"Step: {Scene.Cpu?.Story?.CurrentIndex}, Active: {Scene.ElementALU.StateMachine.Current}");
+            text.WriteLineFormatted($"Step: {Scene.Cpu?.Story?.CurrentIndex}, Active: {Scene.ElementLogicUnit.StateMachine.Current}");
             text.WriteLineFormatted($"Frames: {Scene.FrameCount}, elapsed {Scene.Elapsed:c} = {Scene.FPS:0.0} fps");
             text.WriteLineFormatted($"Mouse: {Scene.DebugPointAt} | {Scene.DebugText}; KeyPress: {Scene.LastKeyPress}");
             if (Scene.DebugPointAt != SKPoint.Empty)

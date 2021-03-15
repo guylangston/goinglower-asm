@@ -82,10 +82,16 @@ namespace Animated.CPU.Animation
 
         string GetText(Type t, object val) => val?.ToString() ?? string.Empty;
 
-        public Span Write<T>(T txt, SKPaint style = null /* Use Default */)
+        public Span? Write<T>(T? txt, SKPaint style = null /* Use Default */)
         {
             var t = GetText(typeof(T), txt);
             if (t == null) return null;
+            if (t == Environment.NewLine)
+            {
+                WriteLine();
+                return null;
+            }
+            
             if (t.Contains("\n"))       // Multi-Line text?
             {
                 Span? last = null;

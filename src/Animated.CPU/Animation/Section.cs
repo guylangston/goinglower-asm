@@ -4,15 +4,29 @@ using SkiaSharp;
 
 namespace Animated.CPU.Animation
 {
-    public abstract class Section<TScene, TModel> : Element<TScene, TModel> where TScene:IScene
+    
+    public class SimpleSection<TScene, TModel> : Section<TScene, TModel> where TScene:IScene
+    {
+        public SimpleSection(IElement parent, TModel model, DBlock block) : base(parent, model, block)
+        {
+            Title = model?.ToString();
+        }
+    }
+
+    public interface IHighlightElement
+    {
+        public bool IsHighlighted { get; set; }
+    }
+    
+    
+    public abstract class Section<TScene, TModel> : Element<TScene, TModel>, IHighlightElement  where TScene:IScene
     {
         private SKRect posTitle;
 
-        protected Section(IElement parent, TModel model, DBlock block) : base(parent, model, block)
+        protected Section(IElement parent, TModel model, DBlock? block) : base(parent, model, block)
         {
             if (parent == null) throw new ArgumentNullException(nameof(parent));
             if (model == null) throw new ArgumentNullException(nameof(model));
-            if (block == null) throw new ArgumentNullException(nameof(block));
         }
         
         public string? Title         { get; set; }
@@ -21,6 +35,8 @@ namespace Animated.CPU.Animation
 
         protected override void Draw(DrawContext surface)
         {
+            if (Block == null) return;
+            
             // Background
             surface.Canvas.DrawRect(Block.BorderRect.ToSkRect(), Scene.StyleFactory.GetPaint(this, "bg"));
 
@@ -64,6 +80,8 @@ namespace Animated.CPU.Animation
 
         public override PointSelectionResult? GetSelectionAtPoint(SKPoint p)
         {
+            if (Block == null) return null;
+            
             var hit =  base.GetSelectionAtPoint(p);
             if (hit != null && posTitle.Contains(p))
             {
@@ -81,14 +99,6 @@ namespace Animated.CPU.Animation
             
             return null;
 
-        }
-    }
-    
-    public class SimpleSection<TScene, TModel> : Section<TScene, TModel> where TScene:IScene
-    {
-        public SimpleSection(IElement parent, TModel model, DBlock block) : base(parent, model, block)
-        {
-            Title = model?.ToString();
         }
     }
 }

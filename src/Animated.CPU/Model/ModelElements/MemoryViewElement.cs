@@ -75,7 +75,7 @@ namespace Animated.CPU.Model.ModelElements
             
         }
 
-        public bool IsSelected => Model.ContainsAddress(Scene.ElementALU.Fetch.Model.RIP);
+        public bool IsSelected => Model.ContainsAddress(Scene.ElementLogicUnit.Fetch.Model.RIP);
 
         protected override void Init()
         {
@@ -90,8 +90,11 @@ namespace Animated.CPU.Model.ModelElements
             if (Model != null)
             {
                 IsEnabled = true;
-             
-                txt.Write($"@{DisplayHelper.ToHex(Model.Address)} ", Scene.Styles.FixedFontDarkGray);
+                if (IsSelected)
+                {
+                    txt.WriteLine($"@{DisplayHelper.ToHex(Model.Address)} ", Scene.Styles.FixedFontDarkGray);    
+                }
+                
                 txt.Write(Model.Raw?.ToHex().PadRight(8), Scene.Styles.FixedFontCyan);
                 txt.Write(" ", Scene.Styles.FixedFontDarkGray);
                 txt.WriteLine(Model.SourceAsm, Scene.Styles.FixedFontYellow);

@@ -11,13 +11,15 @@ using Window=Gtk.Window;
 
 namespace Animated.CPU.GTK
 {
-    class MainWindow : Window
+    public class MainWindow : Window
     {
         private SKDrawingArea skiaView;
         private SceneBase scene;
         private uint timerId;
         private TimeSpan interval;
         private (double X, double Y) last;
+        
+        public  DBlock region;
 
         public MainWindow()
             : this(new Builder("MainWindow.glade"))
@@ -28,18 +30,19 @@ namespace Animated.CPU.GTK
         private MainWindow(Builder builder)
             : base(builder.GetObject("MainWindow").Handle)
         {
-           
+            this.AcceptFocus = true;
             
             builder.Autoconnect(this);
             
-            skiaView              =  new SKDrawingArea();
-            skiaView.WidthRequest =  1920;
-            skiaView.HeightRequest =  1080;
+            skiaView               = new SKDrawingArea();
+            skiaView.CanFocus      = false;
+            skiaView.WidthRequest  = 1920;
+            skiaView.HeightRequest = 1080;
 
-            var region = new DBlock(0, 0, skiaView.WidthRequest, skiaView.HeightRequest)
+            region = new DBlock(0, 0, skiaView.WidthRequest, skiaView.HeightRequest)
                 .Set(20, 0, 0);
 
-            scene = Init.BuildScene(region);
+            SetScene(null);
             
             //  Window Events
             this.DeleteEvent       += OnWindowDeleteEvent;
@@ -59,7 +62,14 @@ namespace Animated.CPU.GTK
             {
                 timerId = GLib.Timeout.Add((uint)interval.TotalMilliseconds, OnUpdateTimer);    
             }
-            
+
+            Init.MainWindow = this;
+
+        }
+        
+        public void SetScene(string name)
+        {
+            scene = Init.BuildScene(name, region);
         }
 
         private void OnMotion(object o, MotionNotifyEventArgs args)
@@ -108,5 +118,7 @@ namespace Animated.CPU.GTK
         {
             scene?.DrawExec(new DrawContext(scene, e.Surface.Canvas));
         }
+
+        
     }
 }

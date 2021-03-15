@@ -70,6 +70,7 @@ namespace Animated.CPU.Backend.LLDB
         {
             var source = new SourceProvider();
             var main   = source.Load(cfg.GetExpectedPath("CodeClean.txt"));
+            main.Title = "Source.cs";
             
             var parser = new Parser(source);
             var dis = parser.ParseCLRU(File.ReadAllLines(cfg.GetExpectedPath("S0000-method.clru"))).ToList();
@@ -83,6 +84,7 @@ namespace Animated.CPU.Backend.LLDB
                 ReadMe     = cfg.ReadAsTextLinesElseNull(source, "ReadMe.txt"),
                 IL         = cfg.ReadAsTextLinesElseNull(source, "Code.il"),
                 Asm        = cfg.ReadAsTextLinesElseNull(source, "Code.asm"),
+                Binary      = cfg.ReadAsTextLinesElseNull(source, "Code.bin"),
             };
 
             foreach (var stepFile in FindStepFiles(cfg.BaseFolder))

@@ -16,9 +16,11 @@ namespace Animated.CPU.Model
         public List<StoryAnnotation>    Slides            { get; } = new List<StoryAnnotation>();
         public SourceFile?              IL                { get; set; }
         public SourceFile?              Asm               { get; set; }
+        public SourceFile?              Binary            { get; set; }
         
         public StoryStep?       Current      => GeneralHelper.ByIndexOrDefault(Steps, CurrentIndex);
         public StoryAnnotation? CurrentSlide => GeneralHelper.ByIndexOrDefault(Slides, CurrentSlideIndex);
+        
     }
 
     public enum Format

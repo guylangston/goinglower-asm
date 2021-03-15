@@ -10,20 +10,20 @@ namespace Animated.CPU.Model
     public class StoryStateMachine : StateMachine<IElement>
     {
         private readonly SceneExecute scene;
-        private readonly ALUElement alu;
+        private readonly LogicUnitElement logicUnit;
 
-        public StoryStateMachine(SceneExecute scene, ALUElement alu) : base(true)
+        public StoryStateMachine(SceneExecute scene, LogicUnitElement logicUnit) : base(true)
         {
             this.scene = scene;
-            this.alu   = alu;
+            this.logicUnit   = logicUnit;
             
-            Add(Start       = new State<IElement>(nameof(Start), alu));
-            Add(Fetch       = new State<IElement>(nameof(Fetch), alu.Fetch));
-            Add(Decode      = new State<IElement>(nameof(Decode), alu.Decode));
-            Add(ExecuteInp  = new State<IElement>(nameof(ExecuteInp), alu.ExecuteINP, alu.ExecuteINP.StateChangeOnEnter));
-            Add(ExecuteOut  = new State<IElement>(nameof(ExecuteOut), alu.ExecuteOUT, alu.ExecuteOUT.StateChangeOnEnter));
-            Add(StepForward = new State<IElement>(nameof(StepForward), alu));
-            Add(Finished    = new State<IElement>(nameof(Finished), alu));
+            Add(Start       = new State<IElement>(nameof(Start), logicUnit));
+            Add(Fetch       = new State<IElement>(nameof(Fetch), logicUnit.Fetch));
+            Add(Decode      = new State<IElement>(nameof(Decode), logicUnit.Decode));
+            Add(ExecuteInp  = new State<IElement>(nameof(ExecuteInp), logicUnit.ExecuteINP, logicUnit.ExecuteINP.StateChangeOnEnter));
+            Add(ExecuteOut  = new State<IElement>(nameof(ExecuteOut), logicUnit.ExecuteOUT, logicUnit.ExecuteOUT.StateChangeOnEnter));
+            Add(StepForward = new State<IElement>(nameof(StepForward), logicUnit));
+            Add(Finished    = new State<IElement>(nameof(Finished), logicUnit));
             
             
             CompleteInit(Start);
@@ -43,7 +43,7 @@ namespace Animated.CPU.Model
         public override void ExecStart()
         {
             Current                = Start;
-            alu.Story.CurrentIndex = 0;
+            logicUnit.Story.CurrentIndex = 0;
         }
 
         public override void ExecNext()
@@ -51,9 +51,9 @@ namespace Animated.CPU.Model
             if (Current == StepForward)
             {
                 // loop back until we run out of steps
-                if (alu.Story.CurrentIndex < alu.Story.Steps.Count-1)
+                if (logicUnit.Story.CurrentIndex < logicUnit.Story.Steps.Count-1)
                 {
-                    alu.Story.CurrentIndex++;
+                    logicUnit.Story.CurrentIndex++;
                     Current = Fetch;
                     return;
                 }
@@ -68,9 +68,9 @@ namespace Animated.CPU.Model
         {
             if (Current == Fetch)
             {
-                if (alu.Story.CurrentIndex > 0)
+                if (logicUnit.Story.CurrentIndex > 0)
                 {
-                    alu.Story.CurrentIndex--;
+                    logicUnit.Story.CurrentIndex--;
                     Current = ExecuteOut;
                     return;
                 }

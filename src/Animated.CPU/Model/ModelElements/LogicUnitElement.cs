@@ -9,11 +9,11 @@ namespace Animated.CPU.Model
     
     
     
-    public class ALUElement : Section<SceneExecute, ArithmeticLogicUnit>
+    public class LogicUnitElement : Section<SceneExecute, ArithmeticLogicUnit>
     {
-        public ALUElement(IElement scene, ArithmeticLogicUnit alu, DBlock b) : base(scene, alu, b)
+        public LogicUnitElement(IElement scene, ArithmeticLogicUnit alu, DBlock b) : base(scene, alu, b)
         {
-            Title = "A-L-U";
+            Title = "Logic Unit (ALU)";
         }
 
         protected override void Init()

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Animated.CPU.Animation;
 using SkiaSharp;
@@ -15,7 +16,7 @@ namespace Animated.CPU.Model
             this.Props = GetType().GetProperties();
             FixedFont = new SKPaint()
             {
-                TextSize = 16,
+                TextSize = 20,
                 Color    = SKColor.Parse("#ccc"),
                 Typeface = SKTypeface.FromFamilyName(
                     MonoSpace, 
@@ -129,9 +130,20 @@ namespace Animated.CPU.Model
             };
 
             Highlighted = Selected = Arrow;
+
+
+            MakeNamedColours();
         }
 
-        
+        private Dictionary<string, SKColor> name = new();
+        private void MakeNamedColours()
+        {
+            name.Clear();
+            foreach (var prop in typeof(SKColors).GetFields())
+            {
+                name[prop.Name.ToLowerInvariant()] = (SKColor)prop.GetValue(null);
+            }
+        }
 
         public PropertyInfo[] Props { get; }
 
@@ -171,6 +183,8 @@ namespace Animated.CPU.Model
         
         
         
+        
+        
         public SKPaint GetPaint(IElement e, string id)
         {
             id = id.ToLowerInvariant();
@@ -197,6 +211,20 @@ namespace Animated.CPU.Model
                         return (SKPaint)prop.GetValue(this);
                     }    
                 }
+            }
+
+            if (id.StartsWith("font-"))
+            {
+                var rem = id.Remove(0, "font-".Length).ToLowerInvariant();
+                if (SKColor.TryParse(rem, out var clr))
+                {
+                    return Clone(FixedFont, x => x.Color = clr);
+                }
+                if (name.TryGetValue(rem, out var clr2))
+                {
+                    return Clone(FixedFont, x => x.Color = clr2);
+                }
+                
             }
             
             switch (id)

@@ -11,16 +11,25 @@ namespace Animated.CPU.Animation
         {
         }
     }
+
+    public enum StackMode
+    {
+        JustLayout,
+        OverrideSize
+    }
     
     public class StackElement : ContainerElement  
     {
-        public StackElement(IElement parent, DBlock b, DOrient orient) : base(parent, b)
+        public StackElement(IElement parent, DBlock b, DOrient orient, StackMode mode = StackMode.JustLayout) : base(parent, b)
         {
-            Orient = orient;
+            Orient    = orient;
+            Mode = mode;
         }
 
-        public bool    SkipHidden { get; set; } = true;
-        public DOrient Orient     { get; set; }
+        public bool      SkipHidden { get; init; } = true;
+        public DOrient   Orient     { get; init; }
+        public StackMode Mode       { get; }
+        public float     Gap        { get; set; }
 
         public void Layout()
         {
@@ -94,7 +103,33 @@ namespace Animated.CPU.Animation
         }
 
         protected override void Step(TimeSpan step)
-        {   
+        {
+            if (Mode == StackMode.OverrideSize)
+            {
+                IElement[] items = SkipHidden
+                    ? Children.Where(x => x is ElementBase eb && !eb.IsHidden).ToArray()
+                    : Children.ToArray();
+
+                if (Orient == DOrient.Horz)
+                {
+                    var size = (Block.W - (items.Length * Gap)) / items.Length;
+                    foreach (var item in items)
+                    {
+                        item.Block   ??= new DBlock();
+                        item.Block.W =   size;
+                    }
+                }
+                else
+                {
+                    var size = (Block.H - (items.Length * Gap)) / items.Length;
+                    foreach (var item in items)
+                    {
+                        item.Block   ??= new DBlock();
+                        item.Block.H =   size;
+                    }
+                }
+                
+            }
             Layout();
         }
 

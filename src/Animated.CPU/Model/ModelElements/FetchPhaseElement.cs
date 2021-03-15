@@ -8,9 +8,9 @@ namespace Animated.CPU.Model
     public class FetchPhaseElement : Section<SceneExecute, PhaseFetch>
     {
         private TextBlockElement text;
-        ALUElement master;
+        LogicUnitElement master;
 
-        public FetchPhaseElement(IElement parent, PhaseFetch model, ALUElement master) : base(parent, model, new DBlock()
+        public FetchPhaseElement(IElement parent, PhaseFetch model, LogicUnitElement master) : base(parent, model, new DBlock()
         {
             H = 100
         })

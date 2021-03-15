@@ -7,9 +7,9 @@ namespace Animated.CPU.Model
     public class DecodePhaseElement : Section<SceneExecute, PhaseDecode>
     {
         private TextBlockElement text;
-        ALUElement master;
+        LogicUnitElement master;
 
-        public DecodePhaseElement(IElement parent, PhaseDecode model, ALUElement master) : base(parent, model, new DBlock()
+        public DecodePhaseElement(IElement parent, PhaseDecode model, LogicUnitElement master) : base(parent, model, new DBlock()
         {
             H = 200
         })

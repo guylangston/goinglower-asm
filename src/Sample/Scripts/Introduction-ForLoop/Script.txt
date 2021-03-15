@@ -1,0 +1,41 @@
+Welcome to Going Lower
+
+Today we will explore how highlevel code is executed by the CPU
+
+In this case, we have a basic for-loop in C#
+-> at compile time the source is transformed into IL or Intermediate Language
+-> at runtime it is JITed or Just In Time Compiled to Asmberly
+-> ASM has a near 1:1 corrospondance with Binary code, 
+and it is that the CPU really executes
+
+Next: Lets watch it execute
+
+=============================================================================
+
+- Starting on the left is the same C# code
+- Next to it is compiled binary code and its corrosponding asembly
+- This binary code is executed inside the CPU by the 
+- ALU (Arithmeic Logic Unit)
+- This logic unit has its own memory in the form of registers
+- The ALU operates a FETCH, DECODE, EXECUTE cycle; 
+    for clarity the Execute is split into READ and WRITE
+
+Next: Lets explore some binary code altering registers
+    
+
+=============================================================================
+
+
+
+
+
+
+
+
+
+-> There are two steps not shown here:
+---> Microcode
+---> Actual logic gates build out of transistors
+
+
+

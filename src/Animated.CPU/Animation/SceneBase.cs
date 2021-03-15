@@ -9,8 +9,25 @@ namespace Animated.CPU.Animation
 {
     public abstract class SceneBase : ElementBase, IScene 
     {
+        protected SceneBase(DBlock b)
+        {
+            base.Block = b ?? throw new ArgumentNullException(nameof(b));
+        }
+
         public TimeSpan      Elapsed      { get; protected set; }
         public IStyleFactory StyleFactory { get; protected set; }
+
+        public new DBlock Block
+        {
+            get
+            {
+                return base.Block ?? throw new Exception();
+            }
+            set
+            {
+                throw new Exception();
+            }
+        }
 
         public int      FrameCount { get; protected set; }
         public float    FPS        => (float)FrameCount / (float)Elapsed.TotalSeconds ;
@@ -27,25 +44,21 @@ namespace Animated.CPU.Animation
         public abstract void ProcessEvent(object platform, string name, object args);
         public abstract void KeyPress(object platformKeyObject, string key);
         public abstract void MousePress(uint eventButton, double eventX, double eventY, object interop);
+        
+        // Send external command
+        public Action<string, object>? SendHostCommand { get; set; }
     }
     
     
     public abstract class SceneBase<TModel, TStyle> : SceneBase where TStyle:IStyleFactory
     {
-        protected SceneBase(TStyle styleFactory)  
+        protected SceneBase(TStyle styleFactory, DBlock block) : base(block)  
         {
             StyleFactory = Styles = styleFactory;
             SetScene(this);
-        }
-        
-        protected SceneBase(IScene scene,  DBlock b, TStyle styleFactory) 
-        {
-            StyleFactory = Styles = styleFactory;
-            SetScene(this);
-            Block = b;
         }
 
-        
+
         public  TStyle Styles { get; }
         
         

@@ -8,9 +8,9 @@ namespace Animated.CPU.Model
     public class ExecutePhaseElementINP : Section<SceneExecute, PhaseExecute>
     {
         private TextBlockElement text;
-        ALUElement master;
+        LogicUnitElement master;
 
-        public ExecutePhaseElementINP(IElement parent, PhaseExecute model, ALUElement master) : base(parent, model, new DBlock()
+        public ExecutePhaseElementINP(IElement parent, PhaseExecute model, LogicUnitElement master) : base(parent, model, new DBlock()
         {
             H = 150
         })
