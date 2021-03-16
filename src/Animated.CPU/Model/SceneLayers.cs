@@ -8,8 +8,12 @@ namespace Animated.CPU.Model
 {
     public class SceneLayers : SceneBase<Cpu, StyleFactory>
     {
-        public SceneLayers(StyleFactory styleFactory, DBlock b) : base(styleFactory, b)
+        private readonly ISceneMaster master;
+
+        public SceneLayers(ISceneMaster master, Cpu model, StyleFactory styleFactory, DBlock b) : base("Layers", styleFactory, b)
         {
+            this.master = master;
+            Model       = model;
         }
         
         public bool                   UseEmbelishments { get; set; } = true;
@@ -78,12 +82,12 @@ namespace Animated.CPU.Model
             drawing.Canvas.Clear(Styles.GetColor(this, "bg"));
         }
 
-        public override void ProcessEvent(object platform, string name, object args)
+        public override void ProcessEvent(string name, object args, object platform)
         {
             
         }
 
-        public override void KeyPress(object platformKeyObject, string key)
+        public override void KeyPress(string key, object platformKeyObject)
         {
             int i;
             switch (key)
@@ -95,7 +99,7 @@ namespace Animated.CPU.Model
                 
                 
                 case "Key_2":
-                    SendHostCommand?.Invoke("Scene", "Execute");
+                    master.MoveToScene(new SceneSeqArg(SceneSeq.Next));
                     break;
                 
                 case "d":

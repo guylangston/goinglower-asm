@@ -85,8 +85,9 @@ namespace Animated.CPU.Animation
     
     public interface IScene : IElement
     {
-        int      FrameCount   { get; }
-        TimeSpan Elapsed { get; }
+        string   Name       { get; }
+        int      FrameCount { get; }
+        TimeSpan Elapsed    { get; }
         
         IStyleFactory StyleFactory { get; }
         
@@ -95,8 +96,9 @@ namespace Animated.CPU.Animation
         List<IElement> DebugHits { get; }
 
         // Send commands/input/events
-        void ProcessEvent(object platform, string name, object args);
-        void KeyPress(object platform, string key);
+        void ProcessEvent(string name, object args, object platform);
+        void KeyPress(string key, object platform);
+        void MousePress(uint eventButton, double eventX, double eventY, object interop);
     }
 
     public static class SceneHelper

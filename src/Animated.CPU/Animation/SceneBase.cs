@@ -9,9 +9,10 @@ namespace Animated.CPU.Animation
 {
     public abstract class SceneBase : ElementBase, IScene 
     {
-        protected SceneBase(DBlock b)
+        protected SceneBase(string name, DBlock b)
         {
             base.Block = b ?? throw new ArgumentNullException(nameof(b));
+            this.Name  = name ?? throw new ArgumentNullException(nameof(name));
         }
 
         public TimeSpan      Elapsed      { get; protected set; }
@@ -29,8 +30,9 @@ namespace Animated.CPU.Animation
             }
         }
 
-        public int      FrameCount { get; protected set; }
-        public float    FPS        => (float)FrameCount / (float)Elapsed.TotalSeconds ;
+        public string Name       { get; }
+        public int    FrameCount { get; protected set; }
+        public float  FPS        => (float)FrameCount / (float)Elapsed.TotalSeconds ;
         
         // Debugging
         public SKPoint        DebugPointAt { get; set; }
@@ -41,8 +43,8 @@ namespace Animated.CPU.Animation
         protected abstract void DrawOverlay(DrawContext drawing);
         protected abstract void DrawBackGround(DrawContext drawing);
 
-        public abstract void ProcessEvent(object platform, string name, object args);
-        public abstract void KeyPress(object platformKeyObject, string key);
+        public abstract void ProcessEvent(string name, object args, object platform);
+        public abstract void KeyPress(string key, object platformKeyObject);
         public abstract void MousePress(uint eventButton, double eventX, double eventY, object interop);
         
         // Send external command
@@ -52,7 +54,7 @@ namespace Animated.CPU.Animation
     
     public abstract class SceneBase<TModel, TStyle> : SceneBase where TStyle:IStyleFactory
     {
-        protected SceneBase(TStyle styleFactory, DBlock block) : base(block)  
+        protected SceneBase(string name, TStyle styleFactory, DBlock block) : base(name, block)  
         {
             StyleFactory = Styles = styleFactory;
             SetScene(this);

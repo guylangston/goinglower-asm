@@ -10,12 +10,15 @@ namespace Animated.CPU.Model
 {
     public class SceneExecute : SceneBase<Cpu, StyleFactory>
     {
+        private readonly ISceneMaster master;
         private SKBitmap bitmap1;
         private CodeElement ElementCodeIL;
         private CodeElement ElementCodeASM;
 
-        public SceneExecute(DBlock region) : base(new StyleFactory(), region)
+        public SceneExecute(ISceneMaster master, Cpu model, DBlock region) : base("Debugger", new StyleFactory(), region)
         {
+            this.master = master;
+            Model       = model;
         }
 
         public const string Version = "0.6-alpha";
@@ -28,7 +31,7 @@ namespace Animated.CPU.Model
         public TerminalElement        Terminal            { get; set; }
         public DialogElement          Dialog              { get; set; }
         
-        public LogicUnitElement             ElementLogicUnit          { get; set; }
+        public LogicUnitElement       ElementLogicUnit    { get; set; }
         public string                 LastKeyPress        { get; set; }
         public bool                   UseEmbelishments    { get; set; } = true;
         public string                 DebugText           { get; set; }
@@ -194,12 +197,12 @@ namespace Animated.CPU.Model
             canvas.Clear(Styles.GetColor(this, "bg"));
         }
 
-        public override void ProcessEvent(object platform, string name, object args)
+        public override void ProcessEvent(string name, object args, object platform)
         {
             
         }
 
-        public override void KeyPress(object platformKeyObject, string key)
+        public override void KeyPress(string key, object platformKeyObject)
         {
             LastKeyPress = key;
             foreach (var register in Model.RegisterFile)
@@ -256,7 +259,7 @@ namespace Animated.CPU.Model
                     break;
                 
                 case "Key_1":
-                    SendHostCommand?.Invoke("Scene", "Layers");
+                    master.MoveToScene(new SceneSeqArg(SceneSeq.Prior));
                     break;
                 
                 case "q":

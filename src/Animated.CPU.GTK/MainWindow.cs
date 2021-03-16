@@ -1,5 +1,6 @@
 using System;
 using Animated.CPU.Animation;
+using Animated.CPU.Model;
 using Gdk;
 using Gtk;
 using SkiaSharp;
@@ -11,10 +12,14 @@ using Window=Gtk.Window;
 
 namespace Animated.CPU.GTK
 {
+    
+    
+
+    
     public class MainWindow : Window
     {
         private SKDrawingArea skiaView;
-        private SceneBase scene;
+        private ISceneMaster master;
         private uint timerId;
         private TimeSpan interval;
         private (double X, double Y) last;
@@ -41,9 +46,13 @@ namespace Animated.CPU.GTK
 
             region = new DBlock(0, 0, skiaView.WidthRequest, skiaView.HeightRequest)
                 .Set(20, 0, 0);
-
-            SetScene(null);
             
+            master = new GtkPresentationSceneMaster((cmd, arg) => {
+                if (cmd == "quit") Application.Quit();
+            });
+            master.Init(new SKRect(0,0, skiaView.WidthRequest, skiaView.HeightRequest));
+
+
             //  Window Events
             this.DeleteEvent       += OnWindowDeleteEvent;
             this.KeyPressEvent     += KeyPress;
@@ -63,30 +72,16 @@ namespace Animated.CPU.GTK
                 timerId = GLib.Timeout.Add((uint)interval.TotalMilliseconds, OnUpdateTimer);    
             }
 
-            Init.MainWindow = this;
-
         }
-        
-        public void SetScene(string name)
-        {
-            scene = Init.BuildScene(name, region);
-        }
-
-        private void OnMotion(object o, MotionNotifyEventArgs args)
-        {
-            // Seems to only report drag events
-            scene.ProcessEvent(args, "DebugText", $"Motion: {args.Event.X}, {args.Event.Y}");
-        }
-
         
         [GLib.ConnectBefore]
         private void OnButtonPressEvent(object o, ButtonPressEventArgs args)
         {
             if (last == (args.Event.X, args.Event.Y)) return; // HACK: Dub click events
             
-            if (args.Event.Button == 1 && args.Event.Type == EventType.ButtonPress)
+            if (args.Event.Type == EventType.ButtonPress)
             {
-                scene.MousePress(args.Event.Button, args.Event.X, args.Event.Y, args);
+                master.HandleMousePress(args.Event.Button, (float)args.Event.X, (float)args.Event.Y, args);
                 last = (args.Event.X, args.Event.Y);
             }
             
@@ -95,21 +90,21 @@ namespace Animated.CPU.GTK
         [GLib.ConnectBefore]        // https://stackoverflow.com/questions/35833643/how-to-manually-detect-arrow-keys-in-gtk-c-sharp
         private void KeyPress(object o, KeyPressEventArgs args)
         {
-            scene.KeyPress(args.Event, args.Event.Key.ToString());
-        }
-        
-        private void OnShow(object? sender, EventArgs e)
-        {
-            //timerId = GLib.Timeout.Add((uint)interval.Ticks, OnUpdateTimer);
+            master.HandleKeyPress(args.Event.Key.ToString(), args.Event);
         }
         
         private bool OnUpdateTimer()
         {
-            scene?.StepExec(interval);
+            master.Step(interval);
             
             this.QueueDraw();
 
             return true;
+        }
+
+        private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
+        {
+            master.Draw(e.Surface);
         }
 
         private void OnWindowDeleteEvent(object sender, DeleteEventArgs a)
@@ -117,9 +112,17 @@ namespace Animated.CPU.GTK
             Application.Quit();
         }
 
-        private void OnPaintSurface(object sender, SKPaintSurfaceEventArgs e)
+        //########[ Experimental ]#######################################################
+        private void OnShow(object? sender, EventArgs e)
         {
-            scene?.DrawExec(new DrawContext(scene, e.Surface.Canvas));
+            //timerId = GLib.Timeout.Add((uint)interval.Ticks, OnUpdateTimer);
+        }
+
+
+        private void OnMotion(object o, MotionNotifyEventArgs args)
+        {
+            // Seems to only report drag events
+            // scene.ProcessEvent("DebugText", $"Motion: {args.Event.X}, {args.Event.Y}", args);
         }
 
         

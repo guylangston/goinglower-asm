@@ -83,8 +83,9 @@ namespace Animated.CPU.Model
                             loc.CustomDraw = (c) => {
                                 
                                 var arr = new DockedArrow(
-                                    new DockPoint(this),
                                     new DockPoint(eReg),
+                                    new DockPoint(this),
+                                    
                                     IsHighlighted ? Scene.Styles.Arrow : Scene.Styles.ArrowGray
                                 );
                                 arr.Step();
