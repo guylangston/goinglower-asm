@@ -23,6 +23,7 @@ namespace Animated.CPU.Animation
         private IList<IElement> elements = ImmutableList<IElement>.Empty;
         private static  int nextId = 0;
         private int id;
+        private object? model;
 
         protected ElementBase() // Only for IScene
         {
@@ -41,9 +42,27 @@ namespace Animated.CPU.Animation
             id     = nextId++;
         }
 
+        protected Action<object?>? OnModelChanged { get; set; }
+        public virtual object? Model
+        {
+            get => model;
+            set
+            {
+                if (!object.Equals(model, value))
+                {
+                    model = value;
+                    if (OnModelChanged != null)
+                    {
+                        OnModelChanged(value);    
+                    }
+                }
+            }
+        }
+
+        
+
         public IScene    Scene        { get; private set; }
         public IElement? Parent       { get; private set; }
-        public object?   Model        { get; set; }
         public DBlock?   Block        { get; set; }
         public IAnimator Animator     { get; set; } = EmptyAnimator.Instance;
         public bool      IsHidden     { get; set; }

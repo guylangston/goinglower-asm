@@ -149,7 +149,7 @@ namespace Animated.CPU.Model
             Dialog.Model = new Dialog()
             {
                 Title = slideTitle,
-                Lines = lines
+                Lines = lines,
             };
             Dialog.Image    = null;
             Dialog.IsHidden = false;

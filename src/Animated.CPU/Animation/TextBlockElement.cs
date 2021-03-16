@@ -42,7 +42,7 @@ namespace Animated.CPU.Animation
             public object?          Model      { get; set; }
             public string           Text       { get; set; }
             public SKPaint          Style      { get; set; }
-            public SKRect           TextSize     { get; set; }
+            public SKRect           TextSize   { get; set; }
             public float            Width      { get; set; }
             public SKPoint          LastDraw   { get; set; }
             public object?          Tag        { get; set; }
@@ -158,33 +158,29 @@ namespace Animated.CPU.Animation
                 line.Y = y;
                 float x = line.X = Block.Inner.X ;
                 
-                float h =  LineHeight;
-
                 if (line.Spans.Any())
                 {
+                    float h =  0;
                     y += line.HeaderY;
                     foreach (var span  in line.Spans)
                     {
                         span.LastDraw = new SKPoint(x, y);
                         span.Line     = line;
-                        
-                        //surface.Canvas.DrawText(span.Text.ToString(), x, y, span.Style);
-                        
-                        x += span.Width; // + span.Region.Width / span.Text.Length;
+
+                        x += span.Width;
                         if (span.TextSize.Height > h) h = span.TextSize.Height;
                     }
+
+                    if (h == 0) h = LineHeight;
+                    
                     line.H =  h + line.FooterY; 
                     y      += h + line.FooterY;
                 }
                 else
                 {
-                    y += line.HeaderY;
-                    
-                    var b = new SKRect();
-                    DefaultStyle.MeasureText("X", ref b);
-                    
-                    y      += b.Height + line.FooterY;
-                    line.H =   b.Height + line.HeaderY + line.FooterY;
+                    line.H =  LineHeight + line.HeaderY + line.FooterY;
+                    y      += line.H;
+
                 }
             }
             LastDrawHeight = y - start;
@@ -226,7 +222,6 @@ namespace Animated.CPU.Animation
                         s = span;
                         return true;
                     }
-                    
                 }
             }
             s = default;

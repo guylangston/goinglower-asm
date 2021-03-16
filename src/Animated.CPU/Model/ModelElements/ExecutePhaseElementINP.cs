@@ -12,7 +12,7 @@ namespace Animated.CPU.Model
 
         public ExecutePhaseElementINP(IElement parent, PhaseExecute model, LogicUnitElement master) : base(parent, model, new DBlock()
         {
-            H = 150
+            H = 200
         })
         {
             this.master = master;

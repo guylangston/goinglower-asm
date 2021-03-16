@@ -17,6 +17,9 @@ namespace Animated.CPU.Animation
             Title           = model?.ToString();
             ShowLineNumbers = true;
             IsSourceChanged = true;
+            OnModelChanged = o => {
+                IsSourceChanged = true;
+            };
         }
         
         public SourceParser? Parser { get; set; }  
@@ -33,22 +36,25 @@ namespace Animated.CPU.Animation
             IsSourceChanged = true;
         }
         
+        
+        
         public bool IsSourceChanged { get; set; }
         public bool ShowLineNumbers { get; set; }
 
         protected override void Step(TimeSpan step)
         {
-            if (text == null) return;
-            
             base.Step(step);
 
             if (IsSourceChanged)
             {
+                var lines = GetLines(Model);
+                if (lines == null) return;
+                
                 text.Clear();
 
                 if (Parser != null)
                 {
-                    var  map = Parser.Parse(GetLines(Model));
+                    var  map = Parser.Parse(lines);
                     foreach (var line in map.Walk())
                     {
                         if (ShowLineNumbers && line.StartLine)
@@ -74,7 +80,7 @@ namespace Animated.CPU.Animation
                 else
                 {
                     uint cc = 1;
-                    foreach (var line in GetLines(Model))
+                    foreach (var line in lines)
                     {
                         if (ShowLineNumbers)
                         {

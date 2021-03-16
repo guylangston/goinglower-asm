@@ -105,7 +105,7 @@ namespace Animated.CPU.Model
             else
             {
                 
-                text.Write($"HEX: ", Scene.Styles.FixedFontDarkGray);
+                text.Write($"HEX:", Scene.Styles.FixedFontDarkGray);
                 text.WriteHexWords(Model.Value, Model.LastUsedAsSize);
                 if (Model.LastUsedAs != null)
                 {
@@ -113,20 +113,23 @@ namespace Animated.CPU.Model
                     text.Write(Model.LastUsedAs, Scene.Styles.FixedFontYellow);
                     text.Write("]", Scene.Styles.FixedFontDarkGray);
                 }
-                if (Model.TagValue != null)
-                {
-                    text.Write(" <", Scene.Styles.FixedFontDarkGray);
-                    text.Write(Model.TagValue, Scene.Styles.FixedFontSource);
-                    text.Write(">", Scene.Styles.FixedFontDarkGray);
-                }
+                
                 text.WriteLine();
 
                 if (true) //IsHighlighted)
                 {
-                    text.Write($"DEC: ", Scene.Styles.FixedFontDarkGray);
-                    text.WriteLine($"{Model.Value:#,##0}", Scene.Styles.FixedFontCyan);
+                    text.Write($"DEC:", Scene.Styles.FixedFontDarkGray);
+                    text.Write($"{Model.Value:#,##0}", Scene.Styles.FixedFontCyan);
+                    
+                    if (Model.TagValue != null)
+                    {
+                        text.Write(" <", Scene.Styles.FixedFontDarkGray);
+                        text.Write(Model.TagValue, Scene.Styles.FixedFontSource);
+                        text.Write(">", Scene.Styles.FixedFontDarkGray);
+                    }
                 }
-            
+                text.WriteLine();
+
                 // if (IsHighlighted)
                 // {
                 //     text.Write($"BIN: ", Scene.Styles.FixedFontDarkGray);

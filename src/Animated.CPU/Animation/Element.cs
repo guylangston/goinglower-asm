@@ -31,7 +31,7 @@ namespace Animated.CPU.Animation
             Model = model;
         }
 
-        public new TModel Model
+        public virtual new TModel Model
         {
             get => (TModel)base.Model;
             set => base.Model = value;

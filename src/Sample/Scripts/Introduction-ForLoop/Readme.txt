@@ -7,8 +7,8 @@
       █     █ █    █ █ █   ██ █    █ █       █    █ ██  ██ █      █   █  
        █████   ████  █ █    █  ████  ███████  ████  █    █ ██████ █    █ 
 
--------[ Build your intuition for our your code executes on silicon ]--------
- (*) Real Code                (*) Real CPU                 (*) Real World 
+-------[ Build your intuition for how code executes on silicon ]-----------
+ (*) Real Code                (*) Real CPU                
              
                  __                 _                   
                / _| ___  _ __     | | ___   ___  _ __  
@@ -19,9 +19,10 @@
              
 In this case we are reviewing:
  - C# for-loop executing
+ - Relationship Source -> IL -> JIT -> ASM -> Machine Code
  - x86 chip in 64-bit mode
  - General-purpose registers
- - Relationship Source -> IL -> JIT -> ASM -> Machine Code
+ 
 
 
 

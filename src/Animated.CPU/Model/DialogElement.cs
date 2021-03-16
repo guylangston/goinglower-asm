@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Animated.CPU.Animation;
+using Animated.CPU.Parsers;
 using SkiaSharp;
 
 namespace Animated.CPU.Model
@@ -11,47 +12,46 @@ namespace Animated.CPU.Model
         public IReadOnlyList<string>? Lines { get; set; }
     }
     
-    public class DialogElement : Section<SceneExecute, Dialog>
+    public class DialogElement : TextSection<SceneExecute, Dialog>
     {
-        private TextBlockElement text;
-        
+
         public DialogElement(IElement parent, Dialog model, DBlock block) : base(parent, model, block)
         {
-            IsHidden = true;
-            Title    = Model.Title;
+            IsHidden        = true;
+            Title           = Model.Title;
+            ShowLineNumbers = false;
+            Parser          = new SourceParser(new SyntaxMarkDown());
         }
 
         
         public SKBitmap? Image { get; set; }
 
+        protected override IReadOnlyList<string> GetLines(Dialog model)
+        {
+            return Model?.Lines;
+        }
+
         protected override void Init()
         {
-            this.text = this.Add(new TextBlockElement(this, Block, Scene.Styles.FixedFontGray));
-            
-            Block.Z      = 100;
-            text.Block.Z = 100;
+            base.Init();
         }
 
         protected override void Step(TimeSpan step)
         {
             Title = Model.Title;
-
+            
             if (Image != null)
             {
                 if (Image.Width > Block.W) Block.W = Image.Width;
                 if (Image.Height > Block.H) Block.H = Image.Height;
             }
 
+            Block.Z      = 100;
+            text.Block.Z = 100;
             Block.CenterAt(Scene.Block);
             
-            this.text.Clear();
-            if (Model.Lines != null)
-            {
-                foreach (var line in Model.Lines)
-                {
-                    text.WriteLine(line);
-                }    
-            }
+            base.Step(step);
+            
         }
 
         protected override void Draw(DrawContext surface)

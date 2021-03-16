@@ -11,7 +11,7 @@ namespace Animated.CPU.Model
 
         public DecodePhaseElement(IElement parent, PhaseDecode model, LogicUnitElement master) : base(parent, model, new DBlock()
         {
-            H = 200
+            H = 250
         })
         {
             this.master = master;
@@ -48,7 +48,7 @@ namespace Animated.CPU.Model
                 text.WriteLine(decode.FriendlyMethod, Scene.Styles.FixedFontWhite);
                 if (decode.Description != null)
                 {
-                    text.WriteLine(decode.Description, Scene.Styles.FixedFontGray);
+                    text.WriteLine(decode.Description, Scene.Styles.SmallFont);
                 }
                 
                 urlOpCode = text.WriteUrl($"https://www.felixcloutier.com/x86/{decode.OpCode}#description", "WIKI");
@@ -71,16 +71,7 @@ namespace Animated.CPU.Model
                         );
                     arr.Step();
                     arr.Draw(surface.Canvas);
-                    
-                    
-                    // new Arrow()
-                    // {
-                    //     Start     = a,
-                    //     WayPointA = a + new SKPoint(20, 0),
-                    //     WayPointB = b + new SKPoint(-20, 0),
-                    //     End       = b,
-                    //     Style     = Scene.Styles.Arrow
-                    // }.Draw(surface.Canvas);
+                   
                 }    
             }
         }
