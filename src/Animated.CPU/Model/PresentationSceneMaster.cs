@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Animated.CPU.Animation;
 using SkiaSharp;
@@ -34,7 +33,7 @@ namespace Animated.CPU.Model
 
             cpu = BuildCpu();
             
-            CurrentScene = SceneFactory("Layers");
+            CurrentScene = SceneFactory("Intro");
         }
 
         public override IScene? SceneFactory(string name)
