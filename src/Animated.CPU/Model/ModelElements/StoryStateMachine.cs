@@ -83,5 +83,23 @@ namespace Animated.CPU.Model
             
             Current = PrevInSeq();
         }
+
+        public void NextInstruction()
+        {
+            if (logicUnit.Story.CurrentIndex < logicUnit.Story.Steps.Count-1)
+            {
+                logicUnit.Story.CurrentIndex++;
+                Current = Fetch;
+            }
+        }
+
+        public void PrevInstruction()
+        {
+            if (logicUnit.Story.CurrentIndex > 0)
+            {
+                logicUnit.Story.CurrentIndex--;
+                Current = Fetch;
+            }
+        }
     }
 }

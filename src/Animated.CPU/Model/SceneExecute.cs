@@ -233,6 +233,14 @@ namespace Animated.CPU.Model
                     this.InitSceneComplete();
                     break;
                 
+                case "Prior":
+                    ElementLogicUnit.PrevInstruction();
+                    break;
+                
+                case "Next":
+                    ElementLogicUnit.NextInstruction();
+                    break;
+                
                 case "d":
                 case "n":
                 case "period":

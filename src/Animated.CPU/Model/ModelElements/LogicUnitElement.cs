@@ -57,6 +57,22 @@ namespace Animated.CPU.Model
             if (!InitComplete) throw new Exception("Not Init");
             StateMachine.ExecNext();
         }
+        
+        public void NextInstruction()
+        {
+            if (!InitComplete) throw new Exception("Not Init");
+            StateMachine.NextInstruction();
+            
+        }
+        
+        public void PrevInstruction()
+        {
+            if (!InitComplete) throw new Exception("Not Init");
+            StateMachine.PrevInstruction();
+            
+        }
+        
+        
 
         public void Prev()
         {
