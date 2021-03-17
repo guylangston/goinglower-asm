@@ -5,13 +5,13 @@ using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
-    public class BackGroundNoise : ElementBase
+    public class BackGroundNoiseElement : ElementBase
     {
         static Random r = new Random();
 
         private DBlock bounds;
 
-        public BackGroundNoise(IElement parent, DBlock bounds) : base(parent, new DBlock()
+        public BackGroundNoiseElement(IElement parent, DBlock bounds) : base(parent, new DBlock()
         {
             W = 3,
             H = 3
@@ -39,9 +39,6 @@ namespace Animated.CPU.Model
         public SKPoint Location { get; set; }
         public SKPoint Speed    { get; set; }
 
-
-        
-        
         protected override void Step(TimeSpan step)
         {
             Location += Speed;
@@ -76,7 +73,7 @@ namespace Animated.CPU.Model
         {
             surface.Canvas.DrawCircle(Location.X, Location.Y, Block.W, Paint);
 
-            foreach (var e in this.Parent.Children.Where(x=>x is BackGroundNoise).Cast<BackGroundNoise>())
+            foreach (var e in this.Parent.Children.Where(x=>x is BackGroundNoiseElement).Cast<BackGroundNoiseElement>())
             {
                 if (e == this) continue;
 

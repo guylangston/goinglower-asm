@@ -47,43 +47,42 @@ namespace Animated.CPU
                     c = b.Inner.TL + offset;
                     canvas.DrawText(txt, c.X, c.Y + bounds.Height, t1);
                     break;
-
-                case BlockAnchor.ML:
-                    c = b.Inner.ML + offset;
-                    canvas.DrawText(txt, c.X, c.Y, t1);
+                case BlockAnchor.TM:
+                    c = b.Outer.TM + offset;
+                    canvas.DrawText(txt, c.X - bounds.MidX / 2, c.Y - bounds.Top + bounds.Bottom, t1);
                     break;
-
-                case BlockAnchor.BL:
-                    c = b.Inner.BL + offset;
-                    canvas.DrawText(txt, c.X, c.Y - t1.TextSize * 0.2f, t1);
-                    break;
-
-
                 case BlockAnchor.TR:
                     c = b.Inner.TR + offset;
                     canvas.DrawText(txt, c.X - bounds.Width - t1.TextSize * 0.2f, c.Y + bounds.Height, t1);
                     break;
 
-                case BlockAnchor.MR:
-                    c = b.Inner.MR + offset;
-                    canvas.DrawText(txt, c.X - bounds.Width, c.Y, t1);
+                case BlockAnchor.ML:
+                    c = b.Inner.ML + offset;
+                    canvas.DrawText(txt, c.X, c.Y, t1);
                     break;
-                
                 case BlockAnchor.MM:
                     c = b.Inner.MM + offset;
                     canvas.DrawText(txt, c.X  - bounds.Width/ 2, c.Y + bounds.Height  - t1.TextSize/2, t1);
                     break;
+                case BlockAnchor.MR:
+                    c = b.Inner.MR + offset;
+                    canvas.DrawText(txt, c.X - bounds.Width, c.Y, t1);
+                    break;
 
+
+                case BlockAnchor.BL:
+                    c = b.Inner.BL + offset;
+                    canvas.DrawText(txt, c.X, c.Y - t1.TextSize * 0.2f, t1);
+                    break;
+                case BlockAnchor.BM:
+                    c = b.Inner.BM + offset;
+                    canvas.DrawText(txt, c.X  - bounds.Width/ 2, c.Y - bounds.Height  - t1.TextSize/2, t1);
+                    break;
                 case BlockAnchor.BR:
                     c = b.Inner.BR + offset;
                     canvas.DrawText(txt, c.X - bounds.Width - t1.TextSize * 0.2f, c.Y - t1.TextSize * 0.2f, t1);
                     break;
 
-
-                case BlockAnchor.TM:
-                    c = b.Outer.TM + offset;
-                    canvas.DrawText(txt, c.X - bounds.MidX / 2, c.Y - bounds.Top + bounds.Bottom, t1);
-                    break;
 
                 default:
                     c = b.Outer.MM + offset;

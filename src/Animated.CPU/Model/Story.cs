@@ -17,6 +17,7 @@ namespace Animated.CPU.Model
         public SourceFile?              IL                { get; set; }
         public SourceFile?              Asm               { get; set; }
         public SourceFile?              Binary            { get; set; }
+        public SourceFile?              Outro             { get; set; }
         
         public StoryStep?       Current      => GeneralHelper.ByIndexOrDefault(Steps, CurrentIndex);
         public StoryAnnotation? CurrentSlide => GeneralHelper.ByIndexOrDefault(Slides, CurrentSlideIndex);

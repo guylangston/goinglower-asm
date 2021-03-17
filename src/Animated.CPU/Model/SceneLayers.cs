@@ -25,7 +25,7 @@ namespace Animated.CPU.Model
             if (UseEmbelishments)
             {
                 for (int cc = 0; cc < 100; cc++)
-                    Add(new BackGroundNoise(this, Block));
+                    Add(new BackGroundNoiseElement(this, Block));
             }
             
             var stack = Add(new StackElement(this, Block, DOrient.Horz, StackMode.OverrideSize));

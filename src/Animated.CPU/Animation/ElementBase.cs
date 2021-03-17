@@ -36,8 +36,9 @@ namespace Animated.CPU.Animation
         {
             if (parent is null) throw new Exception("Must have parent");
             if (this is IScene) throw new Exception("Use IScene constructor");
+            
             Parent = parent;
-            Scene  = parent.Scene;
+            Scene  = parent is IScene ss ?  ss : parent.Scene ?? throw new Exception("Parent must have a valid scene");
             Block  = b;
             id     = nextId++;
         }
@@ -61,7 +62,7 @@ namespace Animated.CPU.Animation
 
         
 
-        public IScene    Scene        { get; private set; }
+        public virtual IScene    Scene        { get; private set; }
         public IElement? Parent       { get; private set; }
         public DBlock?   Block        { get; set; }
         public IAnimator Animator     { get; set; } = EmptyAnimator.Instance;

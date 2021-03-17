@@ -43,10 +43,10 @@ namespace Animated.CPU.Model
                 .Set(30,0, 0);
             return name switch
             {
-                "intro" => new EmptyScene("Intro", styles, dBlock),
+                "intro" => new IntroScene("Intro", styles,  dBlock),
                 "layers" => new SceneLayers(this, cpu, styles, dBlock),
                 "debugger" => new SceneExecute(this, cpu, dBlock),
-                "outro" => new EmptyScene("Outro", styles, dBlock),
+                "outro" => new TextScene("Outro", styles,  dBlock, cpu.Story.Outro),
                 _ => throw new Exception($"Not Found: {name}")
             };
         }

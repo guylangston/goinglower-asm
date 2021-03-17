@@ -7,13 +7,33 @@ using SkiaSharp;
 
 namespace Animated.CPU.Animation
 {
+    public abstract class SceneBase<TModel, TStyle> : SceneBase where TStyle:IStyleFactory
+    {
+        protected SceneBase(string name, TStyle styleFactory, DBlock block) : base(name, styleFactory, block)  
+        {
+            SetScene(this);
+        }
+
+        public TStyle Styles => (TStyle)StyleFactory;
+        
+        public new TModel Model
+        {
+            get => (TModel)base.Model;
+            set => base.Model = value;
+        }
+    }
+    
+
     public abstract class SceneBase : ElementBase, IScene 
     {
-        protected SceneBase(string name, DBlock b)
+        protected SceneBase(string name, IStyleFactory styleFactory, DBlock b)
         {
-            base.Block = b ?? throw new ArgumentNullException(nameof(b));
-            this.Name  = name ?? throw new ArgumentNullException(nameof(name));
+            base.Block   = b ?? throw new ArgumentNullException(nameof(b));
+            this.Name    = name ?? throw new ArgumentNullException(nameof(name));
+            StyleFactory = styleFactory ?? throw new ArgumentNullException(nameof(styleFactory));
         }
+
+        public override IScene Scene => this;
 
         public TimeSpan      Elapsed      { get; protected set; }
         public IStyleFactory StyleFactory { get; protected set; }
@@ -42,6 +62,10 @@ namespace Animated.CPU.Animation
         
         protected abstract void DrawOverlay(DrawContext drawing);
         protected abstract void DrawBackGround(DrawContext drawing);
+        
+        protected abstract void InitScene();
+        protected abstract void InitSceneComplete();
+
 
         public abstract void ProcessEvent(string name, object args, object platform);
         public abstract void KeyPress(string key, object platformKeyObject);
@@ -49,29 +73,6 @@ namespace Animated.CPU.Animation
         
         // Send external command
         public Action<string, object>? SendHostCommand { get; set; }
-    }
-    
-    
-    public abstract class SceneBase<TModel, TStyle> : SceneBase where TStyle:IStyleFactory
-    {
-        protected SceneBase(string name, TStyle styleFactory, DBlock block) : base(name, block)  
-        {
-            StyleFactory = Styles = styleFactory;
-            SetScene(this);
-        }
-
-
-        public  TStyle Styles { get; }
-        
-        
-        public new TModel Model
-        {
-            get => (TModel)base.Model;
-            set => base.Model = value;
-        }
-        
-        protected abstract void InitScene();
-        protected abstract void InitSceneComplete();
         
         public virtual void StepScene(TimeSpan s)
         {
@@ -143,12 +144,5 @@ namespace Animated.CPU.Animation
             return true;
         }
 
-      
-
-
-
-
-
     }
-
 }
