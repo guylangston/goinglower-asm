@@ -1,3 +1,5 @@
+# Comparisons are in two parts
+# Set flags
 curr=(0x7fff7dd15cf0, cmp    esi, edi)
 next=(0x7fff7dd15cf2, jl     0x7fff7dd15cec)
 RIP=00007FFF7DD15CF0

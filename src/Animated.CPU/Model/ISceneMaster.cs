@@ -64,7 +64,16 @@ namespace Animated.CPU.Model
             CurrentScene = NextScene(seq);
         }
 
-        public int CurrentIndex => current == null ? -1 : all.IndexOf(current.Name);
+        public int CurrentIndex
+        {
+            get
+            {
+                if (current == null) return -1;
+                
+                return all.IndexOfElse(current.Name, -2);
+            }
+        }
+
         public IReadOnlyList<string> GetAllScenes() => all;
 
         public abstract void Init(SKRect viewSize);

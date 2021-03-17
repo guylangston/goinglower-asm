@@ -1,3 +1,6 @@
+# Part of the calling preamble, 
+# we can ignore it for now
+# $edi=var count
 curr=(0x7fff7dd15ce1, mov    rbp, rsp)
 next=(0x7fff7dd15ce4, xor    eax, eax)
 RIP=00007FFF7DD15CE1

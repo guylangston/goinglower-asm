@@ -137,31 +137,66 @@ namespace Animated.CPU.Backend.LLDB
 
         public StoryStep ParseStep(string[] readAllLines)
         {
-            var l0    = readAllLines[0];
+            var step = new StoryStep();
+            
+            // FrontMatter
+            var c   = 0;
+            while (readAllLines[c].StartsWith("#"))
+            {
+                step.Comment ??= new StoryAnnotation();
+                var l = readAllLines[c].Remove(0, 1).Trim();
+                if (l.StartsWith("$"))
+                {
+                    // map
+                    if (StringHelper.TrySplitExclusive(l, "=", out var parts))
+                    {
+                        step.Comment.Tags ??= new List<Tag>();
+                        step.Comment.Tags.Add(new Tag()
+                        {
+                            Name = parts.l.Remove(0,1),
+                            Value = parts.r
+                        });
+                    }
+                }
+                else// normal line 
+                {
+                    if (step.Comment.Text == null)
+                    {
+                        step.Comment.Text ??= "";    
+                    }
+                    else
+                    {
+                        step.Comment.Text += "\n";
+                    }
+                    
+                    step.Comment.Text +=  l;
+                }
+                
+                c++;
+            }
+            
+            var l0   = readAllLines[c];
+
             var clean = l0.Remove(0, 8).TrimEnd(')');
             if (StringHelper.TrySplitExclusive(clean, ", ", out var res))
             {
-                return new StoryStep()
-                {
-                    RIP   = ParseHelper.ParseHexWord(res.l),
-                    Asm   = res.r,
-                    Delta = ParseRegisters(readAllLines.Skip(5)).ToImmutableArray()
-                };    
+                step.Delta = ParseRegisters(readAllLines.Skip(c+5)).ToImmutableArray();
+                step.Asm   = res.r;
+                step.RIP   = ParseHelper.ParseHexWord(res.l);
+                return step;
             }
             else
             {
                 // cannot read first line, try RIP
-                if (readAllLines[2].StartsWith("RIP="))
+                var rip = readAllLines[c + 2]; 
+                if (rip.StartsWith("RIP="))
                 {
-                    return new StoryStep()
-                    {
-                        RIP   = ParseHelper.ParseHexWord(readAllLines[2].Remove(0, 4)),
-                        Asm   = null,
-                        Delta = ParseRegisters(readAllLines.Skip(5)).ToImmutableArray()
-                    };    
+                    step.Delta = ParseRegisters(readAllLines.Skip(c+5)).ToImmutableArray();
+                    step.Asm   = null;
+                    step.RIP   = ParseHelper.ParseHexWord(rip.Remove(0, 4));
+                    return step;
                 }
-                
-                
+
             }
             return null;
         }

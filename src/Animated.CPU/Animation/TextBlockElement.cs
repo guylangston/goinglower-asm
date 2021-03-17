@@ -97,7 +97,8 @@ namespace Animated.CPU.Animation
                 Span? last = null;
                 foreach (var ll in StringHelper.ToLines(t))
                 {
-                    var s = WriteLine<string>(ll, style);
+                    if (last != null) WriteLine();
+                    var s = Write<string>(ll, style);
                     s.Model = (txt, ll);
                     last    = s;
                 }

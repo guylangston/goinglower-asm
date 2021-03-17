@@ -1,3 +1,5 @@
+# Second, based on flags jump 
+# or continue
 curr=(0x7fff7dd15cf2, jl     0x7fff7dd15cec)
 next=(0x7fff7dd15cec, add    eax, esi)
 RIP=00007FFF7DD15CF2

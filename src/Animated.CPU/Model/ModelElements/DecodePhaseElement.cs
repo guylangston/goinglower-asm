@@ -37,20 +37,20 @@ namespace Animated.CPU.Model
             var decode = Model.DecodeResult;
             if (decode != null)
             {
-                text.Write("   ASM: ", Scene.Styles.FixedFontDarkGray);
+                text.Write(" ASM: ", Scene.Styles.FixedFontDarkGray);
                 text.WriteLine(decode, Scene.Styles.FixedFontYellow);
                 
-                text.Write("  Name: ", Scene.Styles.FixedFontDarkGray);
+                text.Write("Name: ", Scene.Styles.FixedFontDarkGray);
                 text.Write(decode.FriendlyName, Scene.Styles.FixedFontWhite);
                 text.WriteLine();
                 
-                text.Write("Pseudo: ", Scene.Styles.FixedFontDarkGray);
-                text.WriteLine(decode.FriendlyMethod, Scene.Styles.FixedFontWhite);
+                text.WriteLine(decode.FriendlyMethod, Scene.Styles.SmallFont);
                 if (decode.Description != null)
                 {
                     text.WriteLine(decode.Description, Scene.Styles.SmallFont);
                 }
-                
+
+                text.WriteLine();
                 urlOpCode = text.WriteUrl($"https://www.felixcloutier.com/x86/{decode.OpCode}#description", "WIKI");
             }
             

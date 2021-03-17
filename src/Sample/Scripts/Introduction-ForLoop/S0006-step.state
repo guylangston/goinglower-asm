@@ -1,3 +1,4 @@
+# $esi=var x
 curr=(0x7fff7dd15ce6, xor    esi, esi)
 next=(0x7fff7dd15ce8, test   edi, edi)
 RIP=00007FFF7DD15CE6

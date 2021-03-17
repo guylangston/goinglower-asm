@@ -34,7 +34,6 @@ namespace Animated.CPU.Model
         
         public IEnumerable<Register> LoosyMathRegs(string asm)
         {
-            
             foreach (var register in Cpu.RegisterFile)
             {
                 if (asm != null && asm.Contains(register.Id, StringComparison.InvariantCultureIgnoreCase))

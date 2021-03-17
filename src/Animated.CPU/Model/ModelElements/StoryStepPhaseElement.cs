@@ -25,12 +25,10 @@ namespace Animated.CPU.Model
             text.Clear();
             if (Model != null)
             {
-                
-
                 if (Model.Comment != null)
                 {
-                    text.WriteLine(Model.Comment.Title);
-                    text.WriteLine(Model.Comment.Text);
+                    if (Model.Comment.Title != null)  text.WriteLine(Model.Comment.Title, Scene.Styles.FixedFontBlue);
+                    if (Model.Comment.Text != null)   text.WriteLine(Model.Comment.Text, Scene.Styles.FixedFontWhite);
                     
                     if (Model.Comment.Tags != null && Model.Comment.Tags.Any())
                     {

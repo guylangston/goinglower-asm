@@ -37,5 +37,20 @@ namespace Animated.CPU
 
             throw new Exception("Not found");
         }
+        
+        public static int IndexOfElse<T>(this IReadOnlyList<T>? items, T item, int elseVal)
+        {
+            if (items == null) throw new Exception();
+
+            for (int cc = 0; cc < items.Count; cc++)
+            {
+                if (item.Equals(items[cc]))
+                {
+                    return cc;
+                }
+            }
+
+            return elseVal;
+        }
     }
 }

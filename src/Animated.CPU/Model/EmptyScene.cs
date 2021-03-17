@@ -87,9 +87,5 @@ namespace Animated.CPU.Model
 
             protected override IReadOnlyList<string> GetLines(SourceFile model) => model.Lines;
         }
-
-        
     }
-
-    
 }

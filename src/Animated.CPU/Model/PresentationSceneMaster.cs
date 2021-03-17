@@ -18,7 +18,8 @@ namespace Animated.CPU.Model
             "Intro",
             "Layers",
             "Execute",
-            "Outro"
+            "Outro",
+            //"Slides", 
         })
         {
             HandleExternalCommand = handleExternalCommand;
@@ -55,6 +56,10 @@ namespace Animated.CPU.Model
                 "intro" => new IntroScene("Intro", styles,  dBlock),
                 "layers" => new SceneLayers(this, cpu, styles, dBlock),
                 "execute" => new SceneExecute(this, cpu, dBlock),
+                "slides" => new SlidesScene("Slides", styles, dBlock)
+                {
+                    Model = cpu.Story
+                },
                 "outro" => new TextScene("Outro", styles,  dBlock, cpu.Story.Outro),
                 _ => throw new Exception($"Not Found: {name}")
             };
@@ -98,11 +103,25 @@ namespace Animated.CPU.Model
             throw new NotSupportedException();
         }
 
+        private IScene? last;
         public override void HandleKeyPress(string key, object native)
         {
             if (key == "q")
             {
                 HandleExternalCommand("quit", null);
+            }
+            if (key == "s")
+            {
+                if (CurrentScene?.Name == "Slides")
+                {
+                    CurrentScene = last;
+                }
+                else
+                {
+                    last         = CurrentScene;
+                    CurrentScene = this.GetScene("Slides");
+                }
+                return;
             }
             if (key == "comma")
             {

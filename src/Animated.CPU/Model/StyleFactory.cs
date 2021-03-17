@@ -41,7 +41,7 @@ namespace Animated.CPU.Model
             
             SmallFont = new SKPaint()
             {
-                TextSize = 12,
+                TextSize = 15,
                 Color    = SKColor.Parse("#ccc"),
                 Typeface = SKTypeface.FromFamilyName(
                     MonoSpace, 
