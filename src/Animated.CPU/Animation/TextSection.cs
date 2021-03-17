@@ -108,7 +108,7 @@ namespace Animated.CPU.Animation
 
         public TextBlockElement.Span? GetLine(uint line)
         {
-            if (text.TryGetSpanFromModel(line, out var s))
+            if (text.TryGetSpanFromModel(line-1, out var s))
             {
                 return s;
             }

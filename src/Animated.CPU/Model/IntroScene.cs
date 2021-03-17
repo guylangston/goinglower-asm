@@ -53,6 +53,9 @@ namespace Animated.CPU.Model
             
             drawing.DrawText(strapLine, StyleFactory.GetPaint(this, "h1"), inner, BlockAnchor.BM);
             
+            
+            drawing.DrawText(PresentationSceneMaster.Version, StyleFactory.GetPaint(this, "FixedFontBlue") , Block, BlockAnchor.BR);
+            
         }
         
         protected override void InitScene()

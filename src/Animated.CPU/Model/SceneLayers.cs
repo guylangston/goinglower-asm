@@ -28,7 +28,7 @@ namespace Animated.CPU.Model
                     Add(new BackGroundNoiseElement(this, Block));
             }
             
-            var stack = Add(new StackElement(this, Block, DOrient.Horz, StackMode.OverrideSize));
+            var stack = Add(new StackElement(this, Block.Inset(10, 0), DOrient.Horz, StackMode.OverrideSize));
 
             var items = new SourceFile?[]
             {
@@ -79,7 +79,7 @@ namespace Animated.CPU.Model
 
         protected override void DrawBackGround(DrawContext drawing)
         {
-            drawing.Canvas.Clear(Styles.GetColor(this, "bg"));
+            
         }
 
         public override void ProcessEvent(string name, object args, object platform)

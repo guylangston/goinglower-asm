@@ -10,18 +10,27 @@ namespace Animated.CPU.Model
         private StyleFactory styles;
         private SKRect size;
         private Cpu cpu;
+        private SKPaint cutGuid;
         public Action<string, object> HandleExternalCommand { get; }
 
         public PresentationSceneMaster(Action<string, object> handleExternalCommand) : base(new []
         {
             "Intro",
             "Layers",
-            "Debugger",
+            "Execute",
             "Outro"
         })
         {
             HandleExternalCommand = handleExternalCommand;
+            cutGuid = new SKPaint()
+            {
+                Style       = SKPaintStyle.Stroke,
+                StrokeWidth = 1,
+                Color       = SKColor.Parse("#383838")
+            };
         }
+        
+        public const string Version = "0.7-alpha";
         
         // May be a live debugger or 'cooked' on disk... External libs
         protected abstract Cpu BuildCpu();
@@ -45,7 +54,7 @@ namespace Animated.CPU.Model
             {
                 "intro" => new IntroScene("Intro", styles,  dBlock),
                 "layers" => new SceneLayers(this, cpu, styles, dBlock),
-                "debugger" => new SceneExecute(this, cpu, dBlock),
+                "execute" => new SceneExecute(this, cpu, dBlock),
                 "outro" => new TextScene("Outro", styles,  dBlock, cpu.Story.Outro),
                 _ => throw new Exception($"Not Found: {name}")
             };
@@ -117,6 +126,8 @@ namespace Animated.CPU.Model
         public override void Draw(SKSurface surface)
         {
             surface.Canvas.Clear(styles.bg);
+            
+            surface.Canvas.DrawRect(size, cutGuid);
             
             base.Draw(surface);
             

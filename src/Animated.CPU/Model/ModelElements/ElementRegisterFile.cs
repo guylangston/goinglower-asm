@@ -75,6 +75,13 @@ namespace Animated.CPU.Model
 
         protected override void Step(TimeSpan step)
         {
+            if (Model == Scene.Cpu.RIP)
+            {
+                // Always show
+                IsHidden        = false;
+                Model.IsChanged = false;
+                IsHighlighted   = false;
+            }
             if (Model.IsChanged)
             {
                 IsHidden = false;

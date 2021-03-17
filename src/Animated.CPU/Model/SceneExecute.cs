@@ -15,13 +15,13 @@ namespace Animated.CPU.Model
         private CodeElement ElementCodeIL;
         private CodeElement ElementCodeASM;
 
-        public SceneExecute(ISceneMaster master, Cpu model, DBlock region) : base("Debugger", new StyleFactory(), region)
+        public SceneExecute(ISceneMaster master, Cpu model, DBlock region) : base("Execute", new StyleFactory(), region)
         {
             this.master = master;
             Model       = model;
         }
 
-        public const string Version = "0.6-alpha";
+        
         
         // Helpers
         public Cpu                    Cpu                 => Model;
@@ -182,8 +182,7 @@ namespace Animated.CPU.Model
             
             surface.DrawRect(Block.Outer, Styles.Border);
             
-            surface.DrawText($"0xGoingLower        .", Styles.TextLogo, Block, BlockAnchor.BR);
-            surface.DrawText(Version + " .", Styles.FixedFontBlue, Block, BlockAnchor.BR);
+            
 
             if (DebugPointAt != SKPoint.Empty)
             {

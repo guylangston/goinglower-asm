@@ -48,20 +48,29 @@ namespace Animated.CPU.Model
 
         protected override void Decorate(DrawContext surface)
         {
-            if (master.Active == this)
+            // Memory to Fetch
+            var seg = Scene.Cpu.Instructions.GetByAddress(Model.RIP);
+            if (seg != null && Scene.TryGetElementFromModelRecurse(seg, out var eRip))
             {
-
-                var seg = Scene.Cpu.Instructions.GetByAddress(Model.RIP);
-                if (seg != null && Scene.TryGetElementFromModelRecurse(seg, out var eRip))
-                {
-                    var arr = new DockedArrow(
-                        new DockPoint(this),
-                        new DockPoint(eRip),
-                        Scene.Styles.Arrow
-                    );
-                    arr.Step();
-                    arr.Draw(surface.Canvas);
-                }    
+                var arr = new DockedArrow(
+                    new DockPoint(this),
+                    new DockPoint(eRip),
+                    IsHighlighted ? Scene.Styles.Arrow : Scene.Styles.ArrowGray
+                );
+                arr.Step();
+                arr.Draw(surface.Canvas);
+            }
+            
+            // RIP to Fetch
+            if (Scene.TryGetElementFromModelRecurse(Scene.Cpu.RIP, out var reg))
+            {
+                var arr = new DockedArrow(
+                    new DockPoint(reg),
+                    new DockPoint(this),
+                    IsHighlighted ? Scene.Styles.Arrow : Scene.Styles.ArrowGray
+                );
+                arr.Step();
+                arr.Draw(surface.Canvas);
             }
         }
 

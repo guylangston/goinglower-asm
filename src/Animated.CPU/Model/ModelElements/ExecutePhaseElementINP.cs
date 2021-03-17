@@ -56,13 +56,14 @@ namespace Animated.CPU.Model
                     }
                     
                     var val = Model.Alu.GetInput(decode, arg);
-                    var loc = text.Write($" IN A{arg.Index}: ");
+                    var loc = text.Write($"A{arg.Index}: ");
                     text.Write(arg.Value, Scene.Styles.FixedFontCyan);
                     text.Write(" ");
                     if (val != null)
                     {
                         text.Write(val.ValueRaw, Scene.Styles.FixedFontYellow);
-                        text.Write("=");
+                        text.WriteLine();
+                        text.Write("  = ");
                         text.Write(val.ValueParsed, Scene.Styles.FixedFontCyan);
                         
                     }
