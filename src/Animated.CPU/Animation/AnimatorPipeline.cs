@@ -30,13 +30,12 @@ namespace Animated.CPU.Animation
             }
             base.Stop();
         }
-
-
-
     }
     
     public class AnimatorPipeline : AnimatorBase
     {
+        public bool Loop { get; set; }
+        
         public AnimatorPipeline(TimeSpan duration) : base(duration)
         {
         }
@@ -46,7 +45,11 @@ namespace Animated.CPU.Animation
             bool readyNext = false;
             foreach (var animation in Items)
             {
-                if (readyNext) animation.Start();
+                if (readyNext)
+                {
+                    animation.Start();
+                    readyNext = false;
+                }
                 
                 if (animation.IsActive)
                 {
@@ -57,7 +60,18 @@ namespace Animated.CPU.Animation
                     }    
                 }
             }
-            return Items.All(x => !x.IsActive);
+
+            var complete = Items.All(x => !x.IsActive);
+
+            if (Loop && complete)
+            {
+                StartInner();
+                return false;
+            }
+            else
+            {
+                return complete;    
+            }
         }
 
         protected override void StartInner()
@@ -67,12 +81,5 @@ namespace Animated.CPU.Animation
                 Items[0].Start();
             }
         }
-
-
-
-
-        
     }
-    
-    
 }

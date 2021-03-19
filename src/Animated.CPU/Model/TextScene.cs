@@ -28,6 +28,14 @@ namespace Animated.CPU.Model
             public MyText(IElement parent, SourceFile model, DBlock block) : base(parent, model, block)
             {
             }
+            
+            
+            protected override void Init()
+            {
+                base.Init();
+                normal = Normal.CloneAndUpdate(x=>x.TextSize = CPU.Model.StyleFactory.TextSizeDefault + 5);
+            }
+
 
             protected override IReadOnlyList<string> GetLines(SourceFile model) => model.Lines;
         }

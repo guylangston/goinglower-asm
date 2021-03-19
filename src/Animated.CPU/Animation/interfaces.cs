@@ -57,6 +57,17 @@ namespace Animated.CPU.Animation
 
     public class PropFloat : IAnimProp
     {
+        public PropFloat(float baseValue)
+        {
+            Value = BaseValue = baseValue;
+        }
+
+        public PropFloat(float value, float baseValue)
+        {
+            Value     = value;
+            BaseValue = baseValue;
+        }
+
         public float Value     { get; set; }
         public float BaseValue { get; set; }
     }

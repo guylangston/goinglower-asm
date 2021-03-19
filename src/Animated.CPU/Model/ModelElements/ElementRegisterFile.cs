@@ -52,7 +52,7 @@ namespace Animated.CPU.Model
         }
         
      
-        public PropFloat Alpha         { get; } = new PropFloat();
+        public PropFloat Alpha         { get; } = new PropFloat(0,0);
         public bool      IsHighlighted { get; set; }
 
         protected override void Init()

@@ -12,6 +12,7 @@ namespace Animated.CPU.Parsers
             Phases.Add( new List<Identifier>()
             {
                 new LineStartIdentifier("header", "#", "yellow"),
+                new StringQuoteIdentifier("strings", "` \"", "cyan")
             });
             
             

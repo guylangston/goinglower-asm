@@ -15,7 +15,8 @@ namespace Animated.CPU.Animation
     public enum StackMode
     {
         JustLayout,
-        OverrideSize
+        OverrideSize,
+        Stack
     }
     
     public class StackElement : ContainerElement  
@@ -128,7 +129,6 @@ namespace Animated.CPU.Animation
                         item.Block.H =   size;
                     }
                 }
-                
             }
             Layout();
         }
