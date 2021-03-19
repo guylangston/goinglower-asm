@@ -17,7 +17,7 @@ namespace Animated.CPU.Model
                 TextSize = 20,
                 Color    = SKColors.LightSeaGreen,
                 Typeface = SKTypeface.FromFamilyName(
-                    "Ubuntu", 
+                    Theme.Sans, 
                     SKFontStyleWeight.Normal, 
                     SKFontStyleWidth.Normal, 
                     SKFontStyleSlant.Upright)
@@ -27,7 +27,7 @@ namespace Animated.CPU.Model
                 TextSize = 20,
                 Color    = new SKColor(SKColors.LightSeaGreen.Red, SKColors.LightSeaGreen.Green, SKColors.LightSeaGreen.Blue, 100),
                 Typeface = SKTypeface.FromFamilyName(
-                    "Ubuntu", 
+                    Theme.Sans,  
                     SKFontStyleWeight.Normal, 
                     SKFontStyleWidth.Normal, 
                     SKFontStyleSlant.Upright)
@@ -36,7 +36,7 @@ namespace Animated.CPU.Model
         }
 
         public StackElement LogoChars { get; set; }
-        const string logoTxt   = "ØxGoingLower";
+        const string logoTxt   =  "ØxGoingLower";
         const string strapLine = "Build a deeper intuition for what our compiler/platform does for us";
 
         protected override void DrawOverlay(DrawContext drawing)

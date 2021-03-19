@@ -82,7 +82,7 @@ namespace Animated.CPU.Model
             protected override void Init()
             {
                 base.Init();
-                normal = Normal.CloneAndUpdate(x=>x.TextSize = CPU.Model.StyleFactory.TextSizeDefault + 5);
+                normal = Normal.CloneAndUpdate(x=>x.TextSize = Theme.TextSizeDefault + 5);
             }
 
             protected override IReadOnlyList<string> GetLines(StoryAnnotation model) =>

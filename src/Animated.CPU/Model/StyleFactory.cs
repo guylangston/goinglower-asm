@@ -16,21 +16,27 @@ namespace Animated.CPU.Model
         }
     }
     
-    public class StyleFactory : IStyleFactory
+    public static class Theme 
     {
         public const string MonoSpace = "Jetbrains Mono";
         public const string Small = "Noto Sans";
         public const float TextSizeDefault = 20;
+        public const string Sans = "Ubuntu";
+
+    }
+    
+    public class StyleFactory : IStyleFactory
+    {
         
         public StyleFactory()
         {
             this.Props = GetType().GetProperties();
             FixedFont = new SKPaint()
             {
-                TextSize = TextSizeDefault,
+                TextSize = Theme.TextSizeDefault,
                 Color    = SKColor.Parse("#ccc"),
                 Typeface = SKTypeface.FromFamilyName(
-                    MonoSpace, 
+                    Theme.MonoSpace, 
                     SKFontStyleWeight.Normal, 
                     SKFontStyleWidth.Normal, 
                     SKFontStyleSlant.Upright)
@@ -52,10 +58,10 @@ namespace Animated.CPU.Model
             
             SmallFont = new SKPaint()
             {
-                TextSize = TextSizeDefault - 5,
+                TextSize = Theme.TextSizeDefault - 5,
                 Color    = SKColor.Parse("#ccc"),
                 Typeface = SKTypeface.FromFamilyName(
-                    MonoSpace, 
+                    Theme.MonoSpace, 
                     SKFontStyleWeight.Normal, 
                     SKFontStyleWidth.Normal, 
                     SKFontStyleSlant.Upright)
@@ -103,15 +109,15 @@ namespace Animated.CPU.Model
             
             Text = new SKPaint()
             {
-                TextSize = TextSizeDefault,
+                TextSize = Theme.TextSizeDefault,
                 Color    = SKColor.Parse("#eee")
             };
             TextH1 = new SKPaint()
             {
-                TextSize = TextSizeDefault + 5,
+                TextSize = Theme.TextSizeDefault + 5,
                 Color    = SKColors.Goldenrod,
                 Typeface = SKTypeface.FromFamilyName(
-                    MonoSpace, 
+                    Theme.MonoSpace, 
                     SKFontStyleWeight.Normal, 
                     SKFontStyleWidth.Normal, 
                     SKFontStyleSlant.Upright)
@@ -226,7 +232,7 @@ namespace Animated.CPU.Model
 
             if (id.StartsWith("font-"))
             {
-                float size = TextSizeDefault;
+                float size = Theme.TextSizeDefault;
                 if (e is ITextStyleContainer ts)
                 {
                     size = ts.Normal.TextSize;

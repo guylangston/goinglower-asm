@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Animated.CPU.Model;
 using SkiaSharp;
 
 namespace Animated.CPU.Animation
