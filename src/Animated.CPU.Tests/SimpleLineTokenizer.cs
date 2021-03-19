@@ -37,21 +37,16 @@ int ForLoop(int count)
             var res = cs.Parse(StringHelper.ToLines(Code).ToArray());
 
             Assert.NotEmpty(res.LineTokens);
-
-
+            
             var sb = new StringBuilder();
             foreach (var line in res.Walk())
             {
                 sb.Append(line.Text);
             }
             
-            
             outp.WriteLine(sb.ToString());
             
-            
             Assert.Equal(Code, sb.ToString());
-
-
         }
 
         void StringRoundTrip(string single)
@@ -87,5 +82,37 @@ int ForLoop(int count)
         
         [Fact]
         public void CanParse_CSharp_SingleLineQuote_InnerInt2() => StringRoundTrip("xxx\"yinty\";");
+        
+        
+        [Fact]
+        public void MarkDown_URL()
+        {
+            var cs  = new SourceParser(new SyntaxMarkDown());
+            var res = cs.Parse(new []
+            {
+                "Nothing",
+                "- [xname](xurl) B",
+                "- ![xname](ximage) B"
+            });
+
+            Assert.NotEmpty(res.LineTokens);
+
+
+            var sb = new StringBuilder();
+            foreach (var line in res.Walk())
+            {
+                sb.Append(line.Text);
+            }
+            
+            
+            outp.WriteLine(sb.ToString());
+            
+            
+            Assert.Equal(@"Nothing
+A xname B
+A xname B", sb.ToString());
+
+
+        }
     }
 }

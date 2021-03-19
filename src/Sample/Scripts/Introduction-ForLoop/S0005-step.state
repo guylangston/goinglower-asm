@@ -1,6 +1,6 @@
 # Just a fancy way of doing 
 # `mov eax, 0`
-# $esi=var sum
+# $eax=var sum
 curr=(0x7fff7dd15ce4, xor    eax, eax)
 next=(0x7fff7dd15ce6, xor    esi, esi)
 RIP=00007FFF7DD15CE4

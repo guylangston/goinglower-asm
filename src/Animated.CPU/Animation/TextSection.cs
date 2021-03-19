@@ -6,7 +6,13 @@ using SkiaSharp;
 
 namespace Animated.CPU.Animation
 {
-    public abstract class TextSection<TScene, TModel> : Section<TScene, TModel> where TScene:IScene
+
+    public interface ITextStyleContainer
+    {
+        SKPaint Normal { get; }
+    }
+    
+    public abstract class TextSection<TScene, TModel> : Section<TScene, TModel>, ITextStyleContainer where TScene:IScene
     {
         protected TextBlockElement text;
         protected SKPaint normal;
@@ -22,7 +28,10 @@ namespace Animated.CPU.Animation
             };
         }
         
-        public SourceParser? Parser { get; set; }  
+        public SourceParser? Parser          { get; set; }
+        public bool          IsSourceChanged { get; set; }
+        public bool          ShowLineNumbers { get; set; }
+        public SKPaint Normal => normal;
 
         protected abstract IReadOnlyList<string> GetLines(TModel model);
         
@@ -31,15 +40,13 @@ namespace Animated.CPU.Animation
             normal = Scene.StyleFactory.GetPaint(this, "FixedFontGray");
             prefix = Scene.StyleFactory.GetPaint(this, "FixedFontDarkGray");
 
-            text = Add(new TextBlockElement(this, this.Block, normal));
+            text = Add(new TextBlockElement(this, this.Block, Normal));
 
             IsSourceChanged = true;
         }
         
         
         
-        public bool IsSourceChanged { get; set; }
-        public bool ShowLineNumbers { get; set; }
 
         protected override void Step(TimeSpan step)
         {
@@ -66,12 +73,18 @@ namespace Animated.CPU.Animation
                             }    
                         }
                         
-                        var span = text.Write(line.Text, line.Ident == null 
-                            ? normal 
-                            : Scene.StyleFactory.GetPaint(this, $"font-{line.Ident.Colour ?? line.Ident.Name}"));
+                        var style = line.Ident == null
+                            ? Normal
+                            : Scene.StyleFactory.GetPaint(this, $"font-{line.Ident.Colour ?? line.Ident.Name}");
+                        
+                        var span = text.Write(line.Text, style);
                         if (span != null)
                         {
                             span.SetModel(line.LineNo);
+                            if (line.Token is SyntaxMarkDown.LinkIdentifier.Token link)
+                            {
+                                span.Url = link.Url;
+                            }
                         }
                     }
 

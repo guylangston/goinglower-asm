@@ -2,6 +2,9 @@ Welcome to Going Lower
 
 Today we will explore how highlevel code is executed by the CPU
 
+
+
+
 In this case, we have a basic for-loop in C#
 -> at compile time the source is transformed into IL or Intermediate Language
 -> at runtime it is JITed or Just In Time Compiled to Asmberly
@@ -10,7 +13,9 @@ and it is that the CPU really executes
 
 Next: Lets watch it execute
 
-=============================================================================
+
+
+
 
 - Starting on the left is the same C# code
 - Next to it is compiled binary code and its corrosponding asembly
@@ -21,9 +26,26 @@ Next: Lets watch it execute
     for clarity the Execute is split into READ and WRITE
 
 Next: Lets explore some binary code altering registers
+
+
+==== Explore the parts
+- Left Code
+- Binary in RAM
+- Logic unit, state in registers
+
+=== Lets walk through the code
+- IP is a pointer into RAM which holds the next instruction to execute
+- Fetch loads this from RAM and sends it to be Decoded
+- The XOR EAX
+- Init X
+- Guard Count==0
+- Inner sum+x
+- Exit Condition
+   - Comparisons are in two parts
+   - Compare or Maths op which sets flags
+   - Based on flags we jump or contineu
     
 
-=============================================================================
 
 
 
@@ -31,11 +53,6 @@ Next: Lets explore some binary code altering registers
 
 
 
-
-
--> There are two steps not shown here:
----> Microcode
----> Actual logic gates build out of transistors
 
 
 

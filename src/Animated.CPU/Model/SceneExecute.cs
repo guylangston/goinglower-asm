@@ -216,22 +216,19 @@ namespace Animated.CPU.Model
                     Dialog.IsHidden = true;
                     return;
                 
-                case "t":
-                    ShowDialog("Test", bitmap1);
-                    break;
+                // case "t":
+                //     ShowDialog("Test", bitmap1);
+                //     break;
+                // case "F1":
+                // case "h":
+                //     PerformAction(new ActionModel("Help"));
+                //     break;
+                // case "F2":
+                // case "?":
+                //     PerformAction(new ActionModel("CurrentSlide"));
+                //     break;
                 
-                
-                case "F1":
-                case "h":
-                    PerformAction(new ActionModel("Help"));
-                    break;
-                
-                case "F2":
-                case "?":
-                    PerformAction(new ActionModel("CurrentSlide"));
-                    break;
-                
-                case "s":
+                case "r":
                     this.InitSceneComplete();
                     break;
                 

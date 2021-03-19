@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Animated.CPU.Parsers
@@ -53,6 +54,11 @@ namespace Animated.CPU.Parsers
         private void Tokenize(IReadOnlyList<Identifier> phase, List<ParserToken> tok, string s, int lineIdx)
         {
             var cc   = 0;
+
+            foreach (var byLine in phase.Where(x => x is LineIdentifier).Cast<LineIdentifier>())
+            {
+                tok.AddRange(byLine.ParseLine(s, lineIdx));
+            }
             
             while (cc < s.Length)
             {
@@ -69,7 +75,7 @@ namespace Animated.CPU.Parsers
                 if (cc >= s.Length) return;
                 
                 Identifier? curr = null;
-                foreach (var ident in phase)
+                foreach (var ident in phase.Where(x=>x is not LineIdentifier))
                 {
                     if (ident.TryParse(s, lineIdx, cc, out var nToken))
                     {

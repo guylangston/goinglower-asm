@@ -6,17 +6,28 @@ using SkiaSharp;
 
 namespace Animated.CPU.Model
 {
+    public static class StyleHelper
+    {
+        public static SKPaint CloneAndUpdate(this SKPaint paint, Action<SKPaint> update)
+        {
+            var c = paint.Clone();
+            update(c);
+            return c;
+        }
+    }
+    
     public class StyleFactory : IStyleFactory
     {
         public const string MonoSpace = "Jetbrains Mono";
         public const string Small = "Noto Sans";
+        public const float TextSizeDefault = 20;
         
         public StyleFactory()
         {
             this.Props = GetType().GetProperties();
             FixedFont = new SKPaint()
             {
-                TextSize = 20,
+                TextSize = TextSizeDefault,
                 Color    = SKColor.Parse("#ccc"),
                 Typeface = SKTypeface.FromFamilyName(
                     MonoSpace, 
@@ -41,7 +52,7 @@ namespace Animated.CPU.Model
             
             SmallFont = new SKPaint()
             {
-                TextSize = 15,
+                TextSize = TextSizeDefault - 5,
                 Color    = SKColor.Parse("#ccc"),
                 Typeface = SKTypeface.FromFamilyName(
                     MonoSpace, 
@@ -92,12 +103,12 @@ namespace Animated.CPU.Model
             
             Text = new SKPaint()
             {
-                TextSize = 15,
+                TextSize = TextSizeDefault,
                 Color    = SKColor.Parse("#eee")
             };
             TextH1 = new SKPaint()
             {
-                TextSize = 25,
+                TextSize = TextSizeDefault + 5,
                 Color    = SKColors.Goldenrod,
                 Typeface = SKTypeface.FromFamilyName(
                     MonoSpace, 
@@ -215,14 +226,27 @@ namespace Animated.CPU.Model
 
             if (id.StartsWith("font-"))
             {
+                float size = TextSizeDefault;
+                if (e is ITextStyleContainer ts)
+                {
+                    size = ts.Normal.TextSize;
+                }
                 var rem = id.Remove(0, "font-".Length).ToLowerInvariant();
                 if (SKColor.TryParse(rem, out var clr))
                 {
-                    return Clone(FixedFont, x => x.Color = clr);
+                    return Clone(FixedFont,
+                        delegate(SKPaint x) {
+                            x.TextSize = size;
+                            x.Color    = clr;
+                        });
                 }
                 if (name.TryGetValue(rem, out var clr2))
                 {
-                    return Clone(FixedFont, x => x.Color = clr2);
+                    return Clone(FixedFont,
+                        delegate(SKPaint x) {
+                            x.TextSize = size;
+                            x.Color    = clr2;
+                        });
                 }
                 
             }

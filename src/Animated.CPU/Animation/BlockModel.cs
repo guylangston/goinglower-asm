@@ -11,6 +11,17 @@ namespace Animated.CPU.Animation
         Horz,
         Vert
     }
+
+    public enum LineAnchor
+    {
+        Left, Middle, Right
+    }
+
+    public enum VertAnchor
+    {
+        Top, Centre, Bottom
+
+    }
     
     
     public enum BlockAnchor

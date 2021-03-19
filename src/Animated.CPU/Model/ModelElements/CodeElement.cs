@@ -28,7 +28,7 @@ namespace Animated.CPU.Model.ModelElements
             normal = Scene.StyleFactory.GetPaint(this, "FixedFontGray");
             prefix = Scene.StyleFactory.GetPaint(this, "FixedFontDarkGray");
 
-            text = Add(new TextBlockElement(this, this.Block, normal));
+            text = Add(new TextBlockElement(this, this.Block, Normal));
 
             IsSourceChanged = true;
         }

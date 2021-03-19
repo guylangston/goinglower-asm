@@ -84,8 +84,8 @@ namespace Animated.CPU.Backend.LLDB
                 ReadMe     = cfg.ReadAsTextLinesElseNull(source, "Readme.txt"),
                 IL         = cfg.ReadAsTextLinesElseNull(source, "Code.il"),
                 Asm        = cfg.ReadAsTextLinesElseNull(source, "Code.asm"),
-                Binary      = cfg.ReadAsTextLinesElseNull(source, "Code.bin"),
-                Outro = cfg.ReadAsTextLinesElseNull(source, "Outro.md"),
+                Binary     = cfg.ReadAsTextLinesElseNull(source, "Code.bin"),
+                Outro      = cfg.ReadAsTextLinesElseNull(source, "Outro.md"),
             };
 
             foreach (var stepFile in FindStepFiles(cfg.BaseFolder))

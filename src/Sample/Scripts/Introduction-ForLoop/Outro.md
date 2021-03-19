@@ -15,6 +15,10 @@
   
 Links in the video description.
 
+# Comments Welcome
+
+This is my first video and feedback would be most appreciated.
+
 # Contact
 @guy_langston
 @OxGoingLower

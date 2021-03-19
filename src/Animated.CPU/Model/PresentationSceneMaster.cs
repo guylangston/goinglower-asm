@@ -149,8 +149,16 @@ namespace Animated.CPU.Model
             surface.Canvas.DrawRect(size, cutGuid);
             
             base.Draw(surface);
+
+            if (CurrentIndex >= 0)
+            {
+                surface.Canvas.DrawText($"{CurrentIndex+1}/{this.GetAllScenes().Count}: {CurrentScene?.Name}", 10, 20, styles.TextH1);    
+            }
+            else
+            {
+                surface.Canvas.DrawText(CurrentScene?.Name, 10, 20, styles.TextH1);
+            }
             
-            surface.Canvas.DrawText($"{CurrentIndex+1}/{this.GetAllScenes().Count}: {CurrentScene?.Name}", 10, 20, styles.TextH1);
         }
     }
 }

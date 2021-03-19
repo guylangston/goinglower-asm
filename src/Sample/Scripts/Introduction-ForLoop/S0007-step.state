@@ -1,4 +1,5 @@
 # Guard, exit if `count=0`
+# $edi=var count
 curr=(0x7fff7dd15ce8, test   edi, edi)
 next=(0x7fff7dd15cea, jle    0x7fff7dd15cf4)
 RIP=00007FFF7DD15CE8

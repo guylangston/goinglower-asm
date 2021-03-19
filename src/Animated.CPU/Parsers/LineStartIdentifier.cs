@@ -23,7 +23,8 @@ namespace Animated.CPU.Parsers
                     {
                         Ident   = this,
                         LineIdx = lineIdx,
-                        Range   = new Range(0, new Index(0, true))
+                        Range   = new Range(0, new Index(0, true)),
+                        OutputText = s.Remove(0, token.Length).Trim()
                     };
                     return true;
                 }

@@ -14,46 +14,48 @@ namespace Animated.CPU.Parsers
             public Identifier? Ident     { get; set; }
             public string      Text      { get; set;}
             public uint        LineNo    { get; set;}
+            public ParserToken Token     { get; set; }
         }
 
         public IEnumerable<Section> Walk()
         {
             for (int cc = 0; cc < Lines.Count; cc++)
             {
-                var l = Lines[cc];
-                var t = LineTokens[cc];
+                var line = Lines[cc];
+                var lineTokens = LineTokens[cc];
 
                 var s = 0;
-                foreach (var token in t)
+                foreach (var token in lineTokens)
                 {
-                    var tt = token.Range.GetOffsetAndLength(l.Length);
+                    var tt = token.Range.GetOffsetAndLength(line.Length);
                     if (tt.Offset > s)
                     {
                         yield return new Section()
                         {
                             StartLine = s == 0,
                             Ident = null,
-                            Text =l[s..tt.Offset],
+                            Text = line[s..tt.Offset],
                             LineNo = (uint)cc
                         };
-                        
                     }
                     yield return new Section()
                     {
                         StartLine = tt.Offset == 0,
-                        Ident  = token.Ident,
-                        Text   = l[token.Range],
-                        LineNo = (uint)cc
+                        Ident     = token.Ident,
+                        Text      = token.OutputText ?? line[token.Range],
+                        LineNo    = (uint)cc,
+                        Token     = token
                     };
                     s = tt.Offset + tt.Length;
                 }
-                if (s < l.Length -1)
+                
+                if (s < line.Length -1)
                 {
                     yield return new Section()
                     {
                         StartLine = s == 0,
                         Ident     = null,
-                        Text      = l[s..^0],
+                        Text      = line[s..^0],
                         LineNo    = (uint)cc
                     };
                 }
