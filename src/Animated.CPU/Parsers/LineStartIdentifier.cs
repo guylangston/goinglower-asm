@@ -13,18 +13,18 @@ namespace Animated.CPU.Parsers
         {
         }
 
-        public override bool TryParse(string s, int lineIdx, int cc, out ParserToken newToken)
+        public override bool TryParse(string txt, int lineIdx, int cc, out ParserToken newToken)
         {
             foreach (var token in Tokens)
             {
-                if (s.Trim().StartsWith(token))
+                if (txt.Trim().StartsWith(token))
                 {
                     newToken = new ParserToken()
                     {
                         Ident   = this,
                         LineIdx = lineIdx,
                         Range   = new Range(0, new Index(0, true)),
-                        OutputText = s.Remove(0, token.Length).Trim()
+                        OutputText = txt.Remove(0, token.Length).Trim()
                     };
                     return true;
                 }

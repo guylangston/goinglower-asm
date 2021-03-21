@@ -1,9 +1,11 @@
-# Thanks To
-- Justin Hall
-- Andrew Martin
-- Beverley Tourle
 
-# More Reading
+# Thanks To
+- Justin Hall                     - Andrew Martin
+- Beverley Tourle                 - Gordon Barrs @gbarrs
+
+# Further Reading
+Links in the video description
+
 - Intel Developer Introduction
   https://software.intel.com/ search "introduction-to-x64-assembly-181178.pdf"
   https://tinyurl.com/4kyxxu2a
@@ -13,11 +15,13 @@
   
 - OpCodes
   https://www.aldeid.com/wiki/X86-assembly/Instructions
-  
-Links in the video description.
 
 # Comments Welcome
-This is my first video and feedback would be most appreciated.
+- Feedback would be most appreciated
+- Suggestions for further topic/videos?
+- Animation improvements/refinements?
+- Errors/omissions?
 
 # Contact
-@guy_langston
+Guy Langston @guy_langston
+https://www.guylangston.net

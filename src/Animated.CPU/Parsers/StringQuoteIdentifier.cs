@@ -12,7 +12,7 @@ namespace Animated.CPU.Parsers
         {
         }
         
-        public override bool TryParse(string s, int lineIdx, int cc,  out ParserToken newToken)
+        public override bool TryParse(string txt, int lineIdx, int cc,  out ParserToken newToken)
         {
             foreach (var token in Tokens)
             {
@@ -20,10 +20,10 @@ namespace Animated.CPU.Parsers
                 if (backlen < 0) continue;
 
                 var end = cc + 1;
-                if (s[backlen..end].Equals(token))
+                if (txt[backlen..end].Equals(token))
                 {
                     // Scan forward for next quote
-                    var endq = s.IndexOf(token, cc + 1);
+                    var endq = txt.IndexOf(token, cc + 1);
                     if (endq > cc)
                     {
                         newToken = NewToken(lineIdx, backlen, endq + 1);

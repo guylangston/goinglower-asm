@@ -25,6 +25,8 @@ namespace Animated.CPU.Model
 
         protected override void InitScene()
         {
+            Add(new ParticleSystemElement(this, Block, 30));
+            
             this.text            = Add(new MyText(this, Model.CurrentSlide, Block.Inset(100, 100).Set(0, 3, 50)));
             text.Title           = "Slides";
             text.ShowLineNumbers = false;

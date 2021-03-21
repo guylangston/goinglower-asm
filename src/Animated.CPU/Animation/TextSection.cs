@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Animated.CPU.Model;
 using Animated.CPU.Parsers;
 using SkiaSharp;
@@ -46,8 +47,6 @@ namespace Animated.CPU.Animation
         }
         
         
-        
-
         protected override void Step(TimeSpan step)
         {
             base.Step(step);
@@ -61,7 +60,17 @@ namespace Animated.CPU.Animation
 
                 if (Parser != null)
                 {
-                    var  map = Parser.Parse(lines);
+                    var skip = 0;
+                    if (Parser.Syntax is SyntaxMarkDown)
+                    {
+                        if (lines[0].StartsWith("#"))
+                        {
+                            Title = lines[0].Remove(0, 2);
+                            skip  = 2;
+                        }
+                    }
+                    
+                    var  map = Parser.Parse(lines.Skip(skip).ToArray());
                     foreach (var line in map.Walk())
                     {
                         if (ShowLineNumbers && line.StartLine)

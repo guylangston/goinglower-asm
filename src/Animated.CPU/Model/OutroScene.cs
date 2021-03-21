@@ -10,15 +10,9 @@ namespace Animated.CPU.Model
 
         protected override void InitScene()
         {
+            Add(new ParticleSystemElement(this, Block, 70));
             
-            // for (int cc = 0; cc < 60; cc++)
-            //     Add(new BackGroundNoiseElement(this, Block));
-            
-            Add(new ParticleSystemElement(this, Block));
-
             base.InitScene();
-            
-         
         }
     }
 }

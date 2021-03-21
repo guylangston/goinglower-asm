@@ -12,6 +12,8 @@ namespace Animated.CPU.Parsers
     {
         private readonly Syntax syntax;
 
+        public Syntax Syntax => syntax;
+
         public SourceParser(Syntax syntax)
         {
             this.syntax = syntax;
@@ -51,38 +53,38 @@ namespace Animated.CPU.Parsers
             return 0;
         }
         
-        private void Tokenize(IReadOnlyList<Identifier> phase, List<ParserToken> tok, string s, int lineIdx)
+        private void Tokenize(IReadOnlyList<Identifier> phase, List<ParserToken> tok, string txt, int lineIdx)
         {
             var cc   = 0;
 
             foreach (var byLine in phase.Where(x => x is LineIdentifier).Cast<LineIdentifier>())
             {
-                tok.AddRange(byLine.ParseLine(s, lineIdx));
+                tok.AddRange(byLine.ParseLine(txt, lineIdx));
             }
             
-            while (cc < s.Length)
+            while (cc < txt.Length)
             {
                 // Already in range
                 foreach (var t in tok)
                 {
-                    var endL = RangeContains(s, t.Range, cc);
+                    var endL = RangeContains(txt, t.Range, cc);
                     if (endL > 0)
                     {
                         cc = endL;
                     }
                 }
 
-                if (cc >= s.Length) return;
+                if (cc >= txt.Length) return;
                 
                 Identifier? curr = null;
                 foreach (var ident in phase.Where(x=>x is not LineIdentifier))
                 {
-                    if (ident.TryParse(s, lineIdx, cc, out var nToken))
+                    if (ident.TryParse(txt, lineIdx, cc, out var nToken))
                     {
                         curr = nToken.Ident;
                         tok.Add(nToken);
 
-                        var (offset, length) = nToken.Range.GetOffsetAndLength(s.Length);
+                        var (offset, length) = nToken.Range.GetOffsetAndLength(txt.Length);
                         cc = offset + length;
                         
                         break;

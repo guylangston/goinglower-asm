@@ -42,7 +42,7 @@ namespace Animated.CPU.Model
         public StackElement LogoChars { get; set; }
         const string logoTxt   =  "ØxGoingLower";
         const string strapLine = "Build a deeper intuition for what our compiler/platform does for us";
-        public string Title { get; set; } = "0x01 - C# to Binary Code: The Basics";
+        public string Title { get; set; } = "[0x01] C# to Binary Code: The Basics";
 
         protected override void DrawOverlay(DrawContext drawing)
         {

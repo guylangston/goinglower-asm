@@ -31,7 +31,7 @@ namespace Animated.CPU.Model
             };
         }
         
-        public const string Version = "0.7-alpha";
+        public const string Version = "0.8-alpha";
         
         // May be a live debugger or 'cooked' on disk... External libs
         protected abstract Cpu BuildCpu();

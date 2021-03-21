@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO.Enumeration;
+using SkiaSharp;
 
 namespace Animated.CPU.Parsers
 {
@@ -21,7 +22,9 @@ namespace Animated.CPU.Parsers
             {
                 new Identifier("line-prefix", "> -", "gray"),
                 new Identifier("block", "`", "darkgray"),
-                new LinkIdentifier("link", "lightgreen")
+                new LinkIdentifier("link", "lightgreen"),
+                new WordPrefixIdentifier("twitter", "@ #", c => char.IsLetterOrDigit(c) || c == '_',  "orange") ,
+                new WordPrefixIdentifier("url", "http", c=>!char.IsWhiteSpace(c), "lightgreen")
             });
         }
 

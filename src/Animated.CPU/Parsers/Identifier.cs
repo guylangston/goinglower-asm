@@ -46,7 +46,7 @@ namespace Animated.CPU.Parsers
         public List<string> Tokens { get; set; }
         
 
-        public virtual bool TryParse(string s, int lineIdx, int cc,  out ParserToken newToken)
+        public virtual bool TryParse(string txt, int lineIdx, int cc,  out ParserToken newToken)
         {
             foreach (var token in Tokens)
             {
@@ -54,7 +54,7 @@ namespace Animated.CPU.Parsers
                 if (backlen < 0) continue;
 
                 var end = cc + 1;
-                if (s[backlen..end].Equals(token))
+                if (txt[backlen..end].Equals(token))
                 {
                     newToken  = NewToken(lineIdx, backlen, end);
                     return true;
@@ -83,7 +83,7 @@ namespace Animated.CPU.Parsers
         {
         }
 
-        public sealed override bool TryParse(string s, int lineIdx, int cc, out ParserToken newToken)
+        public sealed override bool TryParse(string txt, int lineIdx, int cc, out ParserToken newToken)
         {
             throw new NotSupportedException();
         }
