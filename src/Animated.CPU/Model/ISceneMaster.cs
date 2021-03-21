@@ -35,10 +35,12 @@ namespace Animated.CPU.Model
         // Input
         void HandleKeyPress(string key, object native);
         void HandleMousePress(uint button, float x, float y, object native);
+        void HandleMotion(float x, float y, object args);
 
         // Animation 
         void Step(TimeSpan step);
         void Draw(SKSurface surface);
+        
     }
 
     public abstract class SceneMasterBase : ISceneMaster
@@ -106,6 +108,11 @@ namespace Animated.CPU.Model
         public virtual void HandleMousePress(uint button, float x, float y, object native)
         {
             current?.MousePress(button, x, y, native);
+        }
+
+        public virtual void HandleMotion(float x, float y, object args)
+        {
+            // Nothing by default
         }
 
         public virtual void Step(TimeSpan step)

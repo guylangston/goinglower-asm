@@ -121,6 +121,7 @@ namespace Animated.CPU.GTK
 
         private void OnMotion(object o, MotionNotifyEventArgs args)
         {
+            master.HandleMotion((float)args.Event.X, (float)args.Event.Y, args);
             // Seems to only report drag events
             // scene.ProcessEvent("DebugText", $"Motion: {args.Event.X}, {args.Event.Y}", args);
         }

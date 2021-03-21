@@ -266,8 +266,16 @@ namespace Animated.CPU.Model
 
         public override void MousePress(uint eventButton, double eventX, double eventY, object interop)
         {
-            DebugPointAt = new SKPoint((float)eventX, (float)eventY);
-            DebugButton  = eventButton;
+            if (eventButton == 3)
+            {
+                DebugPointAt = new SKPoint((float)eventX, (float)eventY);
+            }
+            else
+            {
+                DebugPointAt = new SKPoint();
+            }
+            
+            DebugButton = eventButton;  
             
             foreach (var element in Scene.ChildrenRecursive())
             {

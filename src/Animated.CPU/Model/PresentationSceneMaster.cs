@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Animated.CPU.Animation;
 using SkiaSharp;
@@ -12,6 +13,7 @@ namespace Animated.CPU.Model
         private Cpu cpu;
         private SKPaint cutGuid;
         public Action<string, object> HandleExternalCommand { get; }
+        public TimeSpan                 MouseDrawTimeOut      { get; set; }
 
         public PresentationSceneMaster(Action<string, object> handleExternalCommand) : base(new []
         {
@@ -22,6 +24,7 @@ namespace Animated.CPU.Model
             //"Slides", 
         })
         {
+            MouseDrawTimeOut      = TimeSpan.FromSeconds(3);
             HandleExternalCommand = handleExternalCommand;
             cutGuid = new SKPaint()
             {
@@ -106,6 +109,34 @@ namespace Animated.CPU.Model
             throw new NotSupportedException();
         }
 
+
+        public struct PointInTime
+        {
+            public SKPoint  Point { get; set; }
+            public DateTime At    { get; set; }
+        }
+
+        private List<PointInTime> mouse = new List<PointInTime>();
+        
+        public override void HandleMousePress(uint button, float x, float y, object native)
+        {
+            base.HandleMousePress(button, x, y, native);
+            mouse.Add(new PointInTime()
+            {
+                Point = new SKPoint(-1, -1),
+                At    =  DateTime.Now
+            });
+        }
+
+        public override void HandleMotion(float x, float y, object args)
+        {
+            mouse.Add(new PointInTime()
+            {
+                Point = new SKPoint(x, y),
+                At    =  DateTime.Now
+            });
+        }
+
         private IScene? last;
         public override void HandleKeyPress(string key, object native)
         {
@@ -145,23 +176,67 @@ namespace Animated.CPU.Model
             if (ccmd == "quit") HandleExternalCommand(cmd, obj);
         }
 
+        public override void Step(TimeSpan step)
+        {
+            base.Step(step);
+            
+            var n = DateTime.Now.Subtract(MouseDrawTimeOut);
+            mouse.RemoveAll(x => x.At < n);
+        }
+
+        
+
         public override void Draw(SKSurface surface)
         {
             surface.Canvas.Clear(styles.bg);
-            
+
             surface.Canvas.DrawRect(size, cutGuid);
-            
+
             base.Draw(surface);
 
             if (CurrentIndex >= 0)
             {
-                surface.Canvas.DrawText($"{CurrentIndex+1}/{this.GetAllScenes().Count}: {CurrentScene?.Name}", 10, 20, styles.TextH1);    
+                surface.Canvas.DrawText($"{CurrentIndex + 1}/{this.GetAllScenes().Count}: {CurrentScene?.Name}", 10, 20, styles.TextH1);
             }
             else
             {
                 surface.Canvas.DrawText(CurrentScene?.Name, 10, 20, styles.TextH1);
             }
+
+            if (mouse.Any())
+            {
+                var mPath = new SKPath();
+                var move  = true;
+                foreach (var pp in mouse)
+                {
+                    if (pp.Point.X == -1 && pp.Point.Y == -1)
+                    {
+                        move = true;
+                        continue;
+                    }
+                    if (move)
+                    {
+                        mPath.MoveTo(pp.Point);
+                    }
+                    else
+                    {
+                        mPath.LineTo(pp.Point);
+                    }
+                    move = false;
+                }
+                
+                // Shadow
+                surface.Canvas.Save();
+                surface.Canvas.Translate(styles.Annotate.StrokeWidth, styles.Annotate.StrokeWidth);
+                surface.Canvas.DrawPath(mPath, styles.Annotate2);
+                surface.Canvas.Restore();
+                
+                surface.Canvas.DrawPath(mPath, styles.Annotate);
+                
+            }
+
             
+
         }
     }
 }

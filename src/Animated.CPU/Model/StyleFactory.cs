@@ -131,6 +131,21 @@ namespace Animated.CPU.Model
             TextLogo       = TextH1.Clone();
             TextLogo.Color = SKColors.LightSkyBlue;
             
+            Annotate = new SKPaint()
+            {
+                Style       = SKPaintStyle.Stroke,
+                StrokeWidth = 4f,
+                Color       = SKColors.PeachPuff,
+                IsAntialias = true
+            };
+            Annotate2 = new SKPaint()
+            {
+                Style       = SKPaintStyle.Stroke,
+                StrokeWidth = 6f,
+                Color       = new SKColor(150, 150, 150, 50),
+                IsAntialias = false
+            };
+            
             Arrow = new SKPaint()
             {
                 Style       = SKPaintStyle.Stroke,
@@ -151,6 +166,8 @@ namespace Animated.CPU.Model
 
             MakeNamedColours();
         }
+
+        public SKPaint Annotate2 { get; set; }
 
         private Dictionary<string, SKColor> name = new();
         private void MakeNamedColours()
@@ -189,6 +206,7 @@ namespace Animated.CPU.Model
         public SKPaint Highlighted       { get; }
         public SKPaint SmallFont         { get; }
         public SKPaint FixedFontHuge     { get;  }
+        public SKPaint Annotate          { get;  }
         
 
         public static SKPaint Clone(SKPaint cpy, Action<SKPaint> then)
