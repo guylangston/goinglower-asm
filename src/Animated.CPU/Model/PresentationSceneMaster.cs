@@ -60,7 +60,7 @@ namespace Animated.CPU.Model
                 {
                     Model = cpu.Story
                 },
-                "outro" => new TextScene("Outro", styles,  dBlock, cpu.Story.Outro)
+                "outro" => new OutroScene("Outro", styles,  dBlock, cpu.Story.Outro)
                 {
                     
                 },

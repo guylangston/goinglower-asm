@@ -224,6 +224,12 @@ namespace Animated.CPU.Animation
             X = c.X - W/2;
             Y = c.Y - H/2;
         }
+
+        public void CenterAt(SKPoint centerAt)
+        {
+            X = centerAt.X - W/2;
+            Y = centerAt.Y - H/2;
+        }
     }
 
     public class DynamicDBlock : DBlock

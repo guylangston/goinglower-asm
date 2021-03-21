@@ -8,8 +8,9 @@ namespace Animated.CPU.Model
     public class IntroScene : SimpleSceneBase
     {
         private SKPaint font;
-        private SKPaint font2;
-
+        private SKPaint fontShadow;
+        private SKPaint fontTitle;
+    
         public IntroScene(string name, IStyleFactory styleFactory, DBlock b) : base(name, styleFactory, b)
         {
             this.font = new SKPaint()
@@ -22,7 +23,7 @@ namespace Animated.CPU.Model
                     SKFontStyleWidth.Normal, 
                     SKFontStyleSlant.Upright)
             };
-            this.font2 = new SKPaint()
+            this.fontShadow = new SKPaint()
             {
                 TextSize = 20,
                 Color    = new SKColor(SKColors.LightSeaGreen.Red, SKColors.LightSeaGreen.Green, SKColors.LightSeaGreen.Blue, 100),
@@ -33,11 +34,15 @@ namespace Animated.CPU.Model
                     SKFontStyleSlant.Upright)
             };
 
+            this.fontTitle = StyleFactory.GetPaint(this, "h1")
+                                         .CloneAndUpdate(x => x.TextSize *= 2);
+
         }
 
         public StackElement LogoChars { get; set; }
         const string logoTxt   =  "ØxGoingLower";
         const string strapLine = "Build a deeper intuition for what our compiler/platform does for us";
+        public string Title { get; set; } = "0x01 - C# to Binary Code: The Basics";
 
         protected override void DrawOverlay(DrawContext drawing)
         {
@@ -46,6 +51,7 @@ namespace Animated.CPU.Model
             
             drawing.DrawText(strapLine, StyleFactory.GetPaint(this, "h1"), inner, BlockAnchor.BM);
             
+            drawing.DrawText(Title, fontTitle, inner, BlockAnchor.BM, new SKPoint(0,-200));
             
             drawing.DrawText(PresentationSceneMaster.Version, StyleFactory.GetPaint(this, "FixedFontBlue") , Block, BlockAnchor.BR);
             
@@ -79,7 +85,7 @@ namespace Animated.CPU.Model
                     Text          = c,
                     Anchor        = LineAnchor.Middle,
                     Style         = font.CloneAndUpdate(x=>x.TextSize  = s),
-                    Shaddow       = font2.CloneAndUpdate(x=>x.TextSize = s),
+                    Shaddow       = fontShadow.CloneAndUpdate(x=>x.TextSize = s),
                     ShaddowOffset = new SKPoint(so, so),
                 });
                 el.Size = new PropFloat(el.Style.TextSize);
