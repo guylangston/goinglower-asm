@@ -24,7 +24,7 @@ namespace Animated.CPU.Model.ModelElements
 
             for (int i = 0; i < 20; i++)
             {
-                stack.Add(new SegmentElement(stack, null, null));    
+                stack.Add(new SegmentElement(stack, null, new DBlock().Set(0, 1, 4)));    
             }
         }
 
@@ -69,6 +69,7 @@ namespace Animated.CPU.Model.ModelElements
     {
         
         private TextBlockElement txt;
+        private TextBlockElement.Span asm;
 
         public SegmentElement(IElement parent, MemoryView.Segment model, DBlock block) : base(parent, model, block)
         {
@@ -80,9 +81,9 @@ namespace Animated.CPU.Model.ModelElements
         protected override void Init()
         {
             txt = Add(new TextBlockElement(this, Block, Scene.Styles.FixedFont));
-            
-          
         }
+
+        
 
         protected override void Step(TimeSpan step)
         {
@@ -95,10 +96,10 @@ namespace Animated.CPU.Model.ModelElements
                     txt.WriteLine($"@{DisplayHelper.ToHex(Model.Address)} ", Scene.Styles.FixedFontDarkGray);    
                 }
                 
-                txt.Write(Model.Raw?.ToHex().PadRight(8), Scene.Styles.FixedFontCyan);
+                var raw = txt.Write(Model.Raw?.ToHex().PadRight(8), Scene.Styles.FixedFontCyan);
                 txt.Write(" ", Scene.Styles.FixedFontDarkGray);
-                txt.WriteLine(Model.SourceAsm, Scene.Styles.FixedFontYellow);
-
+                this.asm = txt.WriteLine(Model.SourceAsm, IsSelected ? Scene.Styles.FixedFontYellow : Scene.Styles.FixedFontGray);
+                
                 
                 Block.H = txt.Block.H = txt.CalcHeight();
             
@@ -118,6 +119,35 @@ namespace Animated.CPU.Model.ModelElements
 
         protected override void Decorate(DrawContext surface)
         {
+            var dec = DecodedInstruction.Parse(Scene.Cpu, Model.SourceAsm);
+            if (dec != null && dec.Category == OpCategory.Jump && dec.A1 != null)
+            {
+                if (dec.A1.TryGetValueAsPointer(out var addr))
+                {
+                    var p    = (MemoryViewElement)Parent.Parent;
+                    var pp   = p.Model.GetByAddress(addr);
+                    var desk = (SegmentElement)p.GetElementByModelRecurse(pp);
+
+                    if (desk != null && asm != null)
+                    {
+                        var a = new DockedArrow(
+                            new DockPoint(this, asm)
+                            {
+                                Anchor = BlockAnchor.MR,
+                                Offset = new SKPoint(20, 0)
+                            },
+                            new DockPoint(desk, desk.asm)
+                            {
+                                Anchor = BlockAnchor.MR,
+                                Offset = new SKPoint(20, 0)
+                            },
+                            IsSelected ?   Scene.Styles.ArrowAlt :  Scene.Styles.ArrowGray);
+                        //a.Step();
+                        a.Draw(surface.Canvas);    
+                    }
+                }
+            }
+            
             if (IsSelected)
             {
                 surface.DrawHighlight(this);

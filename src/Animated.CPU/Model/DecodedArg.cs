@@ -41,5 +41,8 @@ namespace Animated.CPU.Model
                 return obj.Value.GetHashCode();
             }
         }
+
+        public bool TryGetValueAsPointer(out ulong addr) => ParseHelper.TryParseHexWord(Value, out addr);
+    
     }
 }

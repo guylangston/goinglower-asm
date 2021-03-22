@@ -153,13 +153,8 @@ namespace Animated.CPU.Model
                 Color       = SKColors.Lime,
                 IsAntialias = true
             };
-            ArrowGray = new SKPaint()
-            {
-                Style       = SKPaintStyle.Stroke,
-                StrokeWidth = 1.5f,
-                Color       = SKColors.DarkGray,
-                IsAntialias = true
-            };
+            ArrowGray = Arrow.CloneAndUpdate(x => x.Color = SKColors.Gray);
+            ArrowAlt = Arrow.CloneAndUpdate(x => x.Color = SKColors.BlueViolet);
 
             Highlighted = Selected = Arrow;
 
@@ -199,6 +194,7 @@ namespace Animated.CPU.Model
         public SKPaint Border            { get; }
         public SKPaint Arrow             { get; }
         public SKPaint ArrowGray         { get; }
+        public SKPaint ArrowAlt          { get; }
         public SKPaint TextLogo          { get; }
         public SKPaint TextH1            { get; }
         public SKPaint TextH1BG          { get; }
