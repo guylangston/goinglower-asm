@@ -24,12 +24,14 @@ namespace Animated.CPU
         public BlockAnchor            Anchor      { get; set; }
         public bool                   AnchorInner { get; set; }
         public SKPoint                Offset      { get; set; }// in the direction of the dock
+        public SKPoint                Padding     { get; set; }
+        public bool                   SpanToOuter { get; set; }
 
         public SKPoint GetDock()
         {
             if (Span is null)
             {
-                return Element.Block[Anchor, AnchorInner];
+                return Element.Block[Anchor, AnchorInner] + Padding;
             }
             else
             {
@@ -38,8 +40,12 @@ namespace Animated.CPU
                 var tb    = new DBlock(Span.LastDrawRect);
                 var inner = tb[Anchor, AnchorInner];
 
-                return inner;
-                return new SKPoint(outer.X, inner.Y);   // HACK - Just take the Y pos for inner (as the default scene only uses horx arrows)
+                if (SpanToOuter)
+                {
+                    return new SKPoint(outer.X, inner.Y) + Padding;      
+                }
+                return inner + Padding;
+                
             }
         }
     }

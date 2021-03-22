@@ -134,12 +134,14 @@ namespace Animated.CPU.Model.ModelElements
                             new DockPoint(this, asm)
                             {
                                 Anchor = BlockAnchor.MR,
-                                Offset = new SKPoint(20, 0)
+                                Offset = new SKPoint(20, 0),
+                                Padding = new SKPoint(10, 0),
                             },
                             new DockPoint(desk, desk.asm)
                             {
-                                Anchor = BlockAnchor.MR,
-                                Offset = new SKPoint(20, 0)
+                                Anchor  = BlockAnchor.MR,
+                                Offset  = new SKPoint(20, 0),
+                                Padding = new SKPoint(10, 0),
                             },
                             IsSelected ?   Scene.Styles.ArrowAlt :  Scene.Styles.ArrowGray);
                         //a.Step();
@@ -162,7 +164,8 @@ namespace Animated.CPU.Model.ModelElements
                             new DockPoint(this),
                             new DockPoint(Scene.ElementCode, line)
                             {
-                                AnchorInner = true
+                                AnchorInner = true,
+                                SpanToOuter = true
                             },
                             Scene.Styles.Arrow
                         );
