@@ -106,6 +106,15 @@ namespace Animated.CPU.Model
                 }
                 text.WriteLine();
                 text.WriteLine(Convert.ToString((long)flags.Value, 2).PadLeft(12, '0').Replace("0", " 0 ").Replace("1", " 1 "));
+                
+                foreach (var (name, _) in flags.GetFlags().Where(x=>x.val))
+                {
+                    if (name.StartsWith("(IF)")) continue;
+                    
+                    var span = text.WriteLine(name, Scene.Styles.FixedFontBlue);
+                }
+                
+                
                 text.WriteUrl("https://en.wikipedia.org/wiki/FLAGS_register", "WIKI");
                 text.WriteLine();
             }

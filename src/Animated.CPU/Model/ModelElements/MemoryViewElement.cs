@@ -117,8 +117,9 @@ namespace Animated.CPU.Model.ModelElements
             
         }
 
-        protected override void Decorate(DrawContext surface)
+        protected override void Draw(DrawContext surface)
         {
+
             var dec = DecodedInstruction.Parse(Scene.Cpu, Model.SourceAsm);
             if (dec != null && dec.Category == OpCategory.Jump && dec.A1 != null)
             {
@@ -133,8 +134,8 @@ namespace Animated.CPU.Model.ModelElements
                         var a = new DockedArrow(
                             new DockPoint(this, asm)
                             {
-                                Anchor = BlockAnchor.MR,
-                                Offset = new SKPoint(20, 0),
+                                Anchor  = BlockAnchor.MR,
+                                Offset  = new SKPoint(20, 0),
                                 Padding = new SKPoint(10, 0),
                             },
                             new DockPoint(desk, desk.asm)
@@ -149,6 +150,11 @@ namespace Animated.CPU.Model.ModelElements
                     }
                 }
             }
+        }
+
+        protected override void Decorate(DrawContext surface)
+        {
+          
             
             if (IsSelected)
             {
@@ -187,12 +193,6 @@ namespace Animated.CPU.Model.ModelElements
                     
                 
             }
-        }
-
-        protected override void Draw(DrawContext surface)
-        {
-
-
         }
     }
 

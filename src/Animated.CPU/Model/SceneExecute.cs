@@ -11,7 +11,6 @@ namespace Animated.CPU.Model
     public class SceneExecute : SceneBase<Cpu, StyleFactory>
     {
         private readonly ISceneMaster master;
-        private SKBitmap bitmap1;
         private CodeElement ElementCodeIL;
         private CodeElement ElementCodeASM;
 
@@ -20,7 +19,6 @@ namespace Animated.CPU.Model
             this.master = master;
             Model       = model;
         }
-
         
         
         // Helpers
@@ -120,7 +118,7 @@ namespace Animated.CPU.Model
                 rel = rel.CreateRelative(BlockAnchor.TR, false, new SKPoint(20, 0), new SKPoint(60, 20));
             }
             
-            this.bitmap1 = SKBitmap.Decode("/home/guy/repo/cpu.anim/doc/IntelIntro-GeneralArch.png");
+            
         }
 
         protected override void InitSceneComplete()
@@ -321,17 +319,17 @@ namespace Animated.CPU.Model
                 return;
             }
             
-            if (act.Name == nameof(ElementRegisterFile))
-            {
-                Dialog.Model = new Dialog()
-                {
-                    Title = "Registers"
-                };
-                Dialog.Image    = this.bitmap1;
-                Dialog.IsHidden = false;
-                
-                return;
-            }
+            // if (act.Name == nameof(ElementRegisterFile))
+            // {
+            //     Dialog.Model = new Dialog()
+            //     {
+            //         Title = "Registers"
+            //     };
+            //     Dialog.Image    = this.bitmap1;
+            //     Dialog.IsHidden = false;
+            //     
+            //     return;
+            // }
             
             if (act.Name == "CPU")
             {
