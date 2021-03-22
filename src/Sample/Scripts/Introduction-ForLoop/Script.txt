@@ -1,37 +1,110 @@
+===[Cut: Intro]=============================================================
+
 Welcome to Going Lower
 
-Today we will explore how highlevel code is executed by the CPU
+This is the first video in a planned series, in which we try to get closer 
+to the silcon from the perspective of high-level managed languages, 
+like C#, kotlin, JS and python.
 
+For most programmers the emphasis is rightfully on going higher, 
+    by adding more levels of abstraction - in library or language;
+but I feel that going the going lower is also important and often overlooked.
 
+There is a real sense of satisfaction in trying to understand all the layers below 
+C#; and when it comes to high performance computing this understanding becomes critical.
 
+In future eposides, I plan to explore this in much more detail; 
 
-In this case, we have a basic for-loop in C#
--> at compile time the source is transformed into IL or Intermediate Language
--> at runtime it is JITed or Just In Time Compiled to Asmberly
+Today however, I wanted to give a taste and introduction by exploring a very simple
+loop.
+
+===[Cut: Files]=============================================================
+
+In this case, on the left, we have a for-loop in C#
+-> at compile time the source is transformed into Intermediate Language (IL)
+-> at runtime it is  Just In Time Compiled, or JITd, to Asmberly
 -> ASM has a near 1:1 corrospondance with Binary code, 
 and it is that the CPU really executes
 
-Next: Lets watch it execute
+===[Cut: Debugger Intro]=============================================================
+
+Lets start by introducing the "visual debugger"
+
+Starting on the left
+    C# for loop (cleaned up)
+    Next: The Binary Code in RAM
+    Next: The CPU, which are comprised of
+        - Arithmetic Logic Unit or ALU
+        - The ALU operates a FETCH, DECODE, EXECUTE cycle; 
+          for clarity the Execute is split into READ and WRITE
+        - Each logic unit has its own memory in the form of registers
+        
+To make better sense of the Asmberly code, we need to look at register names
+
+===[Cut: Register Slide]=============================================================
+
+The x86 instruction set of around 30 years old
+It started life as the simple 16-bit 8086 processor - hence the family name
+Later it doubled to 32-bit
+Finally doubling to 64-bit
+
+The register name reflect this progression
+
+===[Cut: Debugger]=============================================================
+
+We are finally ready to watch some code running...
+
+Our first step it is init sum to zero
+
+On the right
+
+- IP is a pointer into RAM which holds the next instruction to execute
+- Fetch loads this from RAM and sends it to be Decoded
+
+Code Structure:
+- Init (count, sum, x)
+    - Why XOR
+    - Why A, SI, DI
+- Guard Count == 0
+- Inner sum+x
+- Exit Condition
+   - Comparisons are in two parts
+   - Compare or Maths op which sets flags
+   - Based on flags we jump or continue 
+   
+   
+   
+Guard: Count == 0, exit early
+- Compare/Test in two parts
+- Is DI zero?
 
 
 
 
 
-- Starting on the left is the same C# code
-- Next to it is compiled binary code and its corrosponding asembly
-- This binary code is executed inside the CPU by the 
-- ALU (Arithmeic Logic Unit)
-- This logic unit has its own memory in the form of registers
-- The ALU operates a FETCH, DECODE, EXECUTE cycle; 
-    for clarity the Execute is split into READ and WRITE
 
-Next: Lets explore some binary code altering registers
+===[Cut: Outro]=============================================================
+
+That wraps up our introduction, in further videos we will get into more interesting cases...
+
+If you want more details, have a look at
+
+- Unlike the full Intel manual, which is thousands of pages, this intro PDF is short and accessable.
+- x86 Primer gives a quick Assmbley programming introduction
+- If you want to lookup an indivual opcode this wiki is a good resource
+
+Please live a comment below if you have any suggestions on how to improve these videos 
+or questions or content you would like me to cover in the future...
+
+Thanks for watching...
 
 
-==== Explore the parts
-- Left Code
-- Binary in RAM
-- Logic unit, state in registers
+
+
+
+
+===[Notes and older material]=============================================================
+
 
 === Lets walk through the code
 - IP is a pointer into RAM which holds the next instruction to execute

@@ -90,7 +90,7 @@ namespace Animated.CPU.Model
                 });
                 el.Size = new PropFloat(el.Style.TextSize);
 
-                el.Animator = new AnimatorPipeline(TimeSpan.FromSeconds(50))
+                el.Animator = new AnimatorPipeline(TimeSpan.FromHours(50))
                 {
                     Loop = true
                 };
