@@ -78,10 +78,10 @@ namespace Animated.CPU.Model
         public Register R1 => RBX;
         public Register R2 => RCX;
         public Register R3 => RDX;
-        public Register R4 => RBP;
-        public Register R5 => RSI;
-        public Register R6 => RDI;
-        public Register R7 => RSP;
+        public Register R4 => RSI;
+        public Register R5 => RDI;
+        public Register R6 => RSP;
+        public Register R7 => RBP;
 
         public Register R8  { get; } = new Register("R8", "Register 8")   { IsExtendedReg = true };
         public Register R9  { get; } = new Register("R9", "Register 9")   { IsExtendedReg = true };
@@ -180,119 +180,6 @@ namespace Animated.CPU.Model
         public string Id      { get; set; }
         public int    Size    { get; set; }
         public ulong  BitMask { get; set; }
-    }
-
-   
-    public class Register : Prop<ulong>
-    {
-        public Register(string id, string name) : base(PropHelper.DefaultCompareULong, 0, null)
-        {
-            Id   = id;
-            Name = name;
-        }
-
-        public string                Id            { get; set; }
-        public string                Name          { get; set; }
-        public string                Description   { get; set; }
-        public string?               LastUsedAs    { get; set; }
-        public bool                  IsExtendedReg { get; set; }
-        public string?               TagValue      { get; set; }
-        
-        public IReadOnlyList<string> IdAlt         { get; set; }  // TODO: Refactor to use RegisterMode
-        
-        public string ValueHex       => Value.ToString("X").PadLeft(64 / 8 * 2, '0');
-
-        public int LastUsedAsSize
-        {
-            get
-            {
-                if (LastUsedAs == null) return 64;
-                if (LastUsedAs.StartsWith("e")) return 32;
-
-                return 64;
-
-            }
-        }
-
-        
-
-        public IEnumerable<string> AllIds()
-        {
-            yield return Id;
-            foreach (var ii in IdAlt)
-            {
-                yield return ii;
-            }
-        }
-        
-        
-
-        public override string ToString() => $"{Id}/{Name} = {Value:X}";
-
-        public bool Match(string rId)
-        {
-            if (string.Equals(Id, rId, StringComparison.InvariantCultureIgnoreCase)) return true;
-
-            if (IdAlt != null)
-            {
-                foreach (var a in IdAlt)
-                {
-                    if (string.Equals(a, rId, StringComparison.InvariantCultureIgnoreCase)) return true;    
-                }    
-            }
-            
-
-            return false;
-        }
-
-        public RegisterDelta ToDelta()
-        {
-            return new RegisterDelta()
-            {
-                Register    = Id,
-                ValueParsed = Value,
-                ValueRaw    = ValueHex
-            };
-        }
-    }
-
-    public class FlagsRegister : Register
-    {
-        public FlagsRegister() : base("FLAGS", "State Flags")
-        {
-            IdAlt = ImmutableArray.Create<string>("RFLAGS");
-        }
-
-        //https://en.wikipedia.org/wiki/FLAGS_register
-        public bool CarryFlag     => (Value & 0x0001ul) > 0;
-        public bool ParityFlag    => (Value & 0x0004ul) > 0;
-        public bool AdjustFlag    => (Value & 0x0010ul) > 0;
-        public bool ZeroFlag      => (Value & 0x0040ul) > 0;
-        public bool SignFlag      => (Value & 0x0080ul) > 0;
-        public bool TrapFlag      => (Value & 0x0100ul) > 0;
-        public bool InterruptFlag => (Value & 0x0200ul) > 0;
-        public bool DirectionFlag => (Value & 0x0400ul) > 0;
-        public bool OverflowFlag  => (Value & 0x0800ul) > 0;
-
-        public IEnumerable<(string name, bool val)> GetFlags()
-        {
-            // Organised my most interesting first
-            yield return ("(CF)Carry", CarryFlag);
-            yield return (" __ ", false);
-            yield return ("(PF)Parity", ParityFlag);
-            yield return (" __ ", false);
-            yield return ("(AF)Adjust", AdjustFlag);
-            yield return (" __ ", false);
-            yield return ("(ZF)Zero", ZeroFlag);
-            yield return ("(SF)Sign", SignFlag);
-            yield return ("(TF)Trap", TrapFlag);
-            yield return ("(IF)Interrupt", InterruptFlag);
-            yield return ("(DF)Direction", DirectionFlag);
-            yield return ("(OF)Overflow", OverflowFlag);
-        }
-        
-
-
     }
 
     public interface IMemory
