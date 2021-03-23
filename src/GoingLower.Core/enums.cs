@@ -30,12 +30,13 @@ namespace GoingLower.Core
         BL, BM, BR
     }
     
-
-    public interface IBorder
+    public enum SceneSeq
     {
-        float Top    { get; }
-        float Bottom { get; }
-        float Left   { get; }
-        float Right  { get; }
+        Beginning,
+        Prior,
+        Next,
+        End
     }
+
+   
 }

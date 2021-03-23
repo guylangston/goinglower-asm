@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using GoingLower.Core.Drawing;
+using GoingLower.Core.Helpers;
 using GoingLower.Core.Primitives;
-using GoingLower.CPU.Model;
 using SkiaSharp;
 
 namespace GoingLower.Core.Elements.Effects
@@ -10,7 +10,6 @@ namespace GoingLower.Core.Elements.Effects
     public class ParticleSystemElement : ElementBase
     {
         private readonly int particleCount;
-        static Random Random = new Random();
         public DBlock Bountry { get; set; }
         private const float G = 3000f;
 
@@ -31,10 +30,9 @@ namespace GoingLower.Core.Elements.Effects
                     StrokeWidth = 3,
                     Color       = new SKColor(90, 100, 150, 150)
                 }));
-                p.Location = new SKPoint(Random.Next((int)Block.X, (int)Block.X2), Random.Next((int)Block.Y, (int)Block.Y2));
-                p.Mass     = Random.Next(2, 500) * 3f;
+                p.Location = RandomHelper.WithIn(Block.Inner);
+                p.Mass     = RandomHelper.NewFloat(2, 500, 10);
                 p.Size     = p.Mass / 50 + 5;
-                //p.Speed    = new SKPoint(Random.Next(-5, 5), Random.Next(-5, 5));
             }
             
         }
@@ -99,9 +97,9 @@ namespace GoingLower.Core.Elements.Effects
         }
 
         public void Leave(ParticleElement p)
-        {
-           p.Location = new SKPoint(Random.Next((int)Block.X, (int)Block.X2), Random.Next((int)Block.Y, (int)Block.Y2));
-           p.Speed    = new SKPoint(Random.Next(-5, 5), Random.Next(-5, 5));
+        { 
+            p.Location = RandomHelper.WithIn(Block.Inner);
+            p.Speed    = RandomHelper.PointInRange(-5, 5, 10);
         }
     }
 

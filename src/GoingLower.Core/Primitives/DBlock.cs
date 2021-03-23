@@ -4,10 +4,6 @@ using SkiaSharp;
 
 namespace GoingLower.Core.Primitives
 {
-    
-  
-
-    
     public class DBlock : DBlockProps
     {
         public DBlock()
@@ -60,16 +56,16 @@ namespace GoingLower.Core.Primitives
         public bool Contains(float pX, float pY) => X <= pX && pX <= X2 && 
                                            Y <= pY && pY <= Y2;
 
-        public Rect Outer => new Rect(X, Y, W, H);
+        public DRect Outer => new DRect(X, Y, W, H);
 
-        public Rect Inner => new Rect(
+        public DRect Inner => new DRect(
             X + Padding.Left + Border.Left + Margin.Left,
             Y + Padding.Top + Border.Top + Margin.Top,
             W - (Padding.Left + Border.Left + Margin.Left) - (Padding.Right + Border.Right + Margin.Right),
             H - (Padding.Top + Border.Top + Margin.Top) - (Padding.Bottom + Border.Bottom + Margin.Bottom)
         );
         
-        public Rect BorderRect => new Rect(
+        public DRect BorderDRect => new DRect(
             X + Margin.Left,
             Y +  Margin.Top,
             W - (Margin.Left) - ( Margin.Right),
@@ -130,111 +126,4 @@ namespace GoingLower.Core.Primitives
             Y = centerAt.Y - H/2;
         }
     }
-    
-    public struct DBorder : IBorder
-    {
-        public DBorder(float all)
-        {
-            Top    = all;
-            Bottom = all;
-            Left   = all;
-            Right  = all;
-        }
-
-        public DBorder(float top, float right, float bottom, float left)
-        {
-            Top    = top;
-            Bottom = bottom;
-            Left   = left;
-            Right  = right;
-        }
-
-
-        public DBorder(DBorder copy) 
-        {
-            this.Top    = copy.Top;
-            this.Bottom = copy.Bottom;
-            this.Left   = copy.Left;
-            this.Right  = copy.Right;
-        }
-        
-        public float Top    { get; }
-        public float Bottom { get; }
-        public float Left   { get; }
-        public float Right  { get; }
-
-        public float All => Math.Max(Top, Math.Max(Bottom, Math.Max(Left, Right)));
-    }
-    
-
-    
-    public class DBlockProps
-    {
-        public DBorder Border  { get; set; }
-        public DBorder Padding { get; set; }
-        public DBorder Margin  { get; set; } 
-        
-        public DBlockProps()
-        {
-
-        }
-
-        public DBlockProps(DBlockProps copy)
-        {
-            Margin  = new DBorder(copy.Margin);
-            Border  = new DBorder(copy.Border);
-            Padding = new DBorder(copy.Padding);
-        }
-
-        public DBlockProps Set(float margin, float border, float padding)
-        {
-            this.Margin  = new DBorder(margin);
-            this.Border  = new DBorder(border);
-            this.Padding = new DBorder(padding);
-            return this;
-        }
-        
-    }
-
-    public class DynamicDBlock : DBlock
-    {
-        public DynamicDBlock()
-        {
-        }
-
-        public DynamicDBlock(float desiredWidth, float desiredHeight) : base(0,0, desiredWidth, desiredHeight)
-        {
-            DesiredWidth  = desiredWidth;
-            DesiredHeight = desiredHeight;
-        }
-
-        public DynamicDBlock(float x, float y, float w, float h, float desiredWidth, float desiredHeight) : base(x, y, w, h)
-        {
-            DesiredWidth  = desiredWidth;
-            DesiredHeight = desiredHeight;
-        }
-
-        public float DesiredWidth { get; set; }
-        public float DesiredHeight { get; set; }
-    }
-    
-
-    public class DText
-    {
-        public DText(string text, SKPaint? style = null)
-        {
-            Text  = text;
-            Style = style;
-        }
-
-        public string    Text  { get; set; }
-        public SKPaint?  Style { get; set; }
-        public BlockAnchor Anchor  { get; set; }
-    }
-
-    
-
-    
-
-
 }

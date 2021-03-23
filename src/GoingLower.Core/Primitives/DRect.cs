@@ -5,7 +5,7 @@ using SkiaSharp;
 namespace GoingLower.Core.Primitives
 {
     
-    public interface IRect
+    public interface IDRect
     {
         public float X { get; set; }
         public float Y { get; set; }
@@ -29,9 +29,9 @@ namespace GoingLower.Core.Primitives
         public SKPoint BR => new SKPoint(X2, Y2);
     }
     
-    public struct Rect : IRect
+    public struct DRect : IDRect
     {
-        public Rect(float x, float y, float w, float h)
+        public DRect(float x, float y, float w, float h)
         {
             X = x;
             Y = y;
@@ -39,7 +39,7 @@ namespace GoingLower.Core.Primitives
             H = h;
         }
 
-        public Rect(SKPoint a, SKPoint b)
+        public DRect(SKPoint a, SKPoint b)
         {
             if (a.X < b.X)
             {
@@ -102,9 +102,9 @@ namespace GoingLower.Core.Primitives
             };
 
 
-        public Rect Inset(float x, float y)
+        public DRect Inset(float x, float y)
         {
-            return new Rect(X + x, Y + y, W - x - x, H - y - y);
+            return new DRect(X + x, Y + y, W - x - x, H - y - y);
         }
     }
         

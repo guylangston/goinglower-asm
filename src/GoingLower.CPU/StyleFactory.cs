@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using GoingLower.Core;
+using GoingLower.Core.Helpers;
 using GoingLower.CPU.Animation;
 using GoingLower.CPU.Elements;
 using SkiaSharp;
@@ -19,10 +20,42 @@ namespace GoingLower.CPU
     
     public class StyleFactory : IStyleFactory
     {
+        private readonly Dictionary<string, SKColor> name = new();
+        private readonly PropertyInfo[] props;
+        
+        public SKPaint Annotate2         { get; }
+        public SKPaint ButtonText        { get; }
+        public SKPaint ButtonBg          { get; }
+        public SKPaint FixedFontSource   { get; }
+        public SKPaint FixedFontArg      { get; }
+        public SKPaint FixedFontURL      { get; }
+        public SKPaint BackGround        { get; }
+        public SKPaint BackGroundAlt     { get; }
+        public SKPaint Text              { get; }
+        public SKPaint FixedFont         { get; }
+        public SKPaint FixedFontYellow   { get; }
+        public SKPaint FixedFontCyan     { get; }
+        public SKPaint FixedFontWhite    { get; }
+        public SKPaint FixedFontBlue     { get; }
+        public SKPaint FixedFontGray     { get; }
+        public SKPaint FixedFontDarkGray { get; }
+        public SKPaint Border            { get; }
+        public SKPaint Arrow             { get; }
+        public SKPaint ArrowGray         { get; }
+        public SKPaint ArrowAlt          { get; }
+        public SKPaint TextLogo          { get; }
+        public SKPaint TextH1            { get; }
+        public SKPaint TextH1BG          { get; }
+        public SKPaint Selected          { get; }
+        public SKPaint Highlighted       { get; }
+        public SKPaint SmallFont         { get; }
+        public SKPaint FixedFontHuge     { get; }
+        public SKPaint Annotate          { get; }
+
         
         public StyleFactory()
         {
-            this.Props = GetType().GetProperties();
+            this.props = GetType().GetProperties();
             FixedFont = new SKPaint()
             {
                 TextSize = Theme.TextSizeDefault,
@@ -154,9 +187,8 @@ namespace GoingLower.CPU
             MakeNamedColours();
         }
 
-        public SKPaint Annotate2 { get; set; }
+        
 
-        private Dictionary<string, SKColor> name = new();
         private void MakeNamedColours()
         {
             name.Clear();
@@ -166,46 +198,13 @@ namespace GoingLower.CPU
             }
         }
 
-        public PropertyInfo[] Props { get; }
-
-        public SKPaint ButtonText        { get; }
-        public SKPaint ButtonBg          { get; }
-        public SKPaint FixedFontSource   { get; }
-        public SKPaint FixedFontArg      { get; }
-        public SKPaint FixedFontURL      { get; }
-        public SKPaint BackGround        { get; }
-        public SKPaint BackGroundAlt     { get; }
-        public SKPaint Text              { get; }
-        public SKPaint FixedFont         { get; }
-        public SKPaint FixedFontYellow   { get; }
-        public SKPaint FixedFontCyan     { get; }
-        public SKPaint FixedFontWhite    { get; }
-        public SKPaint FixedFontBlue     { get; }
-        public SKPaint FixedFontGray     { get; }
-        public SKPaint FixedFontDarkGray { get; }
-        public SKPaint Border            { get; }
-        public SKPaint Arrow             { get; }
-        public SKPaint ArrowGray         { get; }
-        public SKPaint ArrowAlt          { get; }
-        public SKPaint TextLogo          { get; }
-        public SKPaint TextH1            { get; }
-        public SKPaint TextH1BG          { get; }
-        public SKPaint Selected          { get; }
-        public SKPaint Highlighted       { get; }
-        public SKPaint SmallFont         { get; }
-        public SKPaint FixedFontHuge     { get;  }
-        public SKPaint Annotate          { get;  }
         
-
         public static SKPaint Clone(SKPaint cpy, Action<SKPaint> then)
         {
             var c = cpy.Clone();
             then(c);
             return c;
         }
-        
-        
-        
         
         
         public SKPaint GetPaint(IElement e, string id)
@@ -225,7 +224,7 @@ namespace GoingLower.CPU
                     return borderGray1;
             }
             
-            foreach (var prop in Props)
+            foreach (var prop in props)
             {
                 if (prop.PropertyType == typeof(SKPaint))
                 {
@@ -296,30 +295,6 @@ namespace GoingLower.CPU
             return def.Color;
         }
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         private SKPaint def = new SKPaint()
         {
             Color       = SKColors.Pink,
@@ -329,45 +304,17 @@ namespace GoingLower.CPU
         };
         
             
-        internal SKPaint p1 = new SKPaint()
-        {
-            Style       = SKPaintStyle.Stroke,
-            Color       = new SKColor(255,0,0),
-            StrokeWidth = 2
-                    
-        };
-            
         internal SKColor bg = SKColor.Parse("#333");
-        internal SKPaint b1 = new SKPaint()
-        {
-            Style       = SKPaintStyle.Stroke,
-            Color       = new SKColor(200,200,200),
-            StrokeWidth = 2
-                    
-        };
-        internal SKPaint t1    =  new SKPaint { TextSize = 15, Color = SKColor.Parse("#00d0fa")};
-        internal SKPaint t1a   =  new SKPaint { TextSize = 15, Color = SKColor.Parse("#00fa00")};
-        internal SKPaint t2    =  new SKPaint { TextSize = 20, Color = SKColor.Parse("#00ff00")};
         internal SKPaint debug =  new SKPaint { TextSize = 10, Color = SKColor.Parse("#ffffff")};
 
        
-
-        
         public SKPaint hex = new SKPaint()
         {
             TextSize = 15,
             Color    = SKColors.Yellow
         };
         
-        public SKPaint hex2 = new SKPaint()
-        {
-            TextSize = 15,
-            Color    = SKColors.Cyan
-        };
-
-        
-        
-
+       
         private SKPaint arrow = new SKPaint()
         {
             Style       = SKPaintStyle.Stroke,

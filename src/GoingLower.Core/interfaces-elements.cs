@@ -48,24 +48,6 @@ namespace GoingLower.Core
     }
     
     
-    public enum SceneSeq
-    {
-        Beginning,
-        Prior,
-        Next,
-        End
-    }
-    
-    public class SceneSeqArg  // Hook to allow overload
-    {
-        public SceneSeqArg(SceneSeq seq)
-        {
-            Seq = seq;
-        }
-
-        public SceneSeq Seq { get;  }
-    }
-
       
     public interface ISceneMaster
     {
@@ -87,6 +69,14 @@ namespace GoingLower.Core
         
     }
     
+    public interface IBorder
+    {
+        float Top    { get; }
+        float Bottom { get; }
+        float Left   { get; }
+        float Right  { get; }
+    }
+    
     public interface IHasMaster  // Where 'real' parent is obscured buy other 'formatting' elements like stack
     {
         IElement Master { get; }
@@ -104,4 +94,15 @@ namespace GoingLower.Core
         public object?  Model     { get; set; }
         public object?  Selection { get; set; }
     }
+    
+    public class SceneSeqArg  // Hook to allow overload
+    {
+        public SceneSeqArg(SceneSeq seq)
+        {
+            Seq = seq;
+        }
+
+        public SceneSeq Seq { get;  }
+    }
+
 }

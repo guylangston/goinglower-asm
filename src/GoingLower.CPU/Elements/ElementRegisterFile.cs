@@ -175,7 +175,7 @@ namespace GoingLower.CPU.Elements
             
             if (IsHighlighted)
             {
-                surface.Canvas.DrawRect(Block.BorderRect.ToSkRect(), Scene.Styles.Selected);
+                surface.Canvas.DrawRect(Block.BorderDRect.ToSkRect(), Scene.Styles.Selected);
             }
 
             //

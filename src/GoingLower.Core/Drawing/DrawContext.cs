@@ -13,7 +13,7 @@ namespace GoingLower.Core.Drawing
 
         public void DrawHighlight(IElement e)
         {
-            DrawHighlight(e.Block.BorderRect.ToSkRect(), e.Scene.StyleFactory.GetPaint(e, "Highlighted"), e.Block.Border.All);
+            DrawHighlight(e.Block.BorderDRect.ToSkRect(), e.Scene.StyleFactory.GetPaint(e, "Highlighted"), e.Block.Border.All);
         }
     }
 }

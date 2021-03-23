@@ -1,7 +1,7 @@
 using System;
 using SkiaSharp;
 
-namespace GoingLower.CPU
+namespace GoingLower.Core.Helpers
 {
     public static class StyleHelper
     {

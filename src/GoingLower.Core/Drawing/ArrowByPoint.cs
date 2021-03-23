@@ -1,5 +1,4 @@
 using GoingLower.Core.Primitives;
-using GoingLower.CPU.Model;
 using SkiaSharp;
 
 namespace GoingLower.Core.Drawing
@@ -30,7 +29,7 @@ namespace GoingLower.Core.Drawing
             
             if (!WayPointA.IsEmpty)
             {
-                IRect rect = new Rect(Start, End);
+                IDRect rect = new DRect(Start, End);
                 canvas.DrawLine(Start, WayPointA, Style);
                 canvas.DrawLine(WayPointA, WayPointB, Style);
                 canvas.DrawLine(WayPointB, End, Style);

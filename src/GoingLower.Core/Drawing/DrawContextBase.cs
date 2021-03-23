@@ -112,7 +112,7 @@ namespace GoingLower.Core.Drawing
         }
 
 
-        public void DrawRect(IRect rect, SKPaint p1) => canvas.DrawRect(rect.X, rect.Y, rect.W, rect.H, p1);
+        public void DrawRect(IDRect rect, SKPaint p1) => canvas.DrawRect(rect.X, rect.Y, rect.W, rect.H, p1);
 
         public void DrawRect(DBlock b, SKPaint p)
         {

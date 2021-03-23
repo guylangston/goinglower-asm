@@ -2,7 +2,7 @@
 # Thanks To
 - Justin Hall                     - Andrew Martin
 - Beverley Tourle                 - Gordon Barrs @gbarrs
-- Craig Barrett @TheCraigus
+- Craig Barrett @TheCraigus       - Bartosz Adamczewski @badamczewski01
 
 # Further Reading
 Links in the video description

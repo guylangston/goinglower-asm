@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using GoingLower.Core;
 using GoingLower.Core.Elements.Scenes;
+using GoingLower.Core.Helpers;
 using GoingLower.Core.Primitives;
 using GoingLower.CPU.Animation;
 using GoingLower.CPU.Elements;

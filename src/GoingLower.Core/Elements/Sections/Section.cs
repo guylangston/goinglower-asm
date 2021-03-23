@@ -40,7 +40,7 @@ namespace GoingLower.Core.Elements.Sections
             if (Block == null) return;
             
             // Background
-            surface.Canvas.DrawRect(Block.BorderRect.ToSkRect(), Scene.StyleFactory.GetPaint(this, "bg"));
+            surface.Canvas.DrawRect(Block.BorderDRect.ToSkRect(), Scene.StyleFactory.GetPaint(this, "bg"));
 
             if (Block.Border.All > 0)
             {
@@ -50,7 +50,7 @@ namespace GoingLower.Core.Elements.Sections
                 }
                 else
                 {
-                    surface.Canvas.DrawRect(Block.BorderRect.ToSkRect(),
+                    surface.Canvas.DrawRect(Block.BorderDRect.ToSkRect(),
                         Scene.StyleFactory.GetPaint(this, "border"));    
                 }
                 

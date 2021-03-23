@@ -1,16 +1,14 @@
 using System;
 using System.Linq;
 using GoingLower.Core.Drawing;
+using GoingLower.Core.Helpers;
 using GoingLower.Core.Primitives;
-using GoingLower.CPU.Model;
 using SkiaSharp;
 
 namespace GoingLower.Core.Elements.Effects
 {
     public class BackGroundNoiseElement : ElementBase
     {
-        static Random r = new Random();
-
         private DBlock bounds;
 
         public BackGroundNoiseElement(IElement parent, DBlock bounds) : base(parent, new DBlock()
@@ -20,8 +18,8 @@ namespace GoingLower.Core.Elements.Effects
         })
         {
             Bounds   = bounds.Inner;
-            Speed    = new SKPoint(r.Next(-30, 30) / 30f, r.Next(-30, 30) / 30f);
-            Location = new SKPoint(r.Next(0, (int)Bounds.W), r.Next(0, (int)Bounds.H));
+            Speed    = RandomHelper.PointInRange(-1, 1, 30);
+            Location = RandomHelper.WithIn(Bounds);
 
             Paint = new SKPaint()
             {
@@ -37,7 +35,7 @@ namespace GoingLower.Core.Elements.Effects
 
         public SKPaint Paint    { get; set; }
         public SKPaint Paint2   { get; set; }
-        public IRect   Bounds   { get; set; }
+        public IDRect   Bounds   { get; set; }
         public SKPoint Location { get; set; }
         public SKPoint Speed    { get; set; }
 

@@ -16,7 +16,7 @@ namespace GoingLower.CPU.Animation
         public DBlock       Container  { get; }
         public DOrient      Orient     { get; }
 
-        private Rect inner;
+        private DRect inner;
         private float offset;
         private float size;
 
