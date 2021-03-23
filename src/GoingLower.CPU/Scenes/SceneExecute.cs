@@ -114,7 +114,7 @@ namespace GoingLower.CPU.Scenes
 
             foreach (var action in new string[] { "Help", "Quit", "Next", "Previous"})
             {
-                var x = Add(new ButtonElement(this, new ActionModel()
+                var x = Add(new ButtonElement(this, new Command()
                     {
                         Name = action,
                         Arg  = action
@@ -297,7 +297,7 @@ namespace GoingLower.CPU.Scenes
                         PerformAction(be.Model);
                         return;
                     }
-                    else if (hit.Selection is ActionModel am)
+                    else if (hit.Selection is Command am)
                     {
                         PerformAction(am);
                         return;
@@ -307,7 +307,7 @@ namespace GoingLower.CPU.Scenes
             }
         }
 
-        private void PerformAction(ActionModel act)
+        private void PerformAction(Command act)
         {
             Terminal.Status = null;
             if (act.Name == "Quit")

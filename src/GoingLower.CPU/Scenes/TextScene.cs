@@ -3,7 +3,6 @@ using GoingLower.Core;
 using GoingLower.Core.Elements.Scenes;
 using GoingLower.Core.Helpers;
 using GoingLower.Core.Primitives;
-using GoingLower.CPU.Animation;
 using GoingLower.CPU.Elements;
 using GoingLower.CPU.Model;
 using GoingLower.CPU.Parsers;

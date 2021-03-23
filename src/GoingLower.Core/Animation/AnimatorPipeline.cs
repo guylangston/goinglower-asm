@@ -1,37 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace GoingLower.Core.Animation
 {
-    
-   
-
-    public abstract class AnimatorBase : Animation, IAnimator
-    {
-        protected List<IAnimation> Items { get; } = new List<IAnimation>();
-        
-        protected AnimatorBase(TimeSpan duration) : base(duration)
-        {
-        }
-        
-        public IEnumerable<IAnimation> Animations => Items;
-        
-        public void Add(IAnimation a)
-        {
-            Items.Add(a);
-        }
-
-        public override void Stop()
-        {
-            foreach (var animation in Animations)
-            {
-                animation.Stop();
-            }
-            base.Stop();
-        }
-    }
-    
     public class AnimatorPipeline : AnimatorBase
     {
         public bool Loop { get; set; }

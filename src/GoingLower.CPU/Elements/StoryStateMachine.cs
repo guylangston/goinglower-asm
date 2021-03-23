@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GoingLower.Core;
+using GoingLower.Core.StateManager;
 using GoingLower.CPU.Animation;
 using GoingLower.CPU.Scenes;
 

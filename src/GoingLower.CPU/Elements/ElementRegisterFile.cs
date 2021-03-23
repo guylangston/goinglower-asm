@@ -44,8 +44,8 @@ namespace GoingLower.CPU.Elements
                 
                 // Add Animation
                 r.Animator = new AnimatorPipeline(TimeSpan.FromSeconds(10));
-                r.Animator.Add(new AnimationDelay(TimeSpan.FromSeconds(reg.index/32f)));
-                r.Animator.Add(new AnimationProp(r.Alpha, 0, r.Alpha.BaseValue, TimeSpan.FromSeconds(1/2f)));
+                r.Animator.Add(new AnimationBaseDelay(TimeSpan.FromSeconds(reg.index/32f)));
+                r.Animator.Add(new AnimationBaseProp(r.Alpha, 0, r.Alpha.BaseValue, TimeSpan.FromSeconds(1/2f)));
                 r.Animator.Start();
             }
         }

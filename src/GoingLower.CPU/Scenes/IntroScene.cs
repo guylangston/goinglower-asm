@@ -105,10 +105,10 @@ namespace GoingLower.CPU.Scenes
                     Loop = true
                 };
                 var timeScale = 0.2;
-                el.Animator.Add(new AnimationDelay(TimeSpan.FromSeconds(i*timeScale)));
-                el.Animator.Add(new AnimationProp(el.Size, el.Size.BaseValue, el.Size.BaseValue+20, TimeSpan.FromSeconds(timeScale)));
-                el.Animator.Add(new AnimationDelay(TimeSpan.FromSeconds(((float)logoTxt.Length-i)*timeScale)));
-                el.Animator.Add(new AnimationProp(el.Size, el.Size.BaseValue+20, el.Size.BaseValue, TimeSpan.FromSeconds(timeScale)));
+                el.Animator.Add(new AnimationBaseDelay(TimeSpan.FromSeconds(i*timeScale)));
+                el.Animator.Add(new AnimationBaseProp(el.Size, el.Size.BaseValue, el.Size.BaseValue+20, TimeSpan.FromSeconds(timeScale)));
+                el.Animator.Add(new AnimationBaseDelay(TimeSpan.FromSeconds(((float)logoTxt.Length-i)*timeScale)));
+                el.Animator.Add(new AnimationBaseProp(el.Size, el.Size.BaseValue+20, el.Size.BaseValue, TimeSpan.FromSeconds(timeScale)));
                 el.Animator.Start();
 
             }

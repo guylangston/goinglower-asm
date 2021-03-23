@@ -8,12 +8,12 @@ namespace GoingLower.Core.Elements
    
     public class ButtonElement : ElementBase
     {
-        public ButtonElement(IElement parent, ActionModel actionModel, DBlock b) : base(parent, b)
+        public ButtonElement(IElement parent, Command command, DBlock b) : base(parent, b)
         {
-            base.Model = actionModel;
+            base.Model = command;
         }
 
-        public new ActionModel Model => (ActionModel)base.Model;
+        public new Command Model => (Command)base.Model;
 
         protected override void Step(TimeSpan step)
         {

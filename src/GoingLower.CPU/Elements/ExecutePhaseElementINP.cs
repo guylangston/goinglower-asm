@@ -6,6 +6,7 @@ using GoingLower.Core.Drawing;
 using GoingLower.Core.Elements;
 using GoingLower.Core.Elements.Sections;
 using GoingLower.Core.Primitives;
+using GoingLower.Core.StateManager;
 using GoingLower.CPU.Animation;
 using GoingLower.CPU.Model;
 using GoingLower.CPU.Scenes;

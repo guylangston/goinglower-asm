@@ -2,9 +2,9 @@ using System;
 
 namespace GoingLower.Core.Animation
 {
-    public class AnimationDelay : Animation
+    public class AnimationBaseDelay : AnimationBase
     {
-        public AnimationDelay(TimeSpan duration) : base(duration)
+        public AnimationBaseDelay(TimeSpan duration) : base(duration)
         {
             
         }

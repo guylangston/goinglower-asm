@@ -1,12 +1,12 @@
 namespace GoingLower.Core.Actions
 {
-    public class ActionModel
+    public class Command
     {
-        public ActionModel()
+        public Command()
         {
         }
 
-        public ActionModel(string name, object? arg = null)
+        public Command(string name, object? arg = null)
         {
             Name = name;
             Arg  = arg;

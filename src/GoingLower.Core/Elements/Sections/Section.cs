@@ -89,7 +89,7 @@ namespace GoingLower.Core.Elements.Sections
             {
                 if (TitleAction != null)
                 {
-                    hit.Selection = new ActionModel()
+                    hit.Selection = new Command()
                     {
                         Name = TitleAction,
                         Arg  = this
