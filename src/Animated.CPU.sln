@@ -1,21 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Animated.CPU", "Animated.CPU\Animated.CPU.csproj", "{8854EDDE-EA7E-4F85-926E-0D84553D127D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoingLower.CPU", "GoingLower.CPU\GoingLower.CPU.csproj", "{8854EDDE-EA7E-4F85-926E-0D84553D127D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Animated.CPU.GTK", "Animated.CPU.GTK\Animated.CPU.GTK.csproj", "{CD255196-21AC-42EC-AA53-BCBE09846D06}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoingLower.UI.GTK", "GoingLower.UI.GTK\GoingLower.UI.GTK.csproj", "{CD255196-21AC-42EC-AA53-BCBE09846D06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Animated.CPU.Tests", "Animated.CPU.Tests\Animated.CPU.Tests.csproj", "{F7D245A3-5660-4676-B230-B0091AF20A68}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoingLower.Tests", "GoingLower.Tests\GoingLower.Tests.csproj", "{F7D245A3-5660-4676-B230-B0091AF20A68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Animated.CPU.Backend.LLDB", "Animated.CPU.Backend.LLDB\Animated.CPU.Backend.LLDB.csproj", "{9D632DA2-547A-47F1-ABF8-656FEA3212AC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoingLower.Backend.LLDB", "GoingLower.Backend.LLDB\GoingLower.Backend.LLDB.csproj", "{9D632DA2-547A-47F1-ABF8-656FEA3212AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Animated.CPU.Console", "Animated.CPU.Console\Animated.CPU.Console.csproj", "{530D6BE1-A007-44FE-A679-78F7C10877B9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoingLower.Console", "GoingLower.Console\GoingLower.Console.csproj", "{530D6BE1-A007-44FE-A679-78F7C10877B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{06EC9A80-2E67-4D9D-93F9-BC87645BEF53}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoingLower.Samples", "GoingLower.Samples\GoingLower.Samples.csproj", "{06EC9A80-2E67-4D9D-93F9-BC87645BEF53}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Root", "Root", "{701D48DB-7AD8-4B7A-BF6C-D0563D27F18E}"
 ProjectSection(SolutionItems) = preProject
 	..\README.md = ..\README.md
 EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoingLower.Core", "GoingLower.Core\GoingLower.Core.csproj", "{0CD7B8FB-DAFA-4711-AA65-CFB47A0FE8B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,5 +49,9 @@ Global
 		{06EC9A80-2E67-4D9D-93F9-BC87645BEF53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06EC9A80-2E67-4D9D-93F9-BC87645BEF53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06EC9A80-2E67-4D9D-93F9-BC87645BEF53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CD7B8FB-DAFA-4711-AA65-CFB47A0FE8B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CD7B8FB-DAFA-4711-AA65-CFB47A0FE8B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CD7B8FB-DAFA-4711-AA65-CFB47A0FE8B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CD7B8FB-DAFA-4711-AA65-CFB47A0FE8B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
