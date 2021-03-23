@@ -7,6 +7,16 @@ using Animated.CPU.Primitives;
 
 namespace Animated.CPU.Model
 {
+    
+    [Flags]
+    public enum InOut 
+    {
+        In = 1, 
+        Out = 2,
+        InOut = In + Out,
+        InComplete = 4,
+    }
+
     // https://software.intel.com/content/www/us/en/develop/articles/introduction-to-x64-assembly.html
     public class Cpu
     {
@@ -101,9 +111,9 @@ namespace Animated.CPU.Model
 
         public List<Register> RegisterFile { get; }
 
-        public IMemory L1   { get; set; }
-        public IMemory L2   { get; set; }
-        public IMemory L3   { get; set; }
+        // public IMemory L1   { get; set; }
+        // public IMemory L2   { get; set; }
+        // public IMemory L3   { get; set; }
         public IMemory Main { get; set; }
 
         public MemoryView Instructions { get; set; }
@@ -113,11 +123,6 @@ namespace Animated.CPU.Model
 
         // Animation & Story Replay
         public Story Story { get; set; }
-
-        public void Step()
-        {
-            CLK.Value++;
-        }
 
         public Register? SetReg(string name, ulong value)
         {
@@ -165,15 +170,7 @@ namespace Animated.CPU.Model
        
     }
 
-    [Flags]
-    public enum InOut 
-    {
-        In = 1, 
-        Out = 2,
-        InOut = In + Out,
-        InComplete = 4,
-    }
-
+ 
 
     public class RegisterMode
     {

@@ -110,16 +110,6 @@ namespace Animated.CPU.Animation
         void KeyPress(string key, object platform);
         void MousePress(uint eventButton, double eventX, double eventY, object interop);
     }
-
-    public static class SceneHelper
-    {
-        public static void Add(this IScene scene, IEnumerable<IElement> items)
-        {
-            foreach (var item in items)
-            {
-                scene.Add(item);
-            }
-        }
-    }
+    
     
 }
