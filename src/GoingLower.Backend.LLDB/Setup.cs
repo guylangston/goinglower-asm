@@ -68,7 +68,7 @@ namespace GoingLower.Backend.LLDB
 
         public Story BuildStory(Config cfg)
         {
-            var source = new SourceProvider();
+            var source = new SourceProvider(null);
             var main   = source.Load(cfg.GetExpectedPath("CodeClean.txt"));
             main.Title = "Source.cs";
             

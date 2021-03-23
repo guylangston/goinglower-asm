@@ -99,11 +99,8 @@ namespace GoingLower.Backend.LLDB
             Console.WriteLine("{0,20}: {1}", "WorkingDirectory", args.WorkingDirectory);
             Console.WriteLine("{0,20}: {1}", "TargetBinary", args.TargetBinary);
             Console.WriteLine("{0,20}: {1}", "SourceFile", args.SourceFile);
-            
-            source = new SourceProvider()
-            {
-                TargetBinary = args.TargetBinary
-            };
+
+            source      = new SourceProvider(args.TargetBinary);
             CapturePath = Path.GetDirectoryName(source.TargetBinary);
             
             source.Load(args.SourceFile);

@@ -28,8 +28,8 @@ namespace GoingLower.UI.GTK
             var cfg = new Setup.Config()
             {
                 StoryId           = "Introduction-ForLoop",
-                BaseFolder        = Path.Combine(root, "src/Sample/Scripts/Introduction-ForLoop"),
-                CompileBaseFolder = Path.Combine(root, "src/Sample/Scripts")
+                BaseFolder        = Path.Combine(root, "src/GoingLower.Samples/Scripts/Introduction-ForLoop"),
+                CompileBaseFolder = Path.Combine(root, "src/GoingLower.Samples/Scripts")
             };
             setup.InitCpuFromDisk(cfg, cpu);
             return cpu;

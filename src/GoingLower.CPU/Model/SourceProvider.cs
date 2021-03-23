@@ -33,15 +33,17 @@ namespace GoingLower.CPU.Model
     public class SourceProvider
     {
         private Dictionary<string, SourceFile> files;
+        private string targetBin;
         
-        public SourceProvider()
+        public SourceProvider(string targetBin)
         {
-            files = new Dictionary<string, SourceFile>();
-            
+            this.targetBin = targetBin;
+            files          = new Dictionary<string, SourceFile>();
         }
+
+        public string TargetBinary => targetBin;
         
-        public string                                  TargetBinary { get; set; }
-        public IReadOnlyDictionary<string, SourceFile> Files        => files;
+        public IReadOnlyDictionary<string, SourceFile> Files => files;
 
         public SourceFile Load(string txtFile)
         {
@@ -59,13 +61,21 @@ namespace GoingLower.CPU.Model
             return s;
         }
         
-        public SourceFileAnchor? FindAnchor(string currSource)
+        public SourceFileAnchor? FindAnchor(string? currSource)
         {
             if (currSource == null) return null;
-            // "home/guy/RiderProjects/ConsoleApp1/ConsoleApp1/Program.cs @ 37:"
             
+            // Sample: "home/guy/RiderProjects/ConsoleApp1/ConsoleApp1/Program.cs @ 37:"
             if (StringHelper.TrySplitExclusive(currSource.Trim(':'), " @ ", out var res))
             {
+                var f = res.l;
+                if (!File.Exists(f))
+                {
+                    f = TryFindAlternativeRoot(f);
+                }
+
+                if (f == null) return null;
+
                 var file = Load(res.l);
                 if (uint.TryParse(res.r, out var lineNo) && lineNo < file.Lines.Count)
                 {
@@ -79,6 +89,12 @@ namespace GoingLower.CPU.Model
 
             return null;
 
+        }
+
+        protected virtual string? TryFindAlternativeRoot(string s)
+        {
+            var x = 1;
+            return null;
         }
     }
 }
