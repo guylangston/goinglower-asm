@@ -11,7 +11,7 @@ namespace GoingLower.UI.GTK
         {
             Application.Init();
 
-            var app = new Application("org.GoingLower.CPU.GTK", GLib.ApplicationFlags.None);
+            var app = new Application("org.goinglower.ui.gtk", GLib.ApplicationFlags.None);
             app.Register(GLib.Cancellable.Current);
 
             var win = new MainWindow();
