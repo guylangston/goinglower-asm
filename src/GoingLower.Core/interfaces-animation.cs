@@ -25,6 +25,33 @@ namespace GoingLower.Core
         public float BaseValue { get; set; }
     }
 
+    public interface IAProp // Addressable Prop
+    {
+        object Value { get; set; }
+    }
+
+    public interface IAProp<T> : IAProp // Addressable Prop 
+    {
+        new T Value { get; set; }
+    }
+
+    public class AProp<T> : IAProp<T>
+    {
+        public AProp(T value)
+        {
+            Value = value;
+        }
+        
+        public T Value { get; set; }
+
+        object IAProp.Value
+        {
+            get => Value;
+            set => Value = (T)value;
+        }
+    }
+    
+
     public class PropFloat : IAnimProp
     {
         public PropFloat(float baseValue)

@@ -46,4 +46,22 @@ namespace GoingLower.Core
             set => base.Model = value;
         }
     }
+    
+    public abstract class ElementWithModel<TModel> : ElementBase 
+    {
+      
+        protected ElementWithModel(IElement parent, DBlock? block) : base(parent, block)
+        {
+            
+        }
+
+        public new IElement Parent => base.Parent ?? throw new Exception("Only Scene should not parent==null");
+        
+
+        public virtual new TModel Model
+        {
+            get => (TModel)base.Model;
+            set => base.Model = value;
+        }
+    }
 }

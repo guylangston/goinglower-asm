@@ -78,8 +78,7 @@ namespace GoingLower.CPU
             FixedFontHuge     = Clone(FixedFont, p => {
                 p.Color    = SKColors.LightCoral;
                 p.TextSize = 36;
-            });  
-            
+            });
             
             SmallFont = new SKPaint()
             {

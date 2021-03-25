@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 
 namespace GoingLower.Core.Helpers
@@ -17,6 +18,17 @@ namespace GoingLower.Core.Helpers
                 
                 sb.Append(b.ToString("X").PadLeft(2, '0'));
                 
+            }
+            return sb.ToString();
+        }
+
+        public static string FlattenStringList(IReadOnlyList<string> list)
+        {
+            var sb = new StringBuilder();
+            foreach (var l in list)
+            {
+                if (sb.Length > 0) sb.AppendLine();
+                sb.Append(l);
             }
             return sb.ToString();
         }

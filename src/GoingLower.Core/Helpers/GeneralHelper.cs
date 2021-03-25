@@ -1,6 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-
+using System.Threading.Tasks;
 
 namespace GoingLower.Core.Helpers
 {
@@ -51,6 +52,35 @@ namespace GoingLower.Core.Helpers
             }
 
             return elseVal;
+        }
+
+        public static IEnumerable<(T a, T b)> PairWise<T>(IEnumerable<T> chain)
+        {
+            T    last  = default;
+            bool first = true;
+            foreach (var item in chain)
+            {
+                if (first)
+                {
+                    last  = item;
+                    first = false;
+                }
+                else
+                {
+                    yield return (last, item);
+                    last = item;
+                }
+            }
+        }
+
+        public static async Task<List<T>> ToList<T>(IAsyncEnumerable<T> readLines)
+        {
+            var res = new List<T>();
+            await foreach (var line in readLines)
+            {
+                res.Add(line);
+            }
+            return res;
         }
     }
 }

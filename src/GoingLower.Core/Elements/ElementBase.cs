@@ -282,6 +282,9 @@ namespace GoingLower.Core
         }
 
         public override string ToString() => $"#{id}:^{IndexInParent}:{GetType().Name}:{Model}";
+
+
+        protected SKPaint GetStyle(string style) => Scene.StyleFactory.GetPaint(this, style);
     }
 
    

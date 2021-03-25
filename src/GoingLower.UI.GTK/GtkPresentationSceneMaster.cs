@@ -3,6 +3,7 @@ using System.IO;
 using GoingLower.Backend.LLDB;
 using GoingLower.CPU.Elements;
 using GoingLower.CPU.Model;
+using GoingLower.CPU.Scenes;
 using Gtk;
 
 namespace GoingLower.UI.GTK

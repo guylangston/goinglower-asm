@@ -1,0 +1,16 @@
+digraph G {
+  rankdir=LR;
+  CSharp -> Roslyn -> IL -> JIT1 -> MachineCode -> MicroCode -> LogicGates -> Transistors -> ElectricField;
+  JIT1 -> JIT2 [label=optimised];
+  IL -> JIT2 -> MachineCode;
+
+  CPP -> CLR;
+
+  CLR-> MachineCode [label="linked"];
+
+  Roslyn [shape=rect];
+
+  { rank = same; JIT1; JIT2; }
+
+
+}

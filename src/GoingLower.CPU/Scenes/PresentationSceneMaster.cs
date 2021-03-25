@@ -10,7 +10,7 @@ using GoingLower.CPU.Model;
 using GoingLower.CPU.Scenes;
 using SkiaSharp;
 
-namespace GoingLower.CPU.Elements
+namespace GoingLower.CPU.Scenes
 {
     public abstract class PresentationSceneMaster : SceneMasterBase
     {
@@ -28,6 +28,7 @@ namespace GoingLower.CPU.Elements
             "Execute",
             "Outro",
             //"Slides", 
+            //"MindMap"
         })
         {
             MouseDrawTimeOut      = TimeSpan.FromSeconds(3);
@@ -51,8 +52,8 @@ namespace GoingLower.CPU.Elements
             styles    = new StyleFactory();
 
             cpu = BuildCpu();
-            
-            CurrentScene = SceneFactory("Intro");
+
+            CurrentScene = SceneFactory("MindMap"); // "Intro");
         }
 
         public override IScene? SceneFactory(string name)
@@ -73,6 +74,7 @@ namespace GoingLower.CPU.Elements
                 {
                     
                 },
+                "mindmap" => new MindMapScene("MindMap", styles,  dBlock),
                 _ => throw new Exception($"Not Found: {name}")
             };
         }
