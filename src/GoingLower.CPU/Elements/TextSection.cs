@@ -122,12 +122,7 @@ namespace GoingLower.CPU.Elements
 
                     IsSourceChanged = false;    
                 }
-                
-                
-
             }
-            
-            
         }
 
         public TextBlockElement.Span? GetLine(uint line)

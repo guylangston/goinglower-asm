@@ -16,9 +16,9 @@ using GoingLower.CPU.Parsers;
 namespace GoingLower.CPU.Scenes
 {
 
-    public class TextSectionX : TextSection<IScene, IContent>
+    public class TextContentSection : TextSection<IScene, IContent>
     {
-        public TextSectionX(IElement parent, IContent model, DBlock block) : base(parent, model, block)
+        public TextContentSection(IElement parent, IContent model, DBlock block) : base(parent, model, block)
         {
             Parser = new SourceParser(new SyntaxMarkDown());
         }
@@ -33,7 +33,7 @@ namespace GoingLower.CPU.Scenes
     public class MindMapScene : SceneBase<MindMap, StyleFactory>
     {
         private NetworkElement network;
-        private TextSectionX body;
+        private TextContentSection body;
         private MindMapNode? selected;
 
         public MindMapScene(string name, StyleFactory styleFactory, DBlock block) : base(name, styleFactory, block)
@@ -86,7 +86,10 @@ namespace GoingLower.CPU.Scenes
 
             
 
-            this.body = Add(new TextSectionX(this, null, new DBlock(150, 300, Block.W, Block.H - 300).Set(10, 2, 20)));            
+            this.body = Add(new TextContentSection(this, null, new DBlock(150, 300, Block.W, Block.H - 300).Set(10, 2, 20))
+            {
+                ShowLineNumbers = false
+            });            
             UpdateSelected(Model.Nodes.First());
 
         }
