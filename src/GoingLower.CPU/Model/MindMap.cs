@@ -24,10 +24,15 @@ namespace GoingLower.CPU.Model
             Add(JIT2);       
             Add(MachineCode);
             Add(MicroCode);
+            Add(LogicGates);
+            Add(Transistor);
+            Add(Runtime);
+            Add(CPP);
             
-            Chain(CSharp, Rosyln, IL, JIT1, MachineCode, MicroCode);
-            Link(JIT1, JIT2);
-            Link(JIT2, MachineCode);
+            Chain(CSharp, Rosyln, IL, JIT1, MachineCode, MicroCode, LogicGates, Transistor);
+            Chain(JIT1, JIT2, MachineCode);
+            Chain(CPP, Runtime, MachineCode);
+            
         }
 
         public IReadOnlyCollection<MindMapNode> Nodes => nodes;
@@ -39,6 +44,10 @@ namespace GoingLower.CPU.Model
         public MindMapNode JIT2        { get; } = new MindMapNode(nameof(JIT2));
         public MindMapNode MachineCode { get; } = new MindMapNode(nameof(MachineCode));
         public MindMapNode MicroCode   { get; } = new MindMapNode(nameof(MicroCode));
+        public MindMapNode LogicGates  { get; } = new MindMapNode(nameof(LogicGates));
+        public MindMapNode Transistor  { get; } = new MindMapNode(nameof(Transistor));
+        public MindMapNode Runtime     { get; } = new MindMapNode(nameof(Runtime));
+        public MindMapNode CPP         { get; } = new MindMapNode(nameof(CPP));
         
         public MindMapNode Add(MindMapNode node)
         {
@@ -76,12 +85,12 @@ namespace GoingLower.CPU.Model
             Content = new LazyContent(this);
         }
 
-        public IEnumerable<IEdge> Edges   => edges;
-        public string             Id      { get; }
-        public IContent           Content { get; }
-        
-        
-        public DiagramElement<MindMapScene> Display { get; set; }
+        public IEnumerable<IEdge>           Edges   => edges;
+        public string                       Id      { get; }
+        public IContent                     Content { get; }
+        public int                          Rank    { get; set; }
+        public int                          Stack   { get; set; }
+        public DiagramElement               Display { get; set; }
 
         // Hidden
         // force graph building to MindMap
@@ -89,8 +98,9 @@ namespace GoingLower.CPU.Model
         {
             edges.Add((Edge<MindMapNode>)edge);
         }
-        object INodeIdent.Id => Id;
+        object INodeIdent.Id    => Id;
         
+
         public class LazyContent : IContent
         {
             private Lazy<IContent> content;
@@ -133,7 +143,7 @@ namespace GoingLower.CPU.Model
             public IContentBody           Body   => content.Value.Body;
         }
 
-        public void Associate(DiagramElement<MindMapScene> display)
+        public void Associate(DiagramElement display)
         {
             this.Display              = display;
             display.Model.Title.Value = Id;
@@ -143,14 +153,6 @@ namespace GoingLower.CPU.Model
         }
     }
 
-    public enum Decoration
-    {
-        Square,
-        Rect,
-        Oval,
-        Circle,
-        Diamond,
-        Triangle
-    }
+   
 
 }

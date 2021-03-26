@@ -56,6 +56,8 @@ namespace GoingLower.CPU.Parsers
 
             private Token? FindAt(string s, int pos, int lineIdx)
             {
+                if (pos >= s.Length) return null;
+                
                 var idx0 = s.IndexOf('[', pos);
                 if (idx0 < 0) return null;
                 

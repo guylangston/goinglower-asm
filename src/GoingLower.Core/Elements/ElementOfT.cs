@@ -54,6 +54,12 @@ namespace GoingLower.Core
         {
             
         }
+        
+        protected ElementWithModel(IElement parent, DBlock? block, TModel model) : base(parent, block)
+        {
+            Model = model;
+
+        }
 
         public new IElement Parent => base.Parent ?? throw new Exception("Only Scene should not parent==null");
         

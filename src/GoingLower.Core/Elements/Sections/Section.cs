@@ -28,7 +28,7 @@ namespace GoingLower.Core.Elements.Sections
         protected Section(IElement parent, TModel model, DBlock? block) : base(parent, model, block)
         {
             if (parent == null) throw new ArgumentNullException(nameof(parent));
-            if (model == null) throw new ArgumentNullException(nameof(model));
+            //if (model == null) throw new ArgumentNullException(nameof(model));
         }
         
         public string? Title         { get; set; }

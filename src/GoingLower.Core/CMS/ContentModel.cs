@@ -47,7 +47,8 @@ namespace GoingLower.Core.CMS
         BodyFormat Format { get; }
         Task<byte[]> ReadAllBytes();
         Task<string> ReadAllText();
-        IAsyncEnumerable<string> ReadLines();
+        IAsyncEnumerable<string> ReadLinesAsync();
+        IReadOnlyList<string> ReadLines();
     }
 
     public class ContentBodyTextLines : IContentBody
@@ -70,13 +71,15 @@ namespace GoingLower.Core.CMS
 
         private readonly string[] lines;
 
-        public async IAsyncEnumerable<string> ReadLines()
+        public async IAsyncEnumerable<string> ReadLinesAsync()
         {
             foreach (var line in lines)
             {
                 yield return line;
             }
         }
+
+        public IReadOnlyList<string> ReadLines() => lines;
     }
 
     

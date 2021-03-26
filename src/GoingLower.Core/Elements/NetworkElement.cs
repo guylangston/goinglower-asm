@@ -23,11 +23,20 @@ namespace GoingLower.Core.Elements
             base.Init();
         }
 
-        private Func<IElement, INode?> getNode;
+        Func<IElement, INode?> getNode;
+        BiMap<IElement, INode> map = new();
+        
+
+        public int                     RankSize    { get; set; } = 200;
+        public int                     StackSize   { get; set; } = 100;
+        public Action<IElement, INode, int, int> AfterLayout { get; set; }
+
+        public IBiMapReadOnly<IElement, INode> Map => map;
+        
 
         public void Layout()
         {
-            BiMap<IElement, INode> map = new();
+            map.Clear();
             foreach (var kid in Children)
             {
                 var node = getNode(kid);
@@ -45,16 +54,22 @@ namespace GoingLower.Core.Elements
                 var inRank = partition[r];
                 if (inRank.Any())
                 {
-                    var y = Block.Y;
+                    var y     = Block.Y;
+                    int stack = 0;
                     foreach (var node in inRank)
                     {
                         var e = map[node];
                         e.Block.X =  x;
                         e.Block.Y =  y;
-                        y         += 200;
+                        y         += StackSize;
+                        if (AfterLayout != null)
+                        {
+                            AfterLayout(e, node, r, stack);
+                        }
+                        stack++;
                     }
                 }
-                x += 200;
+                x += RankSize;
             }
         }
 

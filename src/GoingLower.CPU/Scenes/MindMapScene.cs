@@ -1,110 +1,40 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using GoingLower.Core;
 using GoingLower.Core.CMS;
-using GoingLower.Core.Docking;
 using GoingLower.Core.Drawing;
 using GoingLower.Core.Elements;
+using GoingLower.Core.Elements.Sections;
 using GoingLower.Core.Graph;
 using GoingLower.Core.Helpers;
 using GoingLower.Core.Primitives;
+using GoingLower.CPU.Elements;
 using GoingLower.CPU.Model;
-using SkiaSharp;
+using GoingLower.CPU.Parsers;
 
 namespace GoingLower.CPU.Scenes
 {
-    
-    public class DiagramModel
-    {
-        public Decoration Decoration { get; set; }
-        public string     Id         { get; set; }
-        public object     Data       { get; set; }
 
-        public AProp<string> Title { get; } = new AProp<string>(string.Empty);
-        public AProp<string> Text  { get; } = new AProp<string>(string.Empty);
-    }
-
-    public interface IElementTheme
+    public class TextSectionX : TextSection<IScene, IContent>
     {
-        SKPaint GetPaint(IElement element, IAProp prop);
-        SKPaint GetPaint(IElement element, string name, object currentValue);
-    }
-
-    public class DiagramElement<TScene> : Element<TScene, DiagramModel>  where TScene:IScene
-    {
-        private readonly IElementTheme? theme;
-            
-        public DiagramElement(IElement parent, DiagramModel model, DBlock? block, IElementTheme? theme) : base(parent, model, block)
+        public TextSectionX(IElement parent, IContent model, DBlock block) : base(parent, model, block)
         {
-            this.theme = theme;
+            Parser = new SourceParser(new SyntaxMarkDown());
         }
 
-        protected override void Step(TimeSpan step)
+        protected override IReadOnlyList<string> GetLines(IContent model)
         {
-            
-        }
-        
-        public bool IsSelected { get; set; }
-
-        protected override void Draw(DrawContext surface)
-        {
-            surface.Canvas.Save();
-            surface.Canvas.ClipRect(Block.Inner.Outset(10, -10).ToSkRect());
-            
-            
-            var ib = Block.Inner;
-            surface.Canvas.DrawOval(ib.MM, new SKSize(ib.W/2, ib.H/2) ,  Scene.StyleFactory.GetPaint(this, IsSelected ? "Selected" :  "border"));
-            
-            surface.DrawText(Model.Title.Value, 
-                theme?.GetPaint(this, Model.Title) ?? Scene.StyleFactory.GetPaint(this, "text"),
-                Block, BlockAnchor.MM);
-            
-            surface.DrawText(Model.Text.Value,
-                theme?.GetPaint(this, Model.Text) ?? Scene.StyleFactory.GetPaint(this, "SmallFont"), 
-                Block, BlockAnchor.BM);
-            
-            surface.Canvas.Restore();
-
-            if (Model.Data is INode n && n.Edges != null)
-            {
-                foreach (var edge in n.Edges)
-                {
-                    if (edge.A == n)
-                    {
-                        if (Parent.TryFindByModelRecursive<DiagramModel>(
-                            x=>object.ReferenceEquals( x.Data, edge.B), out var eleB))
-                        {
-                            var a = new DockedArrow(
-                                new DockPoint(this)
-                                {
-                                    AnchorInner = true
-                                }, 
-                                new DockPoint(eleB)
-                                {
-                                    AnchorInner = true
-                                }, 
-                                GetStyle(IsSelected ? "arrow" : "ArrowGray"))
-                            {
-                                ArrowPop = 2
-                            };
-                            a.Step();
-                            a.Draw(surface.Canvas);
-                        }
-                        
-                        
-                    }
-                }
-            }
+            return model.Body.ReadLines();
         }
     }
-    
-    
-    
+   
+
     public class MindMapScene : SceneBase<MindMap, StyleFactory>
     {
-        
+        private NetworkElement network;
+        private TextSectionX body;
+        private MindMapNode? selected;
 
         public MindMapScene(string name, StyleFactory styleFactory, DBlock block) : base(name, styleFactory, block)
         {
@@ -121,15 +51,31 @@ namespace GoingLower.CPU.Scenes
             
         }
 
+        
+
         protected override void InitScene()
         {
             IElementTheme themeHeader = null; 
            
             var headerBlock = new DBlock(0, 50, Block.W, 200).Inset(20, 20);
-            var network     = Add(new NetworkElement(this, headerBlock, GetNode));
+            network = Add(new NetworkElement(this, headerBlock, GetNode)
+            {
+                // Apply Fixups to the default layout
+                AfterLayout = (e, n, rank, stack) => {
+                    if (n is MindMapNode nn)
+                    {
+                        if (nn.Id == "JIT2")
+                        {
+                            e.Block.Y -= 40;
+                        }
+                        nn.Rank  = rank;
+                        nn.Stack = stack;
+                    }
+                }
+            });
             foreach (var node in Model.Nodes)
             {
-                node.Associate(network.Add(new DiagramElement<MindMapScene>(network, new DiagramModel()
+                node.Associate(network.Add(new DiagramElement(network, new DiagramModel()
                 {
                     Decoration = Decoration.Oval,
                     Id = node.Id
@@ -138,12 +84,30 @@ namespace GoingLower.CPU.Scenes
             }
             network.Layout();
 
-            Model.Nodes.First().Display.IsSelected = true;
+            
+
+            this.body = Add(new TextSectionX(this, null, new DBlock(150, 300, Block.W, Block.H - 300).Set(10, 2, 20)));            
+            UpdateSelected(Model.Nodes.First());
+
+        }
+
+        private void UpdateSelected(MindMapNode newNode)
+        {
+            if (selected != null)
+            {
+                selected.Display.IsSelected = false;    
+            }
+            
+            newNode.Display.IsSelected = true;
+            selected                   = newNode;
+            body.Model                 = selected.Content;
+            body.IsSourceChanged       = true;
+        
         }
 
         private INode? GetNode(IElement arg)
         {
-            if (arg is DiagramElement<MindMapScene> dm && dm.Model.Data is INode node) return node;
+            if (arg is DiagramElement dm && dm.Model.Data is INode node) return node;
             return null;
         }
 
@@ -159,7 +123,33 @@ namespace GoingLower.CPU.Scenes
 
         public override void KeyPress(string key, object platformKeyObject)
         {
-         
+            if (key == Keys.Right)
+            {
+                
+                if (network.TryFind<DiagramElement, DiagramModel>((e, m) => e.IsSelected, out var ee, out var mm))
+                {
+                    var current = mm.DataAs<MindMapNode>();
+                    var next = network.Map.AllB.Cast<MindMapNode>().FirstOrDefault(x => x.Rank == current.Rank - 1);
+                    if (next != null)
+                    {
+                        UpdateSelected(next);
+
+                    }
+                }
+            }
+            else if (key == Keys.Left)
+            {
+                
+                if (network.TryFind<DiagramElement, DiagramModel>((e, m) => e.IsSelected, out var ee, out var mm))
+                {
+                    var current = mm.DataAs<MindMapNode>();
+                    var next    = network.Map.AllB.Cast<MindMapNode>().FirstOrDefault(x => x.Rank == current.Rank + 1);
+                    if (next != null)
+                    {
+                        UpdateSelected(next);
+                    }
+                }
+            }
         }
 
         public override void MousePress(uint eventButton, double eventX, double eventY, object interop)

@@ -51,7 +51,19 @@ namespace GoingLower.Core.Collections
         
     }
 
-    public class BiMap<TA, TB>
+    public interface IBiMapReadOnly<TA, TB>
+    {
+        IReadOnlyCollection<TA> AllA { get; }
+        IReadOnlyCollection<TB> AllB { get; }
+        
+        TA this[TB b] { get; }
+        TB this[TA a] { get; }
+        
+        TA GetA(TB b);
+        TB GetB(TA a);
+    }
+
+    public class BiMap<TA, TB> : IBiMapReadOnly<TA, TB>
     {
         private Dictionary<TA, TB> ab = new Dictionary<TA, TB>();
         private Dictionary<TB, TA> ba = new Dictionary<TB, TA>();
@@ -73,5 +85,11 @@ namespace GoingLower.Core.Collections
 
         public TA GetA(TB b) => ba[b];
         public TB GetB(TA a) => ab[a];
+
+        public void Clear()
+        {
+            ab.Clear();
+            ba.Clear();
+        }
     }
 }
