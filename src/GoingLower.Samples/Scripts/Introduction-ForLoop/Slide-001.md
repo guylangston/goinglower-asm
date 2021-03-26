@@ -22,9 +22,10 @@ The same hold for the other registers:
 - Destination Index   (DI): DI, EDI, RDI
 - Instruction Pointer (IP): IP, EIP, RIP
 - Stack Pointer       (SP): SP, ESP, RSP
-- B Register          (B):  BX, EBP, RBP
-- C Register          (C):  CX, ECP, RCP
-- D Register          (D):  DX, EDP, RDP
+- A Register          (A):  AX, EAX, RAX
+- B Register          (B):  BX, EBX, RBX
+- C Register          (C):  CX, ECX, RCX
+- D Register          (D):  DX, EDX, RDX
 
 
 

@@ -237,6 +237,11 @@ namespace GoingLower.Core.Elements
         protected override void Draw(DrawContext surface)
         {
             if (Block == null) throw new NullReferenceException("Block");
+            
+            if (Background != null)
+            {
+                surface.Canvas.DrawRect(Block.BorderDRect.ToSkRect(), Background);
+            }
 
             if (ClipEnabled)
             {
@@ -244,11 +249,7 @@ namespace GoingLower.Core.Elements
                 surface.Canvas.ClipRegion(new SKRegion(Block.Inner.ToSkRectI()));    
             }
             
-            if (Background != null)
-            {
-                surface.Canvas.DrawRect(Block.Outer.ToSkRect(), Background);
-            }
-
+            
             foreach (var line in lines)
             {
                 if (line.Spans.Any())

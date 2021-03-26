@@ -54,33 +54,10 @@ namespace GoingLower.CPU.Scenes
 
             float w     = Block.Inner.W / 4;
 
-            // var cpu = Add(new SimpleSection(this, "CPU", 
-            //     DBlock.FromTwoPoints(new SKPoint(50, 20), new SKPoint(970, 1020))));
-            // cpu.TitleAction = "CPU";
-            //
-            // var ram = Add(new SimpleSection(this, "RAM", 
-            //     DBlock.FromTwoPoints(new SKPoint(990, 20), new SKPoint(1440, 1020))));
-            // ram.TitleAction = "RAM";
-            //
-
             var   stack = Add(new StackElement(this, Block, DOrient.Horz));
             
             this.ElementCode   = stack.Add(new CodeElement(stack, Model.Story.MainFile, 
                 DBlock.JustWidth(w)));
-
-            // if (Cpu.Story.IL != null)
-            // {
-            //     this.ElementCodeIL = stack.Add(new CodeElement(stack, Cpu.Story.IL, 
-            //         DBlock.JustWidth(w)));
-            //     this.ElementCodeIL.IsHidden = true;
-            // }
-            //
-            // if (Cpu.Story.Asm != null)
-            // {
-            //     this.ElementCodeASM = stack.Add(new CodeElement(stack, Cpu.Story.Asm, 
-            //         DBlock.JustWidth(w)));
-            //     this.ElementCodeASM.IsHidden = true;
-            // }
             
             this.ElementInstructions = stack.Add(new MemoryViewElement(stack,  
                 DBlock.JustWidth(w),
@@ -103,6 +80,24 @@ namespace GoingLower.CPU.Scenes
             var bTerm = new DBlock(30, hh + 10, 900, 400);
             bTerm.Set(0, 3, 10);
             Terminal   = Add(new TerminalElement(this, new Terminal(), bTerm));
+
+            var overlay = Add(new TextBlockElement(this, 
+                new DBlock(450, 800, 500, 280).Set(0, 4, 10),
+                Styles.FixedFont));
+            
+            overlay.Background = Styles.BackGroundAlt;
+            overlay.WriteLine("-- Register Cheatsheet --", Styles.FixedFontBlue);
+            overlay.WriteLine("");
+            overlay.WriteLine("                          16   32   64", Styles.FixedFontArg);
+            overlay.WriteLine("A Register          (A):  AX, EAX, RAX");
+            overlay.WriteLine("B Register          (B):  BX, EBX, RBX");
+            overlay.WriteLine("C Register          (C):  CX, ECX, RCX");
+            overlay.WriteLine("D Register          (D):  DX, EDX, RDX");
+            overlay.WriteLine("Source Index        (SI): SI, ESI, RSI");
+            overlay.WriteLine("Destination Index   (DI): DI, EDI, RDI");
+            overlay.WriteLine("Instruction Pointer (IP): IP, EIP, RIP");
+            overlay.WriteLine("Stack Pointer       (SP): SP, ESP, RSP");
+                        
 
             var d = 400;
             

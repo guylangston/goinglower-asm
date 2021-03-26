@@ -104,7 +104,6 @@ namespace GoingLower.CPU.Elements
             
             if (Model is FlagsRegister flags)
             {
-                
                 var xx = 0;
                 foreach (var (name, val) in flags.GetFlags().Reverse())
                 {
@@ -122,7 +121,6 @@ namespace GoingLower.CPU.Elements
                     
                     var span = text.WriteLine(name, Scene.Styles.FixedFontBlue);
                 }
-                
                 
                 text.WriteUrl("https://en.wikipedia.org/wiki/FLAGS_register", "WIKI");
                 text.WriteLine();
@@ -143,8 +141,12 @@ namespace GoingLower.CPU.Elements
 
                 if (true) //IsHighlighted)
                 {
-                    text.Write($"DEC:", Scene.Styles.FixedFontDarkGray);
-                    text.Write($"{Model.Value:#,##0}", Scene.Styles.FixedFontCyan);
+                    if (Model.Value < 10000)
+                    {
+                        text.Write($"DEC:", Scene.Styles.FixedFontDarkGray);
+                        text.Write($"{Model.Value:#,##0}", Scene.Styles.FixedFontCyan);    
+                    }
+                    
                     
                     if (Model.TagValue != null)
                     {
