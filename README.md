@@ -1,6 +1,6 @@
-# GoingLower
+# [GoingLower](https://www.goinglower.dev/)
 
-> Animated execution of C# down to machine code on modern hardware
+> Animated CPU execution
 
 Goals:
 - Animate real code, not an simplified cpu model

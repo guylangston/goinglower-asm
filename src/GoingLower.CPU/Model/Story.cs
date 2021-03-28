@@ -5,6 +5,10 @@ using GoingLower.Core.Helpers;
 
 namespace GoingLower.CPU.Model
 {
+
+    
+    
+    
     public class Story
     {
         public int                      CurrentIndex      { get; set; }
@@ -19,6 +23,7 @@ namespace GoingLower.CPU.Model
         public SourceFile?              Asm               { get; set; }
         public SourceFile?              Binary            { get; set; }
         public SourceFile?              Outro             { get; set; }
+        public StoryDigest              Digest            { get; set; }
         
         public StoryStep?       Current      => GeneralHelper.ByIndexOrDefault(Steps, CurrentIndex);
         public StoryAnnotation? CurrentSlide => GeneralHelper.ByIndexOrDefault(Slides, CurrentSlideIndex);

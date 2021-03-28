@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using GoingLower.Core.Drawing;
 using GoingLower.Core.Helpers;
