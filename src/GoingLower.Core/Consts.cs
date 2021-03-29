@@ -2,7 +2,7 @@ namespace GoingLower.Core
 {
     public static class Consts
     {
-        public const string Version = "0.9-alpha";
+        public const string Version = "0.10-alpha";
     }
 
     public static class Keys

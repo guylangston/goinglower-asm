@@ -14,10 +14,6 @@ using Window=Gtk.Window;
 
 namespace GoingLower.UI.GTK
 {
-    
-    
-
-    
     public class MainWindow : Window
     {
         private SKDrawingArea skiaView;
@@ -25,18 +21,19 @@ namespace GoingLower.UI.GTK
         private uint timerId;
         private TimeSpan interval;
         private (double X, double Y) last;
-        
-        public  DBlock region;
+        private string[] appArgs;
 
-        public MainWindow()
-            : this(new Builder("MainWindow.glade"))
+        public MainWindow(string[] args)
+            : this(args, new Builder("MainWindow.glade"))
         {
             
         }
 
-        private MainWindow(Builder builder)
+        private MainWindow(string[] args, Builder builder)
             : base(builder.GetObject("MainWindow").Handle)
         {
+            this.appArgs     = args;
+            
             this.AcceptFocus = true;
             
             builder.Autoconnect(this);
@@ -46,15 +43,14 @@ namespace GoingLower.UI.GTK
             skiaView.WidthRequest  = 1920;
             skiaView.HeightRequest = 1080;
 
-            region = new DBlock(0, 0, skiaView.WidthRequest, skiaView.HeightRequest)
+            var region = new DBlock(0, 0, skiaView.WidthRequest, skiaView.HeightRequest)
                 .Set(20, 0, 0);
             
-            master = new GtkPresentationSceneMaster((cmd, arg) => {
+            master = new GtkPresentationSceneMaster(appArgs,(cmd, arg) => {
                 if (cmd == "quit") Application.Quit();
             });
             master.Init(new SKRect(0,0, skiaView.WidthRequest, skiaView.HeightRequest));
-
-
+            
             //  Window Events
             this.DeleteEvent       += OnWindowDeleteEvent;
             this.KeyPressEvent     += KeyPress;

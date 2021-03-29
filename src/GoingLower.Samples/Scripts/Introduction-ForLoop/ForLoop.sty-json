@@ -1,0 +1,18 @@
+{
+  "Id": "ForLoop",
+  "Title": "Basics: C# ForLoop",
+  "DescText": "In this case, on the left, we have a for-loop in C#\n-> at compile time the source is transformed into Intermediate Language (IL)\n-> at runtime it is  Just In Time Compiled, or JITd, to Asmberly\n-> ASM has a near 1:1 corrospondance with Binary code, \nand it is that the CPU really executes",
+  "DescFormat": "text/markdown",
+  "Arch": "AMD Ryzen Threadripper 2950X (32) @ 3.500GHz",
+  "OS": "Ubuntu 20.04.2 LTS x86_64",
+  "IconPath": null,
+  "ThumbnailPath": null,
+  "CompileRoot": "/home/guy/repo/cpu.anim/src/GoingLower.Samples/",
+  "Author": "Guy Langston",
+  "AuthorUrl": "https://www.guylangston.net",
+  "License": "https://creativecommons.org/licenses/by/4.0/",
+  "ProjectUrl": "https://www.goinglower.dev",
+  "Created": "2021-03-29T08:36:00.3768297Z",
+  "Modified": "2021-03-29T08:36:00.3768592Z",
+  "Version": 1
+}

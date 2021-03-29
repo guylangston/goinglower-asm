@@ -112,6 +112,45 @@ namespace GoingLower.CPU.Scenes
                 el.Animator.Start();
 
             }
+
+
+            // var play = Add(new TileMapElement(this, new DBlock(100, 100, 500, 500), new TerminalModel()
+            // {
+            //     DefaultFG = StyleFactory.GetPaint(this, "text")
+            // })
+            // {
+            //     PixelSize = new SKSize(3,3),
+            //     PixelSpace = new SKSize(1,1) 
+            // });
+            // play.Model.WriteLine("Hello World");
+            // play.Model.WriteLine("Blah blah...");
+
+            var on = new SKPaint()
+            {
+                StrokeWidth = 1,
+                Color       = SKColors.Yellow,
+                Style       = SKPaintStyle.StrokeAndFill
+            };
+            var off = new SKPaint()
+            {
+                Color  = new SKColor(20,20,20, 100),
+                Shader = SKShader.CreateColor(new SKColor(20,20,20, 100)),
+                Style  = SKPaintStyle.StrokeAndFill
+            };
+
+            var r = new Random();
+
+            var model = new VirtualScreen(new SKSize(4,4), new SKSize(1, 1),  220, 60);
+            
+            
+            var play2 = Add(new VirtualScreenElement(this, new DBlock(100, 100, 500, 500), model));
+            play2.Model.Fill( ((x,y) => new VirtualScreenPixel()
+            {
+                FG = r.Next(0, 10) < 3 ? on : null
+            } )) ;
+            
+
+
         }
 
         public override void StepScene(TimeSpan s)

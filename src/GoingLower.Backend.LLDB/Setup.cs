@@ -10,10 +10,11 @@ namespace GoingLower.Backend.LLDB
     {
         public class Config
         {
-            public string CompileBaseFolder { get; set; }  // /home/guy/repo/cpu.anim/src/Sample
-            public string BaseFolder        { get; set; }  // /home/guy/repo/cpu.anim/src/Sample/Scripts/Introduction-ForLoop
-            public string StoryId           { get; set; }  // Introduction-ForLoop
-            
+            public string      CompileBaseFolder { get; set; }  // /home/guy/repo/cpu.anim/src/Sample
+            public string      BaseFolder        { get; set; }  // /home/guy/repo/cpu.anim/src/Sample/Scripts/Introduction-ForLoop
+            public string      StoryId           { get; set; }  // Introduction-ForLoop
+            public StoryDigest Digest            { get; set; }
+
             public bool TryGetPath(string rel, out string fullPath)
             {
                 var p = System.IO.Path.Combine(BaseFolder, rel);

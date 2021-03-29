@@ -4,19 +4,21 @@ using System.IO;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace GoingLower.CPU.Model
 {
     public record StoryDigest  // Json Serialisable
     {
-        public string   Id            { get; set; }
-        public string   Title         { get; set; }
-        public string   DescText      { get; set; }
-        public string   DescFormat    { get; set; }
-        public string   Arch          { get; set; }
-        public string   IconPath      { get; set; }
-        public string   ThumbnailPath { get; set; }
-        public string   CompileRoot   { get; set; }
+        public string Id            { get; set; }
+        public string Title         { get; set; }
+        public string DescText      { get; set; }
+        public string DescFormat    { get; set; }
+        public string Arch          { get; set; }
+        public string OS            { get; set; }
+        public string IconPath      { get; set; }
+        public string ThumbnailPath { get; set; }
+        public string CompileRoot   { get; set; }
 
         public string Author     { get; set; }
         public string AuthorUrl { get; set; }
@@ -42,8 +44,8 @@ namespace GoingLower.CPU.Model
 
         public StoryDigest Load(string file)
         {
-            using FileStream openStream = File.OpenRead(file);
-            return JsonSerializer.Deserialize<StoryDigest>(file);
+            // TODO: Async
+            return JsonSerializer.Deserialize<StoryDigest>(File.ReadAllText(file), options);
         }
 
         public void Write(StoryDigest digest, string file)
