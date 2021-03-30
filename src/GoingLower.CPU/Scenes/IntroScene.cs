@@ -67,18 +67,14 @@ namespace GoingLower.CPU.Scenes
             
         }
         
-        
-        
         protected override void InitScene()
         {
             for (int cc = 0; cc < 60; cc++)
                 Add(new BackGroundNoiseElement(this, Block));
 
-            
             var inner = Block.Inset(100, 500);
             this.LogoChars = Add(new StackElement(this, inner, DOrient.Horz, StackMode.JustLayout));
-            
-            
+
             const float   sizeS = 300f;
             const float   sizeE = 100f;
             for (int i = 0; i < logoTxt.Length; i++)
@@ -110,46 +106,9 @@ namespace GoingLower.CPU.Scenes
                 el.Animator.Add(new AnimationBaseDelay(TimeSpan.FromSeconds(((float)logoTxt.Length-i)*timeScale)));
                 el.Animator.Add(new AnimationBaseProp(el.Size, el.Size.BaseValue+20, el.Size.BaseValue, TimeSpan.FromSeconds(timeScale)));
                 el.Animator.Start();
-
             }
 
-
-            // var play = Add(new TileMapElement(this, new DBlock(100, 100, 500, 500), new TerminalModel()
-            // {
-            //     DefaultFG = StyleFactory.GetPaint(this, "text")
-            // })
-            // {
-            //     PixelSize = new SKSize(3,3),
-            //     PixelSpace = new SKSize(1,1) 
-            // });
-            // play.Model.WriteLine("Hello World");
-            // play.Model.WriteLine("Blah blah...");
-
-            var on = new SKPaint()
-            {
-                StrokeWidth = 1,
-                Color       = SKColors.Yellow,
-                Style       = SKPaintStyle.StrokeAndFill
-            };
-            var off = new SKPaint()
-            {
-                Color  = new SKColor(20,20,20, 100),
-                Shader = SKShader.CreateColor(new SKColor(20,20,20, 100)),
-                Style  = SKPaintStyle.StrokeAndFill
-            };
-
-            var r = new Random();
-
-            var model = new VirtualScreen(new SKSize(4,4), new SKSize(1, 1),  220, 60);
             
-            
-            var play2 = Add(new VirtualScreenElement(this, new DBlock(100, 100, 500, 500), model));
-            play2.Model.Fill( ((x,y) => new VirtualScreenPixel()
-            {
-                FG = r.Next(0, 10) < 3 ? on : null
-            } )) ;
-            
-
 
         }
 

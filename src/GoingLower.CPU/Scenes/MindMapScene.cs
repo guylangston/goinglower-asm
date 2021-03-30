@@ -1,15 +1,18 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using GoingLower.Core;
 using GoingLower.Core.CMS;
 using GoingLower.Core.Drawing;
 using GoingLower.Core.Elements;
+using GoingLower.Core.Elements.Effects;
 using GoingLower.Core.Graph;
 using GoingLower.Core.Helpers;
 using GoingLower.Core.Primitives;
 using GoingLower.CPU.Elements;
 using GoingLower.CPU.Model;
 using GoingLower.CPU.Parsers;
+using SkiaSharp;
 
 namespace GoingLower.CPU.Scenes
 {
@@ -89,6 +92,60 @@ namespace GoingLower.CPU.Scenes
                 ShowLineNumbers = false
             });            
             UpdateSelected(Model.Nodes.First());
+
+
+            var z = SKBitmap.Decode("/home/guy/Pictures/sample1.png");
+
+            var img  = new SKBitmap(250, 100);
+            var imgc = new SKCanvas(img);
+            imgc.DrawBitmap(z, 1, 1);
+            var munro = new SKPaint()
+            {
+                Typeface =SKTypeface.FromFamilyName(
+                    "Munro", 
+                    SKFontStyleWeight.Normal, 
+                    SKFontStyleWidth.Normal, 
+                    SKFontStyleSlant.Upright),
+                TextSize = 10,
+                Color = SKColors.Aquamarine
+            };
+            SKRect munroSize = new SKRect();
+            munro.MeasureText("|", ref munroSize);
+            imgc.DrawText("Hello World! 0123456789", 10, 20, munro);
+            imgc.DrawText("The lazy brown cow jumped over the moon", 10, 20 +munroSize.Height, munro);
+            
+            
+            var on = new SKPaint()
+            {
+                StrokeWidth = 1,
+                Color       = SKColors.Yellow,
+                Style       = SKPaintStyle.StrokeAndFill
+            };
+            
+            // https://www.fontspace.com/munro-font-f14903
+            var r     = new Random();
+            var model = new VirtualScreen(new SKSize(3,3), new SKSize(1, 1),  img.Width, img.Height);
+            
+            var play2 = Add(new VirtualScreenElement(this, new DBlock(1000, 1000, 500, 500), model));
+            play2.Model.Fill( ((x,y) => {
+
+                SKPaint f       = null;
+                var     clr = img.GetPixel(x, y);
+                if (clr != SKColor.Empty)
+                {
+                    f = new SKPaint()
+                    {
+                        Color = clr,
+                        Style = SKPaintStyle.Fill
+                    };
+                }
+                return new VirtualScreenPixel()
+                {
+                    FG = f
+                };
+            }));
+            
+
 
         }
 
