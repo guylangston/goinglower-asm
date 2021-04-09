@@ -53,7 +53,8 @@ namespace GoingLower.CPU.Scenes
 
             cpu = BuildCpu();
 
-            CurrentScene = SceneFactory("MindMap"); //"Intro");
+            CurrentScene = SceneFactory("Intro"); // "MindMap");
+            //CurrentScene = SceneFactory("MindMap");   
         }
 
         public override IScene? SceneFactory(string name)

@@ -90,26 +90,15 @@ namespace GoingLower.Core.Elements.Effects
 
         protected override void DrawTile(DrawContext surface, Tile<VirtualScreenPixel> map)
         {
-            if (map.Data?.FG == null) return;
-
-
-            if (true)
-            {
-                var p = Block.Inner.TL + map.Point;
-                var r = new SKRect(p.X + Model.PixelSpace.Width, p.Y + Model.PixelSpace.Height,
-                    p.X + Model.PixelSpace.Width + Model.PixelSize.Width, p.Y + Model.PixelSpace.Height + Model.PixelSize.Height);
-                surface.Canvas.DrawRect(r, map.Data.FG);
-                
-            }
-            else
-            {
-                var ht = new SKPoint(Model.TileSize.Width / 2, Model.TileSize.Height / 2);
-                var p  = Block.Inner.TL + map.Point + ht;
-                
-                surface.Canvas.DrawCircle(p.X, p.Y, Model.PixelSize.Width/2, map.Data.FG);
-            }
-
-
+            if (map.Data?.FG == null || map.Data.FG.Color == SKColor.Empty) return;
+            
+            var p = Block.Inner.TL + map.Point;
+            var r = new SKRect(
+                p.X + Model.PixelSpace.Width,
+                p.Y + Model.PixelSpace.Height,
+                p.X + Model.PixelSpace.Width + Model.PixelSize.Width, 
+                p.Y + Model.PixelSpace.Height + Model.PixelSize.Height);
+            surface.Canvas.DrawRect(r, map.Data.FG);
         }
         
     }

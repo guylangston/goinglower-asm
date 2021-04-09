@@ -44,7 +44,7 @@ namespace GoingLower.CPU.Scenes
 
         protected override void DrawOverlay(DrawContext drawing)
         {
-         
+            //drawing.Canvas.DrawText(SKTextBlob.Create("111111111111111111111\n22222222222222222222222\n333333333333", Styles.FixedFont.ToFont()), 100, 100, Styles.FixedFontArg );
         }
 
         protected override void DrawBackGround(DrawContext drawing)
@@ -86,21 +86,31 @@ namespace GoingLower.CPU.Scenes
             network.Layout();
 
             
-
             this.body = Add(new TextContentSection(this, null, new DBlock(150, 300, Block.W, Block.H - 300).Set(10, 2, 20))
             {
                 ShowLineNumbers = false
             });            
             UpdateSelected(Model.Nodes.First());
 
+            
+            
+            
+            
+            
+            
+            
+            
+            
 
             var z = SKBitmap.Decode("/home/guy/Pictures/sample1.png");
 
             var img  = new SKBitmap(250, 100);
             var imgc = new SKCanvas(img);
-            imgc.DrawBitmap(z, 1, 1);
+            //imgc.DrawBitmap(z, 1, 1);
+            
             var munro = new SKPaint()
             {
+                // https://www.fontspace.com/munro-font-f14903
                 Typeface =SKTypeface.FromFamilyName(
                     "Munro", 
                     SKFontStyleWeight.Normal, 
@@ -109,22 +119,16 @@ namespace GoingLower.CPU.Scenes
                 TextSize = 10,
                 Color = SKColors.Aquamarine
             };
+            
+            
             SKRect munroSize = new SKRect();
             munro.MeasureText("|", ref munroSize);
             imgc.DrawText("Hello World! 0123456789", 10, 20, munro);
             imgc.DrawText("The lazy brown cow jumped over the moon", 10, 20 +munroSize.Height, munro);
             
             
-            var on = new SKPaint()
-            {
-                StrokeWidth = 1,
-                Color       = SKColors.Yellow,
-                Style       = SKPaintStyle.StrokeAndFill
-            };
             
-            // https://www.fontspace.com/munro-font-f14903
-            var r     = new Random();
-            var model = new VirtualScreen(new SKSize(3,3), new SKSize(1, 1),  img.Width, img.Height);
+            var model = new VirtualScreen(new SKSize(2,2), new SKSize(1, 1),  img.Width, img.Height);
             
             var play2 = Add(new VirtualScreenElement(this, new DBlock(1000, 1000, 500, 500), model));
             play2.Model.Fill( ((x,y) => {
@@ -144,6 +148,8 @@ namespace GoingLower.CPU.Scenes
                     FG = f
                 };
             }));
+            
+            
             
 
 

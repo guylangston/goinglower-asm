@@ -3,7 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
-    <DefineConstants>Introduction</DefineConstants>
+    <DefineConstants>SamplePrimeSieveCS</DefineConstants>
   </PropertyGroup>
+  
 
 </Project>

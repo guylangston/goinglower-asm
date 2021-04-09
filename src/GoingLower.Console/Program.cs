@@ -25,7 +25,7 @@ namespace GoingLower.Console
                     Author     = "Guy Langston",
                     License    = "https://creativecommons.org/licenses/by/4.0/",
                     ProjectUrl = "https://www.goinglower.dev",
-                    AuthorUrl = "https://www.guylangston.net",
+                    AuthorUrl  = "https://www.guylangston.net",
                 };
                 var repo           = new StoryDigestRepo();
                 var file = "unnamed.sty-json";

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 NAME="PerfStructSize"
 echo "DOTNET CORE"
 # The command below vvvv   requires the dotnet publish + 

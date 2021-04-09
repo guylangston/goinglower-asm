@@ -9,8 +9,6 @@ namespace GoingLower.UI.GTK
         [STAThread]
         public static void Main(string[] args)
         {
-            
-            
             Application.Init();
 
             var app = new Application("org.goinglower.ui.gtk", GLib.ApplicationFlags.None);

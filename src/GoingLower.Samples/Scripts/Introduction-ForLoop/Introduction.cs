@@ -30,7 +30,7 @@ namespace GoingLower.Samples
         }
     }
     
-    #if Introduction
+    #if SampleIntroduction
     class Program
     {
         public static int Main()
