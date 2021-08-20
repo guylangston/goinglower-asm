@@ -70,7 +70,7 @@ namespace GoingLower.Backend.LLDB
         public Story BuildStory(Config cfg)
         {
             var source = new SourceProvider(null);
-            var main   = source.Load(cfg.GetExpectedPath("CodeClean.txt"));
+            var main   = source.Load(cfg.GetExpectedPath("PrimeSieve.cs"));
             main.Title = "Source.cs";
             
             var parser = new Parser(source);

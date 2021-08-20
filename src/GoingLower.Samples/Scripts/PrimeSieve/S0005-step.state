@@ -1,0 +1,30 @@
+curr=(0x7fff7d3f3a85, vzeroupper)
+next=(0x7fff7d3f3a88, lea    rbp, [rsp + 0x10])
+RIP=00007FFF7D3F3A85
+(lldb) register read
+General Purpose Registers:
+       rax = 0x00007fff7d3cc500
+       rbx = 0x00007fffffffd370
+       rcx = 0x000000000000f420
+       rdx = 0x0000000000003d09
+       rdi = 0x00007fff4801ee38
+       rsi = 0x00007fff4801ee58
+       rbp = 0x00007fffffffd1e0
+       rsp = 0x00007fffffffd1b0
+        r8 = 0x000000000000f41c
+        r9 = 0x00007ffff7553e50
+       r10 = 0x00007ffff7c501f0  
+       r11 = 0x00007ffff6e85158  
+       r12 = 0x00007fffffffd4d8
+       r13 = 0x0000000000000000
+       r14 = 0x0000000000000000
+       r15 = 0x00007fffffffd560
+       rip = 0x00007fff7d3f3a88
+    rflags = 0x0000000000000202
+        cs = 0x0000000000000033
+        fs = 0x0000000000000000
+        gs = 0x0000000000000000
+        ss = 0x000000000000002b
+        ds = 0x0000000000000000
+        es = 0x0000000000000000
+

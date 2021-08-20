@@ -43,12 +43,14 @@ namespace GoingLower.Console
             {
                 var p    = new DebuggerDriver();
                 var cfg  = new DebuggerDriver.ConfigArgs();
-                var name = "Introduction";
+                
                 cfg.WithProjectDir(
-                    "/home/guy/repo/cpu.anim/src/Sample", 
-                    $"{name}.cs", 
+                    "/home/guy/repo/cpu.anim/src/GoingLower.Samples", 
+                    $"Scripts/PrimeSieve/PrimeSieve.cs", 
                     null,
-                    $"Sample.Introduction.ForLoop");
+                    $"GoingLower.Samples.Scripts.PrimeSieve");
+
+                cfg.StepCount = 100;
 
                 p.Start(cfg);
                 return 0;

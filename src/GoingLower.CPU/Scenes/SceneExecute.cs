@@ -81,23 +81,23 @@ namespace GoingLower.CPU.Scenes
             bTerm.Set(0, 3, 10);
             Terminal   = Add(new TerminalElement(this, new Terminal(), bTerm));
 
-            var overlay = Add(new TextBlockElement(this, 
-                new DBlock(450, 800, 500, 280).Set(0, 4, 10),
-                Styles.FixedFont));
-            
-            overlay.Background = Styles.BackGroundAlt;
-            overlay.WriteLine("-- Register Cheatsheet --", Styles.FixedFontBlue);
-            overlay.WriteLine("");
-            overlay.WriteLine("                          16   32   64", Styles.FixedFontBlue);
-            overlay.Write("A Register          "); overlay.WriteLine("(A):  AX, EAX, RAX", Styles.FixedFontArg);
-            overlay.Write("B Register          "); overlay.WriteLine("(B):  BX, EBX, RBX", Styles.FixedFontArg);
-            overlay.Write("C Register          "); overlay.WriteLine("(C):  CX, ECX, RCX", Styles.FixedFontArg);
-            overlay.Write("D Register          "); overlay.WriteLine("(D):  DX, EDX, RDX", Styles.FixedFontArg);
-            overlay.Write("Source Index        "); overlay.WriteLine("(SI): SI, ESI, RSI", Styles.FixedFontArg);
-            overlay.Write("Destination Index   "); overlay.WriteLine("(DI): DI, EDI, RDI", Styles.FixedFontArg);
-            overlay.Write("Instruction Pointer "); overlay.WriteLine("(IP): IP, EIP, RIP", Styles.FixedFontArg);
-            overlay.Write("Stack Pointer       "); overlay.WriteLine("(SP): SP, ESP, RSP", Styles.FixedFontArg);
-                        
+            // var overlay = Add(new TextBlockElement(this, 
+            //     new DBlock(450, 800, 500, 280).Set(0, 4, 10),
+            //     Styles.FixedFont));
+            //
+            // overlay.Background = Styles.BackGroundAlt;
+            // overlay.WriteLine("-- Register Cheatsheet --", Styles.FixedFontBlue);
+            // overlay.WriteLine("");
+            // overlay.WriteLine("                          16   32   64", Styles.FixedFontBlue);
+            // overlay.Write("A Register          "); overlay.WriteLine("(A):  AX, EAX, RAX", Styles.FixedFontArg);
+            // overlay.Write("B Register          "); overlay.WriteLine("(B):  BX, EBX, RBX", Styles.FixedFontArg);
+            // overlay.Write("C Register          "); overlay.WriteLine("(C):  CX, ECX, RCX", Styles.FixedFontArg);
+            // overlay.Write("D Register          "); overlay.WriteLine("(D):  DX, EDX, RDX", Styles.FixedFontArg);
+            // overlay.Write("Source Index        "); overlay.WriteLine("(SI): SI, ESI, RSI", Styles.FixedFontArg);
+            // overlay.Write("Destination Index   "); overlay.WriteLine("(DI): DI, EDI, RDI", Styles.FixedFontArg);
+            // overlay.Write("Instruction Pointer "); overlay.WriteLine("(IP): IP, EIP, RIP", Styles.FixedFontArg);
+            // overlay.Write("Stack Pointer       "); overlay.WriteLine("(SP): SP, ESP, RSP", Styles.FixedFontArg);
+            //             
 
             var d = 400;
             

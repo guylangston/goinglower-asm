@@ -1,0 +1,30 @@
+curr=(0x7fff7d3f3b67, cmp    r11d, dword ptr [rcx + 0x8])
+next=(0x7fff7d3f3b6b, jae    0x7fff7d3f3baa)
+RIP=00007FFF7D3F3B67
+(lldb) register read
+General Purpose Registers:
+       rax = 0x0000000000000003
+       rbx = 0x00007fffffffd370
+       rcx = 0x00007fff4801ee90
+       rdx = 0x00000000000003e8
+       rdi = 0x00007fff4801ee38
+       rsi = 0x00000000000f4240
+       rbp = 0x00007fffffffd1c0
+       rsp = 0x00007fffffffd1b0
+        r8 = 0x0000000000000009
+        r9 = 0x00007fff4801ee58
+       r10 = 0x0000000000000010
+       r11 = 0x0000000000000000
+       r12 = 0x00007fffffffd4d8
+       r13 = 0x0000000000000000
+       r14 = 0x0000000000000000
+       r15 = 0x00007fffffffd560
+       rip = 0x00007fff7d3f3b6b
+    rflags = 0x0000000000000293
+        cs = 0x0000000000000033
+        fs = 0x0000000000000000
+        gs = 0x0000000000000000
+        ss = 0x000000000000002b
+        ds = 0x0000000000000000
+        es = 0x0000000000000000
+

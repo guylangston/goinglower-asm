@@ -13,7 +13,7 @@ namespace GoingLower.CPU
     {
         public const string MonoSpace = "Jetbrains Mono";
         public const string Small = "Noto Sans";
-        public const float TextSizeDefault = 20;
+        public const float TextSizeDefault = 16;//20;
         public const string Sans = "Ubuntu";
 
     }

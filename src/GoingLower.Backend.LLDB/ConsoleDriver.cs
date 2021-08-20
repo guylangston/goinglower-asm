@@ -125,7 +125,7 @@ namespace GoingLower.Backend.LLDB
             proc.StandardInput.WriteLine(cmd);
         }
         
-        public IReadOnlyList<string> ExecuteAndWaitForResults(string cmd, double threshold = 0.3d, bool echo = true)
+        public IReadOnlyList<string> ExecuteAndWaitForResults(string cmd, double threshold = 0.1d, bool echo = true)
         {
             // Assumes underlying is already READY
             if (!IsReady) throw new Exception("Must be Ready for Cmd");

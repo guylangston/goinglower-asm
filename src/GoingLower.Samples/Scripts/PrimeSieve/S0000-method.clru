@@ -1,0 +1,136 @@
+(lldb) clru 0x00007FFF7D3F3A80
+Normal JIT generated code
+GoingLower.Samples.Scripts.PrimeSieve.PrimeCS.runSieve()
+ilAddr is 00007FFFF7FAC488 pImport is 00000000019984A0
+Begin 00007FFF7D3F3A80, size 130
+
+/home/guy/repo/cpu.anim/src/GoingLower.Samples/Scripts/PrimeSieve/PrimeSieve.cs @ 16:
+>>> 00007fff7d3f3a80 55                   push    rbp
+00007fff7d3f3a81 4883ec10             sub     rsp, 0x10
+00007fff7d3f3a85 c5f877               vzeroupper 
+00007fff7d3f3a88 488d6c2410           lea     rbp, [rsp + 0x10]
+00007fff7d3f3a8d b803000000           mov     eax, 0x3
+
+/home/guy/repo/cpu.anim/src/GoingLower.Samples/Scripts/PrimeSieve/PrimeSieve.cs @ 17:
+00007fff7d3f3a92 8b7710               mov     esi, dword ptr [rdi + 0x10]
+00007fff7d3f3a95 c5f857c0             vxorps  xmm0, xmm0, xmm0
+00007fff7d3f3a99 c5fb2ac6             vcvtsi2sd xmm0, xmm0, esi
+00007fff7d3f3a9d c5fb51c0             vsqrtsd xmm0, xmm0, xmm0
+00007fff7d3f3aa1 c5fb2cd0             vcvttsd2si edx, xmm0
+
+/home/guy/repo/cpu.anim/src/GoingLower.Samples/Scripts/PrimeSieve/PrimeSieve.cs @ 19:
+00007fff7d3f3aa5 83fa03               cmp     edx, 0x3
+00007fff7d3f3aa8 0f8ee5000000         jle     0x7fff7d3f3b93
+
+/home/guy/repo/cpu.anim/src/GoingLower.Samples/Scripts/PrimeSieve/PrimeSieve.cs @ 21:
+00007fff7d3f3aae 8bc8                 mov     ecx, eax
+
+/home/guy/repo/cpu.anim/src/GoingLower.Samples/Scripts/PrimeSieve/PrimeSieve.cs @ 22:
+00007fff7d3f3ab0 3bce                 cmp     ecx, esi
+00007fff7d3f3ab2 7f69                 jg      0x7fff7d3f3b1d
+
+/home/guy/repo/cpu.anim/src/GoingLower.Samples/Scripts/PrimeSieve/PrimeSieve.cs @ 25:
+00007fff7d3f3ab4 448bc1               mov     r8d, ecx
+00007fff7d3f3ab7 41c1e81f             shr     r8d, 0x1f
+00007fff7d3f3abb 4403c1               add     r8d, ecx
+00007fff7d3f3abe 4183e0fe             and     r8d, -0x2
+00007fff7d3f3ac2 448bc9               mov     r9d, ecx
+00007fff7d3f3ac5 452bc8               sub     r9d, r8d
+00007fff7d3f3ac8 7449                 je      0x7fff7d3f3b13
+00007fff7d3f3aca 4c8b4708             mov     r8, qword ptr [rdi + 0x8]
+00007fff7d3f3ace 448bc9               mov     r9d, ecx
+00007fff7d3f3ad1 41c1e91f             shr     r9d, 0x1f
+00007fff7d3f3ad5 4403c9               add     r9d, ecx
+00007fff7d3f3ad8 41d1f9               sar     r9d
+00007fff7d3f3adb 453b4810             cmp     r9d, dword ptr [r8 + 0x10]
+00007fff7d3f3adf 0f83b4000000         jae     0x7fff7d3f3b99
+00007fff7d3f3ae5 4d8b4008             mov     r8, qword ptr [r8 + 0x8]
+00007fff7d3f3ae9 458bd1               mov     r10d, r9d
+00007fff7d3f3aec 41c1fa05             sar     r10d, 0x5
+00007fff7d3f3af0 453b5008             cmp     r10d, dword ptr [r8 + 0x8]
+00007fff7d3f3af4 0f83b0000000         jae     0x7fff7d3f3baa
+00007fff7d3f3afa 4d63d2               movsxd  r10, r10d
+00007fff7d3f3afd 478b449010           mov     r8d, dword ptr [r8 + 4*r10 + 0x10]
+00007fff7d3f3b02 450fa3c8             bt      r8d, r9d
+00007fff7d3f3b06 410f92c1             setb    r9b
+00007fff7d3f3b0a 450fb6c9             movzx   r9d, r9b
+00007fff7d3f3b0e 4585c9               test    r9d, r9d
+00007fff7d3f3b11 7508                 jne     0x7fff7d3f3b1b
+
+/home/guy/repo/cpu.anim/src/GoingLower.Samples/Scripts/PrimeSieve/PrimeSieve.cs @ 23:
+00007fff7d3f3b13 ffc1                 inc     ecx
+
+/home/guy/repo/cpu.anim/src/GoingLower.Samples/Scripts/PrimeSieve/PrimeSieve.cs @ 22:
+00007fff7d3f3b15 3bce                 cmp     ecx, esi
+00007fff7d3f3b17 7e9b                 jle     0x7fff7d3f3ab4
+00007fff7d3f3b19 eb02                 jmp     0x7fff7d3f3b1d
+
+/home/guy/repo/cpu.anim/src/GoingLower.Samples/Scripts/PrimeSieve/PrimeSieve.cs @ 27:
+00007fff7d3f3b1b 8bc1                 mov     eax, ecx
+
+/home/guy/repo/cpu.anim/src/GoingLower.Samples/Scripts/PrimeSieve/PrimeSieve.cs @ 32:
+00007fff7d3f3b1d 448d0440             lea     r8d, [rax + 2*rax]
+
+/home/guy/repo/cpu.anim/src/GoingLower.Samples/Scripts/PrimeSieve/PrimeSieve.cs @ 33:
+00007fff7d3f3b21 443bc6               cmp     r8d, esi
+00007fff7d3f3b24 7f62                 jg      0x7fff7d3f3b88
+
+/home/guy/repo/cpu.anim/src/GoingLower.Samples/Scripts/PrimeSieve/PrimeSieve.cs @ 35:
+00007fff7d3f3b26 418bc8               mov     ecx, r8d
+00007fff7d3f3b29 c1e91f               shr     ecx, 0x1f
+00007fff7d3f3b2c 4103c8               add     ecx, r8d
+00007fff7d3f3b2f 83e1fe               and     ecx, -0x2
+00007fff7d3f3b32 458bc8               mov     r9d, r8d
+00007fff7d3f3b35 442bc9               sub     r9d, ecx
+00007fff7d3f3b38 7445                 je      0x7fff7d3f3b7f
+00007fff7d3f3b3a 4c8b4f08             mov     r9, qword ptr [rdi + 0x8]
+00007fff7d3f3b3e 418bc8               mov     ecx, r8d
+00007fff7d3f3b41 c1e91f               shr     ecx, 0x1f
+00007fff7d3f3b44 4103c8               add     ecx, r8d
+00007fff7d3f3b47 d1f9                 sar     ecx
+00007fff7d3f3b49 413b4910             cmp     ecx, dword ptr [r9 + 0x10]
+00007fff7d3f3b4d 7353                 jae     0x7fff7d3f3ba2
+00007fff7d3f3b4f 41ba01000000         mov     r10d, 0x1
+00007fff7d3f3b55 894dfc               mov     dword ptr [rbp - 0x4], ecx
+00007fff7d3f3b58 41d3e2               shl     r10d, cl
+00007fff7d3f3b5b 498b4908             mov     rcx, qword ptr [r9 + 0x8]
+00007fff7d3f3b5f 448b5dfc             mov     r11d, dword ptr [rbp - 0x4]
+00007fff7d3f3b63 41c1fb05             sar     r11d, 0x5
+00007fff7d3f3b67 443b5908             cmp     r11d, dword ptr [rcx + 0x8]
+00007fff7d3f3b6b 733d                 jae     0x7fff7d3f3baa
+00007fff7d3f3b6d 4d63db               movsxd  r11, r11d
+00007fff7d3f3b70 4a8d4c9910           lea     rcx, [rcx + 4*r11 + 0x10]
+00007fff7d3f3b75 41f7d2               not     r10d
+00007fff7d3f3b78 442111               and     dword ptr [rcx], r10d
+00007fff7d3f3b7b 41ff4114             inc     dword ptr [r9 + 0x14]
+
+/home/guy/repo/cpu.anim/src/GoingLower.Samples/Scripts/PrimeSieve/PrimeSieve.cs @ 34:
+00007fff7d3f3b7f 458d0440             lea     r8d, [r8 + 2*rax]
+
+/home/guy/repo/cpu.anim/src/GoingLower.Samples/Scripts/PrimeSieve/PrimeSieve.cs @ 33:
+00007fff7d3f3b83 443bc6               cmp     r8d, esi
+00007fff7d3f3b86 7e9e                 jle     0x7fff7d3f3b26
+
+/home/guy/repo/cpu.anim/src/GoingLower.Samples/Scripts/PrimeSieve/PrimeSieve.cs @ 37:
+00007fff7d3f3b88 83c002               add     eax, 0x2
+
+/home/guy/repo/cpu.anim/src/GoingLower.Samples/Scripts/PrimeSieve/PrimeSieve.cs @ 19:
+00007fff7d3f3b8b 3bc2                 cmp     eax, edx
+00007fff7d3f3b8d 0f8c1bffffff         jl      0x7fff7d3f3aae
+
+/home/guy/repo/cpu.anim/src/GoingLower.Samples/Scripts/PrimeSieve/PrimeSieve.cs @ 39:
+00007fff7d3f3b93 488d6500             lea     rsp, [rbp]
+00007fff7d3f3b97 5d                   pop     rbp
+00007fff7d3f3b98 c3                   ret     
+
+/home/guy/repo/cpu.anim/src/GoingLower.Samples/Scripts/PrimeSieve/PrimeSieve.cs @ 25:
+00007fff7d3f3b99 418bf9               mov     edi, r9d
+00007fff7d3f3b9c e86ff6ffff           call    0x7fff7d3f3210 (System.Collections.BitArray.ThrowArgumentOutOfRangeException(Int32), mdToken: 0000000006000017)
+00007fff7d3f3ba1 cc                   int3    
+
+/home/guy/repo/cpu.anim/src/GoingLower.Samples/Scripts/PrimeSieve/PrimeSieve.cs @ 35:
+00007fff7d3f3ba2 8bf9                 mov     edi, ecx
+00007fff7d3f3ba4 e867f6ffff           call    0x7fff7d3f3210 (System.Collections.BitArray.ThrowArgumentOutOfRangeException(Int32), mdToken: 0000000006000017)
+00007fff7d3f3ba9 cc                   int3    
+00007fff7d3f3baa e81172cb79           call    0x7ffff70aadc0 (JitHelp: CORINFO_HELP_RNGCHKFAIL)
+00007fff7d3f3baf cc                   int3    

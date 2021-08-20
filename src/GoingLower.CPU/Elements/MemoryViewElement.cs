@@ -136,27 +136,32 @@ namespace GoingLower.CPU.Elements
                 {
                     var p    = (MemoryViewElement)Parent.Parent;
                     var pp   = p.Model.GetByAddress(addr);
-                    var desk = (SegmentElement)p.GetElementByModelRecurse(pp);
-
-                    if (desk != null && asm != null)
+                    //var desk = (SegmentElement)p.GetElementByModelRecurse(pp);
+                    
+                    if (p.TryGetElementFromModelRecurse(pp, out var desk))
                     {
-                        var a = new DockedArrow(
-                            new DockPoint(this, asm)
-                            {
-                                Anchor  = BlockAnchor.MR,
-                                Offset  = new SKPoint(20, 0),
-                                Padding = new SKPoint(10, 0),
-                            },
-                            new DockPoint(desk, desk.asm)
-                            {
-                                Anchor  = BlockAnchor.MR,
-                                Offset  = new SKPoint(20, 0),
-                                Padding = new SKPoint(10, 0),
-                            },
-                            IsSelected ?   Scene.Styles.ArrowAlt :  Scene.Styles.ArrowGray);
-                        //a.Step();
-                        a.Draw(surface.Canvas);    
+                        if (desk != null && asm != null)
+                        {
+                            var a = new DockedArrow(
+                                new DockPoint(this, asm)
+                                {
+                                    Anchor  = BlockAnchor.MR,
+                                    Offset  = new SKPoint(20, 0),
+                                    Padding = new SKPoint(10, 0),
+                                },
+                                new DockPoint(desk, asm)
+                                {
+                                    Anchor  = BlockAnchor.MR,
+                                    Offset  = new SKPoint(20, 0),
+                                    Padding = new SKPoint(10, 0),
+                                },
+                                IsSelected ?   Scene.Styles.ArrowAlt :  Scene.Styles.ArrowGray);
+                            //a.Step();
+                            a.Draw(surface.Canvas);    
+                        }    
                     }
+
+                    
                 }
             }
         }

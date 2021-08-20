@@ -5,73 +5,68 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
-namespace PrimeSieveCS
+namespace GoingLower.Samples.Scripts.PrimeSieve
 {
     class PrimeCS
     {
-        class prime_sieve
-        {
-            private int sieveSize = 0;
-            private BitArray bitArray;
+       public void runSieve()
+       {
+           var factor = 3; // Break: Target
+           var q      = (int)Math.Sqrt(sieveSize);
 
-            public prime_sieve(int size)
-            {
-                sieveSize = size;
-                bitArray  = new BitArray((int)((this.sieveSize + 1) / 2), true);
-            }
+           while (factor < q)
+           {
+               for (var num = factor; 
+                   num <= sieveSize; 
+                   num++)
+               {
+                   if (GetBit(num))
+                   {
+                       factor = num;
+                       break;
+                   }
+               }
 
-            bool GetBit(int index)
-            {
-                if (index % 2 == 0)
-                    return false;
-                return bitArray[index / 2];
-            }
+               for (int num = factor * 3; 
+                   num <= sieveSize; 
+                   num += factor * 2)
+                   ClearBit(num);
 
-            void ClearBit(int index)
-            {
-                if (index % 2 == 0)
-                {
-                    Console.WriteLine("You are setting even bits, which is sub-optimal");
-                    return;
-                }
-                bitArray[index / 2] = false;
-            }
+               factor += 2;
+           }
+       }
+       
+       private int sieveSize;
+       private BitArray bitArray;
 
-            public void runSieve()
-            {
-                var factor = 3; // Break-Here
-                var q      = (int)Math.Sqrt(sieveSize);
+       public PrimeCS(int size)
+       {
+           sieveSize = size;
+           bitArray  = new BitArray((int)((this.sieveSize + 1) / 2), true);
+       }
 
-                while (factor < q)
-                {
-                    for (var num = factor; num <= sieveSize; num++)
-                    {
-                        if (GetBit(num))
-                        {
-                            factor = num;
-                            break;
-                        }
-                    }
+       [MethodImpl(MethodImplOptions.AggressiveInlining)]  // Avoid calls for ASM 
+       bool GetBit(int index)
+       {
+           if (index % 2 == 0) return false;
+           return bitArray[index / 2];
+       }
 
-                    // If marking factor 3, you wouldn't mark 6 (it's a mult of 2) so start with the 3rd instance of this factor's multiple.
-                    // We can then step by factor * 2 because every second one is going to be even by definition
-
-                    for (int num = factor * 3; num <= sieveSize; num += factor * 2)
-                        ClearBit(num);
-
-                    factor += 2;
-                }
-            }
-        }
+       [MethodImpl(MethodImplOptions.AggressiveInlining)]  // Avoid calls for ASM 
+       void ClearBit(int index)
+       {
+           if (index % 2 == 0) return;
+           bitArray[index / 2] = false;
+       }
 
 #if SamplePrimeSieveCS
         static void Main(string[] args)
         {
-            Console.WriteLine("Starting");
-            var sieve = new prime_sieve(1000000);
-            sieve.runSieve();
+            Console.WriteLine("Starting");  
+            var sieve = new PrimeCS(1000);  // Reduced so we can see more ASM
+            sieve.runSieve(); 
             Console.WriteLine("Complete");
         }
 #endif

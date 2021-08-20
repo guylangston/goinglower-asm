@@ -25,7 +25,7 @@ namespace GoingLower.Backend.LLDB
             // /home/guy/repo/cpu.anim/src/Sample/Sample.csproj
             public void WithProjectDir(string proj, 
                 string source,
-                int? breakOnLine,
+                string? breakOnLine,
                 string confirm
                 )
             {
@@ -57,10 +57,10 @@ namespace GoingLower.Backend.LLDB
                 if (breakOnLine == null)
                 {
                     var all = File.ReadAllLines(SourceFile);
-                    var bk  = all.WithIndex().FirstOrDefault(x => x.val != null && x.val.Contains("// Break-Here"));
+                    var bk  = all.WithIndex().FirstOrDefault(x => x.val != null && x.val.Contains("// Break"));
                     if (bk.index > 0)
                     {
-                        breakOnLine = bk.index + 1;
+                        breakOnLine = $"{Path.GetFileName(SourceFile)}:{bk.index + 1}";
                     }
                     else
                     {
@@ -68,7 +68,28 @@ namespace GoingLower.Backend.LLDB
                     }
                 }
 
-                BreakPoint             = $"{source}:{breakOnLine}";
+                /*
+➤ lldb ./GoingLower.Samples
+Added Microsoft public symbol server
+(lldb) target create "./GoingLower.Samples"
+Current executable set to '/home/guy/repo/cpu.anim/src/GoingLower.Samples/bin/Release/net5.0/linux-x64/publish/GoingLower.Samples' (x86_64).
+(lldb) bpmd PrimeSieve.cs:69
+(lldb) run
+Process 70640 launched: '/home/guy/repo/cpu.anim/src/GoingLower.Samples/bin/Release/net5.0/linux-x64/publish/GoingLower.Samples' (x86_64)
+1 location added to breakpoint 1
+JITTED GoingLower.Samples!PrimeSieveCS.PrimeCS.Main(System.String[])
+Setting breakpoint: breakpoint set --address 0x00007FFF7D3E6890 [PrimeSieveCS.PrimeCS.Main(System.String[])]
+Process 70640 stopped
+* thread #1, name = 'GoingLower.Samp', stop reason = breakpoint 3.1
+    frame #0: 0x00007fff7d3e6890
+->  0x7fff7d3e6890: push   rbp
+    0x7fff7d3e6891: sub    rsp, 0x10
+    0x7fff7d3e6895: lea    rbp, [rsp + 0x10]
+    0x7fff7d3e689a: xor    eax, eax
+(lldb) 
+
+                 */
+                BreakPoint             = breakOnLine;
                 BreakPointConfirmation = confirm;
 
 
@@ -102,6 +123,8 @@ namespace GoingLower.Backend.LLDB
 
             source      = new SourceProvider(args.TargetBinary);
             CapturePath = Path.GetDirectoryName(source.TargetBinary);
+            
+            Console.WriteLine("{0,20}: {1}", "CapturePath", CapturePath);
             
             source.Load(args.SourceFile);
             

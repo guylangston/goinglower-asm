@@ -29,12 +29,12 @@ namespace GoingLower.UI.GTK
                 }
             }
             
-            var paths = new PathScanner(new[]
-            {
-                "/home/guy/repo/cpu.anim",
-                "c:\\projects\\cpu.anim",
-                "c:\\repo\\cpu.anim"
-            });
+            // var paths = new PathScanner(new[]
+            // {
+            //     "/home/guy/repo/cpu.anim",
+            //     "c:\\projects\\cpu.anim",
+            //     "c:\\repo\\cpu.anim"
+            // });
 
             // if (paths.TryScanFirstDirectoryExists(out var dir))
             // {
