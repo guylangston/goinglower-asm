@@ -10,15 +10,16 @@ namespace GoingLower.CPU.Model
 {
     public record StoryDigest  // Json Serialisable
     {
-        public string Id            { get; set; }
-        public string Title         { get; set; }
-        public string DescText      { get; set; }
-        public string DescFormat    { get; set; }
-        public string Arch          { get; set; }
-        public string OS            { get; set; }
-        public string IconPath      { get; set; }
-        public string ThumbnailPath { get; set; }
-        public string CompileRoot   { get; set; }
+        public string Id             { get; set; }
+        public string Title          { get; set; }
+        public string DescText       { get; set; }
+        public string DescFormat     { get; set; }
+        public string Arch           { get; set; }
+        public string OS             { get; set; }
+        public string IconPath       { get; set; }
+        public string ThumbnailPath  { get; set; }
+        public string CompileRoot    { get; set; }
+        public string MainSourceFile { get; set; }
 
         public string Author     { get; set; }
         public string AuthorUrl { get; set; }
@@ -29,7 +30,8 @@ namespace GoingLower.CPU.Model
         public DateTime Modified    { get; set; } // Utc
         public int      Version     { get; set; }
 
-        public Dictionary<string, string> Props { get; set; }
+        public Dictionary<string, string> Props          { get; set; }
+        
     }
 
     

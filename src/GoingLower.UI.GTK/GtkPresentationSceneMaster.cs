@@ -59,7 +59,8 @@ namespace GoingLower.UI.GTK
                 Digest            = digest,
                 StoryId           = digest.Id,
                 BaseFolder        = Path.GetDirectoryName(digestFile),
-                CompileBaseFolder = digest.CompileRoot
+                CompileBaseFolder = digest.CompileRoot,
+                MainSourceFile = digest.MainSourceFile
             };
             setup.InitCpuFromDisk(cfg, cpu);
             return cpu;

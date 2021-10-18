@@ -10,10 +10,11 @@ namespace GoingLower.Backend.LLDB
     {
         public class Config
         {
-            public string      CompileBaseFolder { get; set; }  // /home/guy/repo/cpu.anim/src/Sample
-            public string      BaseFolder        { get; set; }  // /home/guy/repo/cpu.anim/src/Sample/Scripts/Introduction-ForLoop
-            public string      StoryId           { get; set; }  // Introduction-ForLoop
+            public string      CompileBaseFolder { get; set; } // /home/guy/repo/cpu.anim/src/Sample
+            public string      BaseFolder        { get; set; } // /home/guy/repo/cpu.anim/src/Sample/Scripts/Introduction-ForLoop
+            public string      StoryId           { get; set; } // Introduction-ForLoop
             public StoryDigest Digest            { get; set; }
+            public string      MainSourceFile    { get; set; }
 
             public bool TryGetPath(string rel, out string fullPath)
             {
@@ -70,7 +71,7 @@ namespace GoingLower.Backend.LLDB
         public Story BuildStory(Config cfg)
         {
             var source = new SourceProvider(null);
-            var main   = source.Load(cfg.GetExpectedPath("PrimeSieve.cs"));
+            var main   = source.Load(cfg.GetExpectedPath(cfg.MainSourceFile));
             main.Title = "Source.cs";
             
             var parser = new Parser(source);

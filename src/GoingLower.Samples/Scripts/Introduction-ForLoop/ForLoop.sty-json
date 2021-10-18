@@ -8,6 +8,7 @@
   "IconPath": null,
   "ThumbnailPath": null,
   "CompileRoot": "/home/guy/repo/cpu.anim/src/GoingLower.Samples/",
+  "MainSourceFile": "Introduction.cs",
   "Author": "Guy Langston",
   "AuthorUrl": "https://www.guylangston.net",
   "License": "https://creativecommons.org/licenses/by/4.0/",
