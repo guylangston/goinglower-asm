@@ -29,3 +29,11 @@
 - the book "xpord",
 - [This Goes to Eleven (Part 1/∞) - damageboy](https://bits.houmus.org/2020-01-28/this-goes-to-eleven-pt1) by [@damageboy](https://twitter.com/damageboy)
 - [Bartosz Adamczewski @badamczewski01](https://twitter.com/badamczewski01)
+
+# Getting Started
+```shell
+$ git clone https://github.com/guylangston/goinglower-asm.git
+$ cd gowinglower-asm
+$ cd src/GoingLower.UI.GTK
+$ ./run.sh
+```
