@@ -7,6 +7,8 @@
 - Videos: [YouTube](https://www.youtube.com/channel/UCvghNVWLxYU00NKxLYMYbdQ/videos)
 
 
+[![C# to binary code](https://img.youtube.com/vi/peWieTZSaAE/0.jpg)](https://www.youtube.com/watch?v=peWieTZSaAE "C# to binary code")
+
 
 ## Project Goals:
 
